@@ -1,0 +1,103 @@
+{
+  "name": "otoplo-wallet",
+  "version": "1.4.0",
+  "description": "Cross-platform light wallet for Nexa",
+  "author": "vgrunner <vgrunner@otoplo.com>",
+  "private": true,
+  "main": "build/electron.js",
+  "homepage": "./",
+  "dependencies": {
+    "@capacitor-community/sqlite": "^5.0.0-beta.2",
+    "@capacitor-mlkit/barcode-scanning": "^5.0.0",
+    "@capacitor/android": "^5.0.3",
+    "@capacitor/app": "^5.0.2",
+    "@capacitor/clipboard": "^5.0.2",
+    "@capacitor/core": "^5.0.3",
+    "@capacitor/dialog": "^5.0.2",
+    "@capacitor/ios": "^5.0.3",
+    "@capacitor/preferences": "^5.0.2",
+    "@capacitor/splash-screen": "^5.0.2",
+    "@fortawesome/fontawesome-free": "^6.2.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "assert": "^2.0.0",
+    "axios": "^1.2.1",
+    "bip39": "^3.0.4",
+    "bootstrap": "^5.2.3",
+    "buffer": "^6.0.3",
+    "concurrently": "^7.6.0",
+    "cross-env": "^7.0.3",
+    "crypto-browserify": "^3.12.0",
+    "crypto-js": "^4.1.1",
+    "dexie": "^3.2.3",
+    "dexie-react-hooks": "^1.1.1",
+    "electron": "^22.2.0",
+    "events": "^3.3.0",
+    "https-browserify": "^1.0.0",
+    "js-big-decimal": "^1.3.15",
+    "nexcore-lib": "^1.1.0",
+    "os-browserify": "^0.3.0",
+    "process": "^0.11.10",
+    "react": "^18.2.0",
+    "react-app-rewired": "^2.2.1",
+    "react-bootstrap": "^2.7.0",
+    "react-circular-progressbar": "^2.1.0",
+    "react-dom": "^18.2.0",
+    "react-pro-sidebar": "^1.0.0",
+    "react-qr-scanner": "^1.0.0-alpha.11",
+    "react-qrcode-logo": "^2.9.0",
+    "react-scripts": "5.0.1",
+    "react-sqlite-hook": "^3.2.1",
+    "remove": "^0.1.5",
+    "sass": "^1.57.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.0",
+    "wait-on": "^7.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "electron-forge start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject",
+    "start-dev": "react-app-rewired start",
+    "electron-dev": "set APP_DEV=true && electron .",
+    "package": "electron-forge package",
+    "make": "react-app-rewired build && electron-forge make",
+    "make-only": "electron-forge make",
+    "build-mobile": "env-cmd -f .env.mobile react-app-rewired build"
+  },
+  "eslintConfig": {
+    "globals": {
+      "BigInt": true
+    },
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^2.0.4",
+    "@capacitor/cli": "^5.0.3",
+    "@electron-forge/cli": "^6.0.4",
+    "@electron-forge/maker-deb": "^6.0.4",
+    "@electron-forge/maker-rpm": "^6.0.4",
+    "@electron-forge/maker-zip": "^6.0.4",
+    "electron": "^22.2.0",
+    "env-cmd": "^10.1.0"
+  }
+}

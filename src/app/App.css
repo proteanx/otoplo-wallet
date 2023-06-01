@@ -1,0 +1,298 @@
+@font-face {
+    font-family: "Source Code Pro";
+    src: url('../fonts/SourceCodePro-Regular.woff2');
+}
+@font-face {
+    font-family: "Ubuntu";
+    src: url('../fonts/Ubuntu-Regular.woff2');
+}
+
+body.barcode-scanning-active {
+    visibility: hidden;
+    background: transparent!important;
+    background-color: transparent!important;
+}
+
+.barcode-scanning-modal {
+    visibility: visible;
+    background: transparent!important;
+    background-color: transparent!important;
+    width: 100%!important;
+    height: 100%!important;
+}
+
+.barcode-scanning-modal-hidden {
+    display: none;
+    visibility: hidden;
+    background: transparent!important;
+    background-color: transparent!important;
+}
+
+#barcode-square {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 16px;
+    width: 200px;
+    height: 200px;
+    border: 6px solid white;
+    box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.3);
+    margin: 15px;
+}
+
+.barcode-close {
+    border-radius: 40px;
+    position: absolute;
+    right: 10%;
+    top: 10%;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #FF1E6F; 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #d21b5e; 
+}
+
+.main-container {
+    background-color: #202224;
+    min-height: 80%;
+}
+
+.ps-sidebar-container, .ps-menu-button {
+    background-color: #282d33 !important;
+}
+
+.ps-menu-button {
+    height: 40px !important;
+}
+.ps-menu-button:hover {
+    background-color: #323942 !important;
+}
+
+.ps-active {
+    background-color: #323942 !important;
+}
+
+.btn-outline-primary {
+    --bs-btn-border-color: #FF1E6F;
+    --bs-btn-color: white;
+    --bs-btn-hover-color: white;
+    --bs-btn-hover-bg: #FF1E6F;
+    --bs-btn-hover-border-color: #FF1E6F;
+    --bs-btn-focus-shadow-rgb: 255, 193, 7;
+    --bs-btn-active-color: white;
+    --bs-btn-active-bg: #FF1E6F;
+    --bs-btn-active-border-color: #FF1E6F;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #FF1E6F;
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: #FF1E6F;
+    --bs-gradient: none;
+}
+
+.btn-primary {
+    --bs-btn-color: white;
+    --bs-btn-bg: #FF1E6F;
+    --bs-btn-border-color: #FF1E6F;
+    --bs-btn-hover-color: white;
+    --bs-btn-hover-bg: #d21b5e;
+    --bs-btn-hover-border-color: #FF1E6F;
+    --bs-btn-focus-shadow-rgb: 217, 164, 6;
+    --bs-btn-active-color: white;
+    --bs-btn-active-bg: #FF1E6F;
+    --bs-btn-active-border-color: #FF1E6F;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #000;
+    --bs-btn-disabled-bg: #FF1E6F;
+    --bs-btn-disabled-border-color: #FF1E6F;
+}
+
+.form-check-input {
+    cursor: pointer;
+}
+.form-check-input:checked {
+    background-color: #FF1E6F;
+    border-color: #FF1E6F;
+}
+
+#info span {
+    padding: 5px;
+}
+html, body, #root {
+    height:100%;
+    width: 100%;
+}
+
+form #amount {
+    width: 10%;
+}
+
+img.header-image {
+    margin-top: -30px;
+    margin-bottom: -30px;
+    width: 90px;
+    height: 70px;
+    margin-right: 10px;
+}
+
+a {
+    color: #FF1E6F !important;
+}
+
+a.ps-menu-button {
+    color: white !important;
+}
+
+.nx {
+    color: #FF1E6F !important;
+}
+
+.text-red {
+    color: red;
+}
+
+.center {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.nav-txt {
+    color: #FF1E6F!important;
+}
+
+footer {
+    border-width: 5px!important;
+    text-align: center;
+    bottom: 0;
+    left: 0;
+    position: "fixed";
+    color: white !important;
+    border-width: 5px !important;
+}
+
+.bg-custom-card {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.tr-border td {
+    border-bottom: 2px solid #2f373f;
+    color: white!important;
+}
+
+hr {
+    border-top: 1px solid rgba(255, 255, 255, 0.7)  !important;
+}
+
+.vl {
+    border-left: 1px solid rgba(255, 255, 255, 0.3)  !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0,0,0,.15);
+}
+
+#tx .table td, .table th {
+    padding: 0.7rem;
+    vertical-align: top;
+}
+
+.bad {
+    color: red;
+}
+
+code, .text-monospace {
+    font-family: "Source Code Pro", monospace !important;
+}
+
+.text-dev {
+    font-family: "Ubuntu", sans-serif !important;
+}
+
+.url a {
+    text-decoration: none!important;
+    word-break: break-all;
+}
+
+.url a:hover {
+    text-decoration: underline!important;
+}
+
+.form-control:focus {
+    border-color: #FF1E6F;
+    box-shadow: 0 0 0 0.05rem rgba(255, 30, 111, 0.897);
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.td-fit {
+    width: 30%;
+    white-space: nowrap
+}
+
+.td-min {
+    width: 1%;
+    white-space: nowrap
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.va {
+    vertical-align: middle;
+}
+
+.outgoing {
+    color: red !important;
+}
+
+.incoming {
+    color: #FF1E6F !important;
+}
+
+.page-item .page-link {
+    background: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;
+    border-color: #282d33;
+}
+
+.page-item .page-link:hover {
+    background: black !important;
+    border-color: #282d33;
+}
+
+.active .page-link {
+    background: #FF1E6F !important;
+    border-color: #282d33;
+    color: white!important 
+}
+
+.active .page-link:hover {
+    background: #FF1E6F !important;
+    border-color: #282d33;
+    color: white !important 
+}
+
+.page-link:focus {
+    box-shadow: none !important;
+}
+
+.menu-btn {
+    padding: 3px;
+    border-radius: 3px;
+    border: 1px solid #FF1E6F;
+    color: #FF1E6F;
+    margin-right: 20px;
+}
