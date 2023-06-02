@@ -4,8 +4,12 @@ const config: CapacitorConfig = {
   appId: 'com.otoplo.mwallet',
   appName: 'Otoplo Wallet',
   webDir: 'build',
+  backgroundColor: "#282d33",
   server: {
     androidScheme: 'https'
+  },
+  ios: {
+    contentInset: 'never',
   },
   plugins: {
     CapacitorHttp: {

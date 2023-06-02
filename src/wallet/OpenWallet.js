@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import CreateWallet from './create/CreateWallet';
 import RecoverWallet from './recover/RecoverWallet';
-import { decryptMnemonic, isMnemonicValid } from '../utils/functions';
+import { decryptMnemonic, isMnemonicValid, isMobilePlatform } from '../utils/functions';
 
 export default function OpenWallet({ encSeed, setDecSeed }) {
   const [makeNew, setMakeNew] = useState(false)
@@ -63,7 +63,7 @@ export default function OpenWallet({ encSeed, setDecSeed }) {
         <Form.Group className="mb-2">
           <Form.Label>Unlock with your password</Form.Label>
           <InputGroup>
-            <Form.Control type={!showPw ? "password" : "text"} ref={pwRef} placeholder="Password" autoFocus onKeyDown={keyDown}/>
+            <Form.Control type={!showPw ? "password" : "text"} ref={pwRef} placeholder="Password" autoFocus={!isMobilePlatform()} onKeyDown={keyDown}/>
             <InputGroup.Text className='cursor' onClick={show}>{!showPw ? <i className="fa fa-eye" aria-hidden="true"></i> : <i className="fa fa-eye-slash" aria-hidden="true"></i>}</InputGroup.Text>
             <Button onClick={open}>Open</Button>
           </InputGroup>

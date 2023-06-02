@@ -93,7 +93,7 @@ export default function Wallet({ heightVal, price, masterKey, item }) {
     var autoRecoverVaults = false;
     if (idx.rIndex === 0) {
       // first wallet creation / recovery
-      idx = {rIndex: 20, cIndex: 20};
+      idx = {rIndex: 50, cIndex: 50};
       autoRecoverVaults = process.env.REACT_APP_IS_HODL_ACTIVE === "true" && (await getHodlState()).idx === 0;
     }
 

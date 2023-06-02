@@ -107,7 +107,9 @@ function App() {
         }).finally(() => {
           initSchema().then(res => {
             if (res) {
-              SplashScreen.hide()
+              setTimeout(() => {
+                SplashScreen.hide();
+              }, 1000)
             }
           });
         });

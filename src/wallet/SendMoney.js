@@ -255,7 +255,7 @@ export default function SendMoney({ balance, keys }) {
       return;
     }
 
-    document.querySelector('body')?.classList.add('barcode-scanning-active');
+    document.querySelector('body').classList.add('barcode-scanning-active');
     document.getElementById('barcode-scanning-modal').classList.remove('barcode-scanning-modal-hidden');
     document.getElementById('barcode-scanning-modal').classList.add('barcode-scanning-modal');
 
@@ -308,7 +308,7 @@ export default function SendMoney({ balance, keys }) {
     await BarcodeScanner.removeAllListeners();
     document.getElementById('barcode-scanning-modal').classList.remove('barcode-scanning-modal');
     document.getElementById('barcode-scanning-modal').classList.add('barcode-scanning-modal-hidden');
-    document.querySelector('body')?.classList.remove('barcode-scanning-active');
+    document.querySelector('body').classList.remove('barcode-scanning-active');
     await BarcodeScanner.stopScan();
     if (barcode) {
       handleScan({ text: barcode });
@@ -405,8 +405,8 @@ export default function SendMoney({ balance, keys }) {
         </Modal.Footer>
       </Modal>
 
-      <div id="barcode-scanning-modal" class="barcode-scanning-modal-hidden">
-        <Button className='barcode-close' variant='secondary' onClick={closeScanner}><CloseButton/></Button>
+      <div id="barcode-scanning-modal" className="barcode-scanning-modal-hidden">
+        <Button className='barcode-close' variant='secondary' onClick={closeScanner}><i class="fa-solid fa-xmark"></i></Button>
         <Container>
           <div id="barcode-square"></div>
         </Container>
