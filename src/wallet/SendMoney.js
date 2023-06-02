@@ -406,7 +406,7 @@ export default function SendMoney({ balance, keys }) {
       </Modal>
 
       <div id="barcode-scanning-modal" className="barcode-scanning-modal-hidden">
-        <Button className='barcode-close' variant='secondary' onClick={closeScanner}><i class="fa-solid fa-xmark"></i></Button>
+        <Button className='barcode-close' variant='secondary' onClick={closeScanner}><i className="fa-solid fa-xmark"/></Button>
         <Container>
           <div id="barcode-square"></div>
         </Container>
