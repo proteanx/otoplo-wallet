@@ -39,6 +39,10 @@ module.exports = {
   ],
   hooks: {
     postPackage: async (forgeConfig, options) => {
+      if (options.platform === 'darwin') {
+        return;
+      }
+
       const fs = require('fs')
 
       const oldDirName = options.outputPaths[0];
