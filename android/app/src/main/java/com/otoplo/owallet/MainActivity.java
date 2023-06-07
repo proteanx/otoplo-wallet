@@ -1,4 +1,4 @@
-package com.otoplo.mwallet;
+package com.otoplo.owallet;
 
 import com.getcapacitor.BridgeActivity;
 
