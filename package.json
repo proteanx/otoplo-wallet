@@ -64,9 +64,10 @@
     "eject": "react-app-rewired eject",
     "start-dev": "react-app-rewired start",
     "electron-dev": "set APP_DEV=true && electron .",
-    "package": "electron-forge package",
-    "make": "react-app-rewired build && electron-forge make",
-    "make-only": "electron-forge make",
+    "package": "react-app-rewired build && electron-forge package",
+    "package-only": "electron-forge package",
+    "build-osx": "react-app-rewired build && electron-forge make -- --arch=universal",
+    "make-osx": "electron-forge make -- --arch=universal",
     "build-mobile": "env-cmd -f .env.mobile react-app-rewired build"
   },
   "eslintConfig": {

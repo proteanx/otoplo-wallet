@@ -8,10 +8,14 @@ module.exports = {
       "^\\/public$",
       "^\\/src$",
       "^\\/node_modules$",
+      "^\\/ios$",
+      "^\\/android$",
+      "^\\/assets$",
       "^\\/[.].+",
       "^\\/.+\.md$",
       "^\\/config-overrides\.js$",
-      "^\\/forge\.config\.js$"
+      "^\\/forge\.config\.js$",
+      "^\\/capacitor\.config\.ts$"
     ],
     osxSign: {
       platform: "darwin",
@@ -25,10 +29,6 @@ module.exports = {
   rebuildConfig: {},
   makers: [
     {
-      name: '@electron-forge/maker-zip',
-      platforms: ["linux", "win32"],
-    },
-    {
       name: '@electron-forge/maker-dmg',
       config: {
         icon: './src/icons/icon.icns',
@@ -37,22 +37,20 @@ module.exports = {
       }
     }
   ],
-  // hooks: {
-  //   postPackage: async (forgeConfig, options) => {
-  //     console.info('Packages built at:', options.outputPaths);
-  //     var fs = require('fs');
-  //     var localeDir = options.outputPaths[0]+'/locales/';
+  hooks: {
+    postPackage: async (forgeConfig, options) => {
+      const fs = require('fs')
 
-  //     fs.readdir(localeDir, function(err, files){
-  //       //files is array of filenames (basename form)
-  //       if(!(files && files.length)) return;
-  //       for (var i = 0, len = files.length; i < len; i++) {
-  //         var match = files[i].match(/en-US\.pak/);
-  //         if(match === null){
-  //           fs.unlinkSync(localeDir+files[i]);
-  //         }
-  //       }
-  //     });
-  //   }
-  // }
+      const oldDirName = options.outputPaths[0];
+      const newDirName = oldDirName.replace("Otoplo Wallet", "otoplo-wallet");
+
+      try {
+        fs.renameSync(oldDirName, newDirName);
+
+        console.log('Directory renamed successfully.')
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }
 };
