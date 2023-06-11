@@ -1,23 +1,23 @@
 # Otoplo Wallet
 
-Otoplo Wallet is a free, open-source modern Nexa non-custodial wallet application for Windows, Linux, and Mac. Release binaries are available directly from [GitLab](https://gitlab.com/otoplo/otoplo-wallet/desktop-wallet/-/releases).
+Otoplo Wallet is a free, open-source modern Nexa non-custodial wallet application for Windows, Linux, Mac and Mobile (iOS and Android). Release binaries are available directly from [GitLab](https://gitlab.com/otoplo/otoplo-wallet/otoplo-wallet/-/releases).
 
-A third-party relay (see [.env](https://gitlab.com/otoplo/otoplo-wallet/desktop-wallet/-/blob/main/.env) and [wallet-api](https://gitlab.com/otoplo/otoplo-wallet/wallet-api)) is used to query the blockchain and broadcast transactions.
+A third-party relay (see [.env](https://gitlab.com/otoplo/otoplo-wallet/otoplo-wallet/-/blob/main/.env) and [wallet-api](https://gitlab.com/otoplo/otoplo-wallet/wallet-api)) is used to query the blockchain and broadcast transactions.
 
-## Building
+## Building for Desktop
 
 Clone the repo and open the directory:
 
 ```sh
-git clone https://gitlab.com/otoplo/otoplo-wallet/desktop-wallet.git
-cd desktop-wallet
+git clone https://gitlab.com/otoplo/otoplo-wallet/otoplo-wallet.git
+cd otoplo-wallet
 ```
 
 Install dependencies and compile:
 
 ```sh
 npm install
-npm run make
+npm run package
 ```
 
 The binaries will be created in `out` directory.
