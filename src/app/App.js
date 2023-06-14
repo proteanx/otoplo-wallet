@@ -14,7 +14,6 @@ import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar } from 'react-pro-sideb
 import nex from '../img/nex.svg';
 import otoplo from '../img/otoplo-logo-white.svg'
 import WalletBackup from '../wallet/WalletBackup';
-import Donation from './Donation';
 import bigDecimal from 'js-big-decimal';
 import ImportToken from '../wallet/token/ImportToken';
 import { fetchTokensData, getLocalTokens } from '../utils/tokensUtils';
@@ -22,8 +21,6 @@ import { useSQLite } from 'react-sqlite-hook';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { getEncryptedSeed, initSchema } from '../utils/localdb';
 import { App as MApp } from '@capacitor/app';
-import { CloseButton } from 'react-bootstrap';
-import { Dialog } from '@capacitor/dialog';
 
 // Singleton SQLite Hook
 export let sqlite;
@@ -249,9 +246,6 @@ function App() {
               <MenuItem disabled suffix={price.compareTo(new bigDecimal(0)) > 0 && price.getPrettyValue()}>NEXA/USDT:</MenuItem>
             </Menu>
             <Footer/>
-            <div className='center p-1'>
-              <Donation/>
-            </div>
           </Sidebar>
         }
         <div style={{ width: '100%', overflowY: 'auto'}}>

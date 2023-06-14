@@ -15,7 +15,7 @@ import { addLocalTransaction, getEncryptedSeed } from '../utils/localdb';
 import { buildAndSignTx } from '../utils/walletUtils';
 import { BarcodeFormat, BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
 import { Dialog } from '@capacitor/dialog';
-import { CloseButton, Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 export default function SendMoney({ balance, keys }) {
   const [scannedAddress, setScannedAddress] = useState("");

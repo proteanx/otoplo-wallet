@@ -79,7 +79,7 @@ export default function CreateWallet({ cancelCreate, setDecSeed }) {
           <Form.Text className="text-red">
             {pwErr}
           </Form.Text>
-          <p className='mt-2'><i>* The password is not part of your seed, it only encrypts the seed locally in your browser.</i></p>
+          <p className='mt-2'><i>* The password is not part of your seed, it only encrypts the seed locally in your device.</i></p>
         </Form.Group>
 
         <Button variant="outline-primary" className='mx-2' onClick={cancelCreate}>Cancel</Button>

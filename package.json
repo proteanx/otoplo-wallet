@@ -1,8 +1,8 @@
 {
   "name": "otoplo-wallet",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Cross-platform light wallet for Nexa",
-  "author": "vgrunner <vgrunner@otoplo.com>",
+  "author": "Otoplo",
   "private": true,
   "main": "build/electron.js",
   "homepage": "./",

@@ -100,7 +100,7 @@ export default function RecoverWallet({ cancelRecover, setDecSeed }) {
       </Modal.Header>
       <Modal.Body>
         <p>Enter password to protect your wallet.</p>
-        <p>Note: Password is not part of your seed, it only encrypts the seed locally in your browser.</p>
+        <p>Note: Password is not part of your seed, it only encrypts the seed locally in your device.</p>
         <InputGroup>
           <Form.Control type={!showPw ? "password" : "text"} ref={pwRef} placeholder="Password" autoFocus/>
           <InputGroup.Text className='cursor' onClick={reveal}>{!showPw ? <i className="fa fa-eye" aria-hidden="true"></i> : <i className="fa fa-eye-slash" aria-hidden="true"></i>}</InputGroup.Text>
