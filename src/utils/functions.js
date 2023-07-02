@@ -1,20 +1,17 @@
 import { Capacitor, CapacitorHttp } from '@capacitor/core';
-//import axios from 'axios';
 import * as Bip39 from 'bip39';
 import CryptoJS from 'crypto-js';
 import NexCore from 'nexcore-lib';
 import { saveEncryptedSeed } from './localdb';
 
 export async function getNexaPrice() {
-    var req = await CapacitorHttp.get({ url: process.env.REACT_APP_PRICE_URL });
-    //var req = await axios.get(process.env.REACT_APP_PRICE_URL);
-    return req.data;
+    var res = await CapacitorHttp.get({ url: process.env.REACT_APP_PRICE_URL });
+    return handleResponse(res);
 }
 
 export async function getBlockHeight() {
-    var req = await CapacitorHttp.get({ url: process.env.REACT_APP_API_URL + "/s/height" });
-    //var req = await axios.get(process.env.REACT_APP_API_URL + "/height")
-    return req.data;
+    var res = await CapacitorHttp.get({ url: process.env.REACT_APP_API_URL + "/s/height" });
+    return handleResponse(res);
 }
 
 export async function checkBalanceAndTransactions(rAddrs, cAddrs, height) {
@@ -29,14 +26,8 @@ export async function checkBalanceAndTransactions(rAddrs, cAddrs, height) {
         data: data
     };
 
-    var req = await CapacitorHttp.post(options);
-
-    // var req = await axios.post(process.env.REACT_APP_API_URL + "/checkdata", { 
-    //     receiveAddresses: rAddrs,
-    //     changeAddresses: cAddrs,
-    //     fromHeight: height
-    // });
-    return req.data;
+    var res = await CapacitorHttp.post(options);
+    return handleResponse(res);
 }
 
 export async function checkBalances(addresses) {
@@ -46,9 +37,8 @@ export async function checkBalances(addresses) {
         data: addresses
     };
 
-    var req = await CapacitorHttp.post(options);
-    //var req = await axios.post(process.env.REACT_APP_API_URL + "/balances", addresses);
-    return req.data;
+    var res = await CapacitorHttp.post(options);
+    return handleResponse(res);
 }
 
 export async function fetchUtxos(rAddrs, cAddrs, toType, subFromAmount, manualFee, value, scriptSize) {
@@ -67,18 +57,8 @@ export async function fetchUtxos(rAddrs, cAddrs, toType, subFromAmount, manualFe
         data: data
     };
 
-    var req = await CapacitorHttp.post(options);
-
-    // var req = await axios.post(process.env.REACT_APP_API_URL + "/utxos", { 
-    //     receiveAddresses: rAddrs,
-    //     changeAddresses: cAddrs,
-    //     type: toType,
-    //     feeFromAmount: subFromAmount,
-    //     explicitFee: manualFee,
-    //     amount: value,
-    //     outputScriptSize: scriptSize
-    // });
-    return req.data;
+    var res = await CapacitorHttp.post(options);
+    return handleResponse(res);
 }
 
 export async function fetchConsolidateUtxos(rAddrs, cAddrs, toType, scriptSize) {
@@ -97,18 +77,8 @@ export async function fetchConsolidateUtxos(rAddrs, cAddrs, toType, scriptSize) 
         data: data
     };
 
-    var req = await CapacitorHttp.post(options);
-
-    // var req = await axios.post(process.env.REACT_APP_API_URL + "/consolidate", { 
-    //     receiveAddresses: rAddrs,
-    //     changeAddresses: cAddrs,
-    //     type: toType,
-    //     feeFromAmount: true,
-    //     explicitFee: 0,
-    //     amount: 0,
-    //     outputScriptSize: scriptSize
-    // });
-    return req.data;
+    var res = await CapacitorHttp.post(options);
+    return handleResponse(res);
 }
 
 export async function checkAddresses(rAddrs, cAddrs) {
@@ -123,14 +93,8 @@ export async function checkAddresses(rAddrs, cAddrs) {
         data: data
     };
 
-    var req = await CapacitorHttp.post(options);
-
-    // var req = await axios.post(process.env.REACT_APP_API_URL + "/scanaddresses", { 
-    //     receiveAddresses: rAddrs,
-    //     changeAddresses: cAddrs,
-    //     fromHeight: 0
-    // });
-    return req.data;
+    var res = await CapacitorHttp.post(options);
+    return handleResponse(res);
 }
 
 export async function checkVaults(rAddrs, cAddrs) {
@@ -145,14 +109,8 @@ export async function checkVaults(rAddrs, cAddrs) {
         data: data
     };
 
-    var req = await CapacitorHttp.post(options);
-
-    // var req = await axios.post(process.env.REACT_APP_API_URL + "/scanvaults", { 
-    //     receiveAddresses: rAddrs,
-    //     changeAddresses: cAddrs,
-    //     fromHeight: 0
-    // });
-    return req.data;
+    var res = await CapacitorHttp.post(options);
+    return handleResponse(res);
 }
 
 export async function broadcastTransaction(txHex) {
@@ -165,14 +123,19 @@ export async function broadcastTransaction(txHex) {
         data: data
     };
 
-    var req = await CapacitorHttp.post(options);
-
-    // var req = await axios.post(process.env.REACT_APP_API_URL + "/sendtx", { 
-    //     hex: txHex
-    // });
-    return req.data;
+    var res = await CapacitorHttp.post(options);
+    return handleResponse(res);
 }
 
+function handleResponse(response) {
+    if (response.status !== 200) {
+        var err = new Error();
+        err.response = response;
+        throw err;
+    }
+    
+    return response.data;
+}
 
 export function validatePassword(pw, pwConfirm) {
     if (pw !== pwConfirm) {
