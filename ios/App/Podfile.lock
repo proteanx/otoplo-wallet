@@ -1,33 +1,33 @@
 PODS:
-  - Capacitor (5.0.3):
+  - Capacitor (5.1.0):
     - CapacitorCordova
-  - CapacitorApp (5.0.2):
+  - CapacitorApp (5.0.5):
     - Capacitor
-  - CapacitorClipboard (5.0.2):
+  - CapacitorClipboard (5.0.5):
     - Capacitor
-  - CapacitorCommunitySqlite (5.0.0-beta.2):
+  - CapacitorCommunitySqlite (5.0.4):
     - Capacitor
     - SQLCipher
     - ZIPFoundation
-  - CapacitorCordova (5.0.3)
-  - CapacitorDialog (5.0.2):
+  - CapacitorCordova (5.1.0)
+  - CapacitorDialog (5.0.5):
     - Capacitor
-  - CapacitorMlkitBarcodeScanning (5.0.0):
+  - CapacitorMlkitBarcodeScanning (5.0.2):
     - Capacitor
-    - GoogleMLKit/BarcodeScanning (= 3.2.0)
-  - CapacitorPreferences (5.0.2):
+    - GoogleMLKit/BarcodeScanning (= 4.0.0)
+  - CapacitorPreferences (5.0.5):
     - Capacitor
-  - CapacitorSplashScreen (5.0.2):
+  - CapacitorSplashScreen (5.0.5):
     - Capacitor
   - GoogleDataTransport (9.2.3):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleMLKit/BarcodeScanning (3.2.0):
+  - GoogleMLKit/BarcodeScanning (4.0.0):
     - GoogleMLKit/MLKitCore
-    - MLKitBarcodeScanning (~> 2.2.0)
-  - GoogleMLKit/MLKitCore (3.2.0):
-    - MLKitCommon (~> 8.0.0)
+    - MLKitBarcodeScanning (~> 3.0.0)
+  - GoogleMLKit/MLKitCore (4.0.0):
+    - MLKitCommon (~> 9.0.0)
   - GoogleToolboxForMac/DebugUtils (2.3.2):
     - GoogleToolboxForMac/Defines (= 2.3.2)
   - GoogleToolboxForMac/Defines (2.3.2)
@@ -48,34 +48,31 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilitiesComponents (1.1.0):
     - GoogleUtilities/Logger
-  - GTMSessionFetcher/Core (1.7.2)
-  - MLImage (1.0.0-beta3)
-  - MLKitBarcodeScanning (2.2.0):
-    - MLKitCommon (~> 8.0)
-    - MLKitVision (~> 4.2)
-  - MLKitCommon (8.0.0):
+  - GTMSessionFetcher/Core (2.3.0)
+  - MLImage (1.0.0-beta4)
+  - MLKitBarcodeScanning (3.0.0):
+    - MLKitCommon (~> 9.0)
+    - MLKitVision (~> 5.0)
+  - MLKitCommon (9.0.0):
     - GoogleDataTransport (~> 9.0)
     - GoogleToolboxForMac/Logger (~> 2.1)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
     - GoogleUtilities/UserDefaults (~> 7.0)
     - GoogleUtilitiesComponents (~> 1.0)
-    - GTMSessionFetcher/Core (~> 1.1)
-    - Protobuf (~> 3.12)
-  - MLKitVision (4.2.0):
+    - GTMSessionFetcher/Core (< 3.0, >= 1.1)
+  - MLKitVision (5.0.0):
     - GoogleToolboxForMac/Logger (~> 2.1)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
-    - GTMSessionFetcher/Core (~> 1.1)
-    - MLImage (= 1.0.0-beta3)
-    - MLKitCommon (~> 8.0)
-    - Protobuf (~> 3.12)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.1)
+    - MLImage (= 1.0.0-beta4)
+    - MLKitCommon (~> 9.0)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
   - nanopb/decode (2.30909.0)
   - nanopb/encode (2.30909.0)
   - PromisesObjC (2.2.0)
-  - Protobuf (3.23.2)
   - SQLCipher (4.5.4):
     - SQLCipher/standard (= 4.5.4)
   - SQLCipher/common (4.5.4)
@@ -108,7 +105,6 @@ SPEC REPOS:
     - MLKitVision
     - nanopb
     - PromisesObjC
-    - Protobuf
     - SQLCipher
     - ZIPFoundation
 
@@ -133,28 +129,27 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/splash-screen"
 
 SPEC CHECKSUMS:
-  Capacitor: 304a960e431f9e6f78556554ca71c41c1b2b9680
-  CapacitorApp: 28fef1fd75b2b3686e875216806fb8416d421097
-  CapacitorClipboard: a198f34cd0ed4d1777da5edae13445227ec05be3
-  CapacitorCommunitySqlite: 37b8581231e1fce8c7b842dff2902dad12c8f780
-  CapacitorCordova: def732a63679698df6fb392bbe6d269a0b61e937
-  CapacitorDialog: 01c49f7f4b37e7ad59e38fd317a6e5f006f23cdc
-  CapacitorMlkitBarcodeScanning: 4c106aa2a7858a4776a955003c0591c05a47edaa
-  CapacitorPreferences: 0ad8838944f900284900d9647d9b0145c89ca27d
-  CapacitorSplashScreen: bd2a056394ba0b8807e7bb3e746424f67c426e03
+  Capacitor: 8dc4a61c44f6644fe4e0b61ad01ff175f9b538e5
+  CapacitorApp: 9d91a5a400e4ad8cafe66a02cc9d8073c864d7bb
+  CapacitorClipboard: 17f9418206e9de5673fac29c815f11c8d618e81c
+  CapacitorCommunitySqlite: e233665bd5f282483dd7fda96868002d003bdf58
+  CapacitorCordova: 5984fa700842461518ecd320905c7f19ecdd590b
+  CapacitorDialog: bea25662cdd38bc87476cefbab875198495657b8
+  CapacitorMlkitBarcodeScanning: 318b32e33b3fb25453961090dcb62ed1062a92e9
+  CapacitorPreferences: c4764b0b3beae28c625c87b1a80504d9b24947ec
+  CapacitorSplashScreen: e563abf6d590bfe0269515ccc9d8bc03c41f32e9
   GoogleDataTransport: f0308f5905a745f94fb91fea9c6cbaf3831cb1bd
-  GoogleMLKit: 0017a6a8372e1a182139b9def4d89be5d87ca5a7
+  GoogleMLKit: 2bd0dc6253c4d4f227aad460f69215a504b2980e
   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
   GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
   GoogleUtilitiesComponents: 679b2c881db3b615a2777504623df6122dd20afe
-  GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
-  MLImage: 489dfec109f21da8621b28d476401aaf7a0d4ff4
-  MLKitBarcodeScanning: d92fe1911001ec36870162c5a0eb206f612b7169
-  MLKitCommon: f6da6c5659618c070b50a80db01248ebe2964175
-  MLKitVision: 96c96571190b7f63eddf4a12068ce8a8689e0d2c
+  GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
+  MLImage: 7bb7c4264164ade9bf64f679b40fb29c8f33ee9b
+  MLKitBarcodeScanning: 04e264482c5f3810cb89ebc134ef6b61e67db505
+  MLKitCommon: c1b791c3e667091918d91bda4bba69a91011e390
+  MLKitVision: 8baa5f46ee3352614169b85250574fde38c36f49
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
-  Protobuf: 5df4e9d2abd535fb675c68d171f6bc87983d27a6
   SQLCipher: 905b145f65f349f26da9e60a19901ad24adcd381
   ZIPFoundation: d170fa8e270b2a32bef9dcdcabff5b8f1a5deced
 
