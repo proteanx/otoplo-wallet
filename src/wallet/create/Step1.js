@@ -39,7 +39,7 @@ export default function Step1({ words, handleSeed }) {
       <Card.Body>
         <p>Your wallet is accessible by a seed phrase. Please store your 12-word seed in a safe location.</p>
         It is important to keep your seed phrase secure and not share it with anyone.
-        If someone else gets access to your seed phrase, they can access to your wallet and steal your funds.
+        If someone else gets access to your seed phrase, they can access your wallet and steal your funds.
         {content}
       </Card.Body>
       <div>
