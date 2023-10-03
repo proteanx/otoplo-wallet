@@ -69,7 +69,7 @@ function createWindow () {
       // Open the DevTools.
     win.webContents.openDevTools({ mode: 'detach' });
   } else {
-    win.loadFile("build/index.html").then(() => {
+    win.loadFile("dist/index.html").then(() => {
       win.setTitle("Otoplo Wallet " + app.getVersion());
     });
   }

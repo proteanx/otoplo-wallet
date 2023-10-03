@@ -1,10 +1,10 @@
 @font-face {
     font-family: "Source Code Pro";
-    src: url('../fonts/SourceCodePro-Regular.woff2');
+    src: url('../assets/fonts/SourceCodePro-Regular.woff2');
 }
 @font-face {
     font-family: "Ubuntu";
-    src: url('../fonts/Ubuntu-Regular.woff2');
+    src: url('../assets/fonts/Ubuntu-Regular.woff2');
 }
 
 body {
@@ -125,6 +125,11 @@ body.barcode-scanning-active {
     --bs-btn-disabled-border-color: #FF1E6F;
 }
 
+.table-dark {
+    --bs-table-bg: #202224;
+    --bs-table-striped-bg: #2c3034;
+}
+
 .form-check-input {
     cursor: pointer;
 }
@@ -171,6 +176,11 @@ a.ps-menu-button {
 
 .center {
     text-align: center;
+    margin: 0 auto;
+}
+
+.right {
+    text-align: right;
     margin: 0 auto;
 }
 

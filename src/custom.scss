@@ -1,6 +1,9 @@
 
-@import '~bootstrap/scss/bootstrap.scss';
-@import '~@fortawesome/fontawesome-free/scss/fontawesome';
-@import '~@fortawesome/fontawesome-free/scss/regular';
-@import '~@fortawesome/fontawesome-free/scss/brands';
-@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~bootstrap/scss/bootstrap';
+
+// for FontAwesome v6+
+$fa-font-path: '~fontawesome/webfonts';
+@import '~fontawesome/scss/fontawesome';
+@import '~fontawesome/scss/regular';
+@import '~fontawesome/scss/brands';
+@import '~fontawesome/scss/solid';

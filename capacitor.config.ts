@@ -3,7 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.otoplo.owallet',
   appName: 'Otoplo Wallet',
-  webDir: 'build',
+  webDir: 'dist',
   backgroundColor: "#282d33",
   server: {
     androidScheme: 'https'
