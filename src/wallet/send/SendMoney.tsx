@@ -13,7 +13,7 @@ import Table from 'react-bootstrap/esm/Table';
 import Alert from 'react-bootstrap/Alert';
 import { BarcodeFormat, BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
 import { Dialog } from '@capacitor/dialog';
-import { Container } from 'react-bootstrap';
+import { Container, Dropdown } from 'react-bootstrap';
 import { Balance, WalletKeys } from '../../models/wallet.entities';
 import { TxTokenType, isValidNexaAddress } from '../../utils/wallet.utils';
 import { isPasswordValid } from '../../utils/seed.utils';
@@ -21,6 +21,7 @@ import { dbProvider } from '../../providers/db.provider';
 import { TransactionEntity } from '../../models/db.entities';
 import Transaction from 'nexcore-lib/types/lib/transaction/transaction';
 import { broadcastTransaction, buildAndSignTransferTransaction } from '../../utils/tx.utils';
+import { QrScanner } from '@yudiel/react-qr-scanner';
 
 export default function SendMoney({ balance, keys }: { balance: Balance, keys: WalletKeys}) {
   const [scannedAddress, setScannedAddress] = useState("");
@@ -42,6 +43,9 @@ export default function SendMoney({ balance, keys }: { balance: Balance, keys: W
   const [txMsg, setTxMsg] = useState<ReactElement | string>("");
   const [txSpinner, setTxSpinner] = useState<ReactElement | string>("");
 
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+  const [selectedDevice, setSelectedDevice] = useState<string>('');
+
   const pwRef = useRef<HTMLInputElement>(null);
   const toAddressRef = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);;
@@ -55,9 +59,9 @@ export default function SendMoney({ balance, keys }: { balance: Balance, keys: W
     console.error(err);
   }
 
-  const handleScan = (data: { text: string }) => {
-    if (data != null && data.text) {
-      var uri = new URL(data.text);
+  const handleScan = (data: string) => {
+    if (data) {
+      var uri = new URL(data);
       var address = uri.protocol + uri.pathname;
       var amount = uri.searchParams.get('amount');
 
@@ -233,6 +237,8 @@ export default function SendMoney({ balance, keys }: { balance: Balance, keys: W
 
   const scanQR = async () => {
     if (!isMobilePlatform()) {
+      let devices = await navigator.mediaDevices.enumerateDevices();
+      setDevices(devices.filter(d => d.kind == 'videoinput'));
       setShowScanDialog(true);
       return;
     }
@@ -298,9 +304,7 @@ export default function SendMoney({ balance, keys }: { balance: Balance, keys: W
     document.getElementById('barcode-scanning-modal')!.classList.add('barcode-scanning-modal-hidden');
     document.querySelector('body')!.classList.remove('barcode-scanning-active');
     await BarcodeScanner.stopScan();
-    if (barcode) {
-      handleScan({ text: barcode });
-    }
+    handleScan(barcode);
   }
 
   return (
@@ -389,7 +393,15 @@ export default function SendMoney({ balance, keys }: { balance: Balance, keys: W
           <Modal.Title>Scan QR</Modal.Title>
         </Modal.Header>
         <Modal.Body className='center'>
-          <QrReader style={{height: 200, width: 250}} constraints={{video: { facingMode: "environment" }}} onError={scanError} onScan={handleScan}/>
+          <QrScanner containerStyle={{ width: 250, marginBottom: "5px" }} constraints={{ deviceId: selectedDevice, facingMode: 'environment' }} onError={scanError} onDecode={handleScan}/>
+          <Dropdown className="d-inline mx-2" onSelect={eventKey => setSelectedDevice(eventKey ?? '')}>
+            <Dropdown.Toggle id="dropdown-autoclose-true">
+              Select Camera Device
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              { devices.map((d, i) => <Dropdown.Item key={i} eventKey={d.deviceId}>{d.label}</Dropdown.Item>) }
+            </Dropdown.Menu>
+          </Dropdown>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowScanDialog(false)}>Close</Button>
