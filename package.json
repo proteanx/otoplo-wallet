@@ -4,7 +4,7 @@
   "description": "Cross-platform light wallet for Nexa",
   "author": "Otoplo",
   "private": true,
-  "main": "dist/electron.js",
+  "main": "dist/main.js",
   "homepage": "./",
   "dependencies": {
     "@capacitor-community/sqlite": "^5.0.4",
@@ -28,10 +28,9 @@
     "crypto-js": "^4.1.1",
     "dexie": "^3.2.3",
     "dexie-react-hooks": "^1.1.1",
-    "electron": "^26.2.4",
     "events": "^3.3.0",
     "js-big-decimal": "^2.0.4",
-    "nexcore-lib": "^3.0.0-beta.6",
+    "nexcore-lib": "^3.0.0-beta.7",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.0",
     "react-dom": "^18.2.0",
@@ -46,9 +45,9 @@
     "test": "vitest",
     "build": "del-cli ./dist && tsc && vite build",
     "build:mobile": "env-cmd -f .env.mobile npm run build",
-    "build:desktop": "env-cmd -f .env.desktop npm run build",
+    "build:desktop": "del-cli ./out && env-cmd -f .env.desktop npm run build && tsc -p tsconfig.electron.json",
     "electron-dev": "set APP_DEV=true && electron .",
-    "make:dekstop": "npm run build:desktop && electron-forge package",
+    "make:desktop": "npm run build:desktop && electron-forge package",
     "make:osx": "npm run build:desktop && electron-forge make --arch=universal"
   },
   "eslintConfig": {
@@ -56,20 +55,8 @@
       "BigInt": true
     }
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
-    "@capacitor/assets": "^3.0.0",
+    "@capacitor/assets": "^3.0.1",
     "@capacitor/cli": "^5.1.0",
     "@electron-forge/cli": "^6.0.4",
     "@electron-forge/maker-dmg": "^6.1.1",
@@ -78,11 +65,12 @@
     "@types/react-dom": "^18.2.8",
     "@vitejs/plugin-react-swc": "^3.4.0",
     "del-cli": "^5.1.0",
+    "electron": "^26.2.4",
     "env-cmd": "^10.1.0",
     "sass": "^1.68.0",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
-    "vite-plugin-node-polyfills": "^0.14.1",
+    "vite-plugin-node-polyfills": "^0.15.0",
     "vite-plugin-svgr": "^4.1.0",
     "vite-tsconfig-paths": "^4.2.1"
   }

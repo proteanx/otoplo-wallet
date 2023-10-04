@@ -7,6 +7,7 @@ module.exports = {
       "^\\/public$",
       "^\\/src$",
       "^\\/node_modules$",
+      "^\\/electron$",
       "^\\/ios$",
       "^\\/android$",
       "^\\/assets$",
@@ -14,10 +15,11 @@ module.exports = {
       "^\\/[.].+",
       "^\\/.+\.md$",
       "^\\/config-overrides\.js$",
-      "^\\/forge\.config\.js$",
+      "^\\/forge\.config\.cjs$",
       "^\\/capacitor\.config\.ts$",
-      "^\\/tsconfig\.json$",
-      "^\\/vite\.config\.ts$"
+      "^\\/tsconfig.*\.json$",
+      "^\\/vite\.config\.ts$",
+      "^\\/index\.html$"
     ],
     osxSign: {
       platform: "darwin",
