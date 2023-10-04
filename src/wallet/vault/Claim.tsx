@@ -45,6 +45,8 @@ export default function Claim({ eta, balance, vaultKey, vaultAddress, vaultInfo,
 
   const pwRef = useRef<HTMLInputElement>(null);
 
+  let vaultBalance = BigInt(balance.confirmed) + BigInt(balance.unconfirmed);
+
   const closePasswordDialog = () => {
     setPwErr("");
     setTxSpinner("");
@@ -60,7 +62,7 @@ export default function Claim({ eta, balance, vaultKey, vaultAddress, vaultInfo,
     setSpinner(<Spinner animation="border" size="sm"/>);
 
     let toAddress = nexKeys.receiveKeys[nexKeys.receiveKeys.length - 1].address;
-    let vaultKeys = {receiveKeys: [{key: vaultKey, address: vaultAddress}], changeKeys: []};
+    let vaultKeys: WalletKeys = {receiveKeys: [{key: vaultKey, address: vaultAddress, balance: vaultBalance.toString()}], changeKeys: []};
 
     let templateData: TxTemplateData = {
       templateScript: getHodlTemplate(),
@@ -123,7 +125,7 @@ export default function Claim({ eta, balance, vaultKey, vaultAddress, vaultInfo,
     }
   }
 
-  let disabled = spinner !== "" || eta !== "" || (BigInt(balance.confirmed) + BigInt(balance.unconfirmed) < BigInt(nexcore.Transaction.DUST_AMOUNT));
+  let disabled = spinner !== "" || eta !== "" || vaultBalance < BigInt(nexcore.Transaction.DUST_AMOUNT);
 
   return (
     <>
