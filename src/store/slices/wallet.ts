@@ -47,11 +47,11 @@ export const fetchBalance = createAsyncThunk('wallet/fetchBalance', async (_, th
     let rootState = thunkAPI.getState() as RootState;
     let state = rootState.wallet;
 
-    let rAddrs = state.keys.receiveKeys.map(k => k.address);
-    let cAddrs = state.keys.changeKeys.map(k => k.address);
+    let walletIdx = await StorageProvider.getWalletIndexes();
+    let wKeys = WalletUtils.generateKeysAndAddresses(state.accountKey!, 0, walletIdx.rIndex, 0, walletIdx.cIndex);
 
-    let balances = await WalletUtils.fetchTotalBalance(rAddrs.concat(cAddrs));
-    return WalletUtils.sumBlance(balances);
+    let balances = await WalletUtils.fetchTotalBalance(wKeys.receiveKeys.concat(wKeys.changeKeys));
+    return { balance: WalletUtils.sumBlance(balances), keys: wKeys };
 });
 
 export const syncWallet = createAsyncThunk('wallet/syncWallet', async (_, thunkAPI) => {
@@ -88,15 +88,15 @@ export const syncWallet = createAsyncThunk('wallet/syncWallet', async (_, thunkA
     let walletKeys = state.keys;
     let balance: Balance = { confirmed: "0", unconfirmed: "0" };
     if (updateBalance) {
+        updateWalletKeys = true;
         let walletIdx = await StorageProvider.getWalletIndexes();
         if (walletIdx.rIndex < rIdx || walletIdx.cIndex < cIdx) {
-            updateWalletKeys = true;
-            walletKeys = WalletUtils.generateKeysAndAddresses(state.accountKey as HDPrivateKey, 0, rIdx, 0, cIdx);
+            walletKeys = WalletUtils.generateKeysAndAddresses(state.accountKey!, 0, rIdx, 0, cIdx);
             await StorageProvider.saveWalletIndexes({ rIndex: rIdx, cIndex: cIdx });
+        } else {
+            walletKeys = WalletUtils.generateKeysAndAddresses(state.accountKey!, 0, walletIdx.rIndex, 0, walletIdx.cIndex);
         }
-        let rAddrs = walletKeys.receiveKeys.map(k => k.address);
-        let cAddrs = walletKeys.changeKeys.map(k => k.address);
-        let balances = await WalletUtils.fetchTotalBalance(rAddrs.concat(cAddrs));
+        let balances = await WalletUtils.fetchTotalBalance(walletKeys.receiveKeys.concat(walletKeys.changeKeys));
         balance = WalletUtils.sumBlance(balances);
     }
 
@@ -123,10 +123,11 @@ export const walletSlice = createSlice({
     extraReducers(builder) {
         builder
             .addCase(fetchBalance.fulfilled, (state, action) => {
-                state.balance = action.payload;
+                state.balance = action.payload.balance;
+                state.keys = action.payload.keys;
             })
             .addCase(fetchBalance.rejected, (_state, action) => {
-                console.log(action.error.message);
+                console.log(action.error);
             })
             .addCase(syncWallet.fulfilled, (state, action) => {
                 let payload = action.payload

@@ -4,7 +4,7 @@ import { rostrumProvider } from '../providers/rostrum.provider';
 import Transaction from 'nexcore-lib/types/lib/transaction/transaction';
 import PrivateKey from 'nexcore-lib/types/lib/privatekey';
 import { WalletKeys } from '../models/wallet.entities';
-import { parseAmountWithDecimals } from './functions';
+import { isNullOrEmpty, parseAmountWithDecimals } from './functions';
 import Script from 'nexcore-lib/types/lib/script/script';
 import PublicKey from 'nexcore-lib/types/lib/publickey';
 
@@ -65,7 +65,13 @@ export async function buildAndSignConsolidateTransaction(keys: WalletKeys, toCha
 }
 
 async function populateNexaInputsAndChange(tx: Transaction, keys: WalletKeys, options: TxOptions) {
-    let allKeys = keys.receiveKeys.concat(keys.changeKeys);
+    let rKeys = keys.receiveKeys.filter(k => BigInt(k.balance) > 0n);
+    let cKeys = keys.changeKeys.filter(k => BigInt(k.balance) > 0n);
+    let allKeys = rKeys.concat(cKeys);
+    if (isNullOrEmpty(allKeys)) {
+        throw new Error("Not enough Nexa balance.");
+    }
+
     let usedKeys = new Map<string, PrivateKey>();
 
     if (options.manuelFee) {

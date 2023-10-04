@@ -21,6 +21,7 @@ export interface HodlStatus {
 export interface AddressKey {
     key: HDPrivateKey;
     address: string;
+    balance: string;
 }
 
 export interface Balance {

@@ -45,12 +45,12 @@ export function generateKeysAndAddresses(accountKey: HDPrivateKey, fromRIndex: n
     for (let index = fromRIndex; index < rIndex; index++) {
         let k = receive.deriveChild(index, false);
         let addr = k.getPublicKey().toAddress().toString();
-        rKeys.push({key: k, address: addr});
+        rKeys.push({key: k, address: addr, balance: "0"});
     }
     for (let index = fromCIndex; index < cIndex; index++) {
         let k = change.deriveChild(index, false);
         let addr = k.getPublicKey().toAddress().toString();
-        cKeys.push({key: k, address: addr});
+        cKeys.push({key: k, address: addr, balance: "0"});
     }
     return {receiveKeys: rKeys, changeKeys: cKeys};
 }
@@ -101,10 +101,16 @@ async function isAddressUsed(address: string) {
     }
 }
 
-export async function fetchTotalBalance(addresses: string[]) {
+async function getAndUpdateAddressKeyBalance(key: AddressKey) {
+    let balance = await rostrumProvider.getBalance(key.address);
+    key.balance = (BigInt(balance.confirmed) + BigInt(balance.unconfirmed)).toString();
+    return balance;
+}
+
+export async function fetchTotalBalance(keys: AddressKey[]) {
     let promises: Promise<Balance>[] = [];
-    addresses.forEach(address => {
-        let b = rostrumProvider.getBalance(address);
+    keys.forEach(key => {
+        let b = getAndUpdateAddressKeyBalance(key);
         promises.push(b);
     });
 

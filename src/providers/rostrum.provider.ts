@@ -10,7 +10,7 @@ export class RostrumProvider {
     private client: ElectrumClient;
 
     public constructor(params: RostrumParams) {
-        this.client = new ElectrumClient("com.otoplo.wallet", "1.4.3", params.host, params.port, params.scheme, undefined, 5000, true);
+        this.client = new ElectrumClient("com.otoplo.wallet", "1.4.3", params.host, params.port, params.scheme, 30*1000, 5000, true);
     }
 
     public async getVersion() {
