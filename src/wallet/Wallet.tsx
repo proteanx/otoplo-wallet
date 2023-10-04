@@ -8,7 +8,7 @@ import WalletLoader from './WalletLoader';
 import Vault from './vault/Vault';
 import { useAppDispatch } from '../store/hooks';
 import StorageProvider from '../providers/storage.provider';
-import { fetchBalance, fetchHeightAndPrice, setAccountKey, setKeys, syncWallet } from '../store/slices/wallet.slice';
+import { fetchBalance, fetchHeightAndPrice, setAccountKey, setKeys, setSync, syncWallet } from '../store/slices/wallet.slice';
 import { discoverWallet, generateAccountKey, generateKeysAndAddresses, generateMasterKey } from '../utils/wallet.utils';
 import { rostrumProvider } from '../providers/rostrum.provider';
 import { discoverVaults, saveHodlAddress } from '../utils/vault.utils';
@@ -33,6 +33,7 @@ export default function Wallet({ seed, item }: WalletProps) {
     let recoverVaults = false;
     let indexes = await StorageProvider.getWalletIndexes();
     if (indexes.rIndex === 0) {
+      dispatch(setSync());
       recoverVaults = import.meta.env.VITE_IS_HODL_ACTIVE === "true" && (await StorageProvider.getHodlState()).idx === 0;
       indexes = await discoverWallet(accountKey);
     }

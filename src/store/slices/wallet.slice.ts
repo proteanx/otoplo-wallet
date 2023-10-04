@@ -121,6 +121,9 @@ export const walletSlice = createSlice({
         setKeys: (state, action: PayloadAction<WalletKeys>) => {
             state.keys = action.payload;
         },
+        setSync: (state) => {
+            state.sync = true;
+        }
     },
     extraReducers(builder) {
         builder
@@ -143,6 +146,7 @@ export const walletSlice = createSlice({
                     state.keys = payload.walletKeys;
                 }
                 state.sync = false;
+                StorageProvider.setLastCheck();
                 StorageProvider.removeLock(StorageProvider.SYNC_LOCK);
             })
             .addCase(syncWallet.rejected, (state, action) => {
@@ -160,7 +164,7 @@ export const walletSlice = createSlice({
     },
 });
 
-export const { setAccountKey, setKeys } = walletSlice.actions;
+export const { setAccountKey, setKeys, setSync } = walletSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const walletState = (state: RootState) => state.wallet;

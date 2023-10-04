@@ -43,6 +43,7 @@ export function decryptMnemonic(encSeed: string, password: string) {
 }
 
 export function encryptAndStoreMnemonic(phrase: string, password: string) {
+    StorageProvider.setVersionCode("2");
     var encMn = CryptoJS.AES.encrypt(phrase, CryptoJS.SHA512(password).toString()).toString();
     var encMnHex = Buffer.from(encMn).toString('hex');
     StorageProvider.saveEncryptedSeed(encMnHex);
