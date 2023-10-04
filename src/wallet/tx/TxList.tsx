@@ -32,7 +32,7 @@ export default function TxList() {
   const wallet = useAppSelector(walletState);
 
   let pagination: string | ReactElement = "";
-  let paginationItems = [];
+  let paginationItems: ReactElement[] = [];
   if (txCount) {
     var pages = Math.ceil(txCount / pageSize);
     if (pages > 1) {

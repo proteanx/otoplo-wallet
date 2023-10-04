@@ -97,6 +97,7 @@ export default function Wallet({ seed, item }: WalletProps) {
   
       return () => clearInterval(myInterval);
     }
+    return;
   }, [seed]);
 
   useEffect(() => {

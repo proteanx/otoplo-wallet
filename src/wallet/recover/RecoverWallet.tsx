@@ -1,4 +1,4 @@
-import React, { useRef, useState, Dispatch, SetStateAction } from 'react'
+import React, { useRef, useState, Dispatch, SetStateAction, ReactElement } from 'react'
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
@@ -25,7 +25,7 @@ export default function RecoverWallet({ cancelRecover, setDecSeed }: { cancelRec
   const refs = useRef<React.RefObject<HTMLInputElement>[]>([]);
   refs.current = [...Array(12)].map((_, i) => refs.current[i] ?? React.createRef<HTMLInputElement>());
 
-  let content = [], columns = [];
+  let content: ReactElement[] = [], columns: ReactElement[] = [];
   for (let i = 0; i < 12; i++) {
     columns.push(
       <Col key ={i}>{i+1}<Form.Control ref={refs.current[i]} type="text"/></Col>
@@ -38,7 +38,7 @@ export default function RecoverWallet({ cancelRecover, setDecSeed }: { cancelRec
   }
 
   const next = () => {
-    let words = [];
+    let words: string[] = [];
     for (let i = 0; i < refs.current.length; i++) {
       if (!refs.current[i].current || !refs.current[i].current!.value) {
         return;
