@@ -61,7 +61,7 @@ export default function WalletData() {
 
   return (
     <>
-      <Card.Title>Available</Card.Title>
+      <Card.Title>Available {wallet.sync && <i className="fas fa-sync fa-spin"/>}</Card.Title>
       <Card.Title>{val.confirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA
         <div style={{fontSize: "0.9rem", fontWeight: "400"}}>
           {wallet.price.compareTo(new bigDecimal(0)) > 0 && "($"+wallet.price.multiply(val.confirmed).round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()+")"}

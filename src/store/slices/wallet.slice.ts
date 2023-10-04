@@ -15,13 +15,15 @@ export interface WalletState {
     balance: Balance;
     height: number;
     price: bigDecimal;
+    sync: boolean;
 }
   
 const initialState: WalletState = {
     keys: {receiveKeys: [], changeKeys: []},
     balance: {confirmed: "0", unconfirmed: "0"},
     height: 0,
-    price: new bigDecimal(0)
+    price: new bigDecimal(0),
+    sync: false
 }
 
 export const fetchHeightAndPrice = createAsyncThunk('wallet/fetchHeightAndPrice', async (_, thunkAPI) => {
@@ -129,6 +131,9 @@ export const walletSlice = createSlice({
             .addCase(fetchBalance.rejected, (_state, action) => {
                 console.log(action.error);
             })
+            .addCase(syncWallet.pending, (state) => {
+                state.sync = true;
+            })
             .addCase(syncWallet.fulfilled, (state, action) => {
                 let payload = action.payload
                 if (payload.updateBalance) {
@@ -137,10 +142,12 @@ export const walletSlice = createSlice({
                 if (payload.updateKeys) {
                     state.keys = payload.walletKeys;
                 }
+                state.sync = false;
                 StorageProvider.removeLock(StorageProvider.SYNC_LOCK);
             })
-            .addCase(syncWallet.rejected, (_state, action) => {
+            .addCase(syncWallet.rejected, (state, action) => {
                 console.log(action.error.message);
+                state.sync = false;
                 StorageProvider.removeLock(StorageProvider.SYNC_LOCK);
             })
             .addCase(fetchHeightAndPrice.fulfilled, (state, action) => {
