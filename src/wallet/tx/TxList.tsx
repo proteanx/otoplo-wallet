@@ -7,7 +7,7 @@ import { txUpdateTrigger } from '../../app/App';
 import { dbProvider } from '../../providers/db.provider';
 import { TransactionEntity } from '../../models/db.entities';
 import { useAppSelector } from '../../store/hooks';
-import { walletState } from '../../store/slices/wallet';
+import { walletState } from '../../store/slices/wallet.slice';
 
 export default function TxList() {
   const [pageNum, setPageNum] = useState(1);

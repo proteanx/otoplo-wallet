@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import CreateVault from './CreateVault';
-import { currentTimestamp, isNullOrEmpty } from '../../utils/functions';
+import { currentTimestamp, isNullOrEmpty } from '../../utils/common.utils';
 import VaultEntry from './VaultEntry';
 import RecoverVault from './RecoverVault';
 import Archive from './Archive';
@@ -16,7 +16,7 @@ import { fetchAllVaultsBalances, getHodlVaults, getVaultBlockAndIndex } from '..
 import StorageProvider from '../../providers/storage.provider';
 import { dbProvider } from '../../providers/db.provider';
 import { useAppSelector } from '../../store/hooks';
-import { walletState } from '../../store/slices/wallet';
+import { walletState } from '../../store/slices/wallet.slice';
 
 export interface VaultInfo {
   address: string;

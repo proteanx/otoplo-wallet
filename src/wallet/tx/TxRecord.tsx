@@ -1,7 +1,7 @@
 import bigDecimal from 'js-big-decimal';
 import Confirmation from './Confirmation';
 import { TransactionEntity } from '../../models/db.entities';
-import { isMobileScreen } from '../../utils/functions';
+import { isMobileScreen } from '../../utils/common.utils';
 
 export default function TxRecord({ record, height }: { record: TransactionEntity, height: number }) {
   let isMobile = isMobileScreen();

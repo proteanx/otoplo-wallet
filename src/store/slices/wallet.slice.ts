@@ -7,7 +7,7 @@ import StorageProvider from "../../providers/storage.provider";
 import { TransactionEntity } from "../../models/db.entities";
 import bigDecimal from "js-big-decimal";
 import { rostrumProvider } from "../../providers/rostrum.provider";
-import { getNexaPrice } from "../../utils/functions";
+import { getNexaPrice } from "../../utils/common.utils";
 
 export interface WalletState {
     accountKey?: HDPrivateKey;

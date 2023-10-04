@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 // import loadingReducer from './slices/loading';
-import walletReducer from './slices/wallet';
+import walletReducer from './slices/wallet.slice';
 // import tokensReducer from './slices/tokens';
 
 export const store = configureStore({

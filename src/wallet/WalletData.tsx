@@ -9,9 +9,9 @@ import nex from '../assets/img/nex.svg';
 import Consolidate from './send/Consolidate';
 import { Clipboard } from '@capacitor/clipboard';
 import { ListGroup, Offcanvas } from 'react-bootstrap';
-import { isMobileScreen } from '../utils/functions';
+import { isMobileScreen } from '../utils/common.utils';
 import { useAppSelector } from '../store/hooks';
-import { walletState } from '../store/slices/wallet';
+import { walletState } from '../store/slices/wallet.slice';
 import SendMoney from './send/SendMoney';
 import { scanForNewAddresses } from '../utils/wallet.utils';
 

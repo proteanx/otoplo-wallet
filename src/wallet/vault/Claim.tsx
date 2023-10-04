@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
-import { currentTimestamp, parseAmountWithDecimals } from '../../utils/functions';
+import { currentTimestamp, parseAmountWithDecimals } from '../../utils/common.utils';
 import bigDecimal from 'js-big-decimal';
 import Table from 'react-bootstrap/esm/Table';
 import Alert from 'react-bootstrap/Alert';

@@ -4,7 +4,7 @@ import { rostrumProvider } from '../providers/rostrum.provider';
 import Transaction from 'nexcore-lib/types/lib/transaction/transaction';
 import PrivateKey from 'nexcore-lib/types/lib/privatekey';
 import { WalletKeys } from '../models/wallet.entities';
-import { isNullOrEmpty, parseAmountWithDecimals } from './functions';
+import { isNullOrEmpty, parseAmountWithDecimals } from './common.utils';
 import Script from 'nexcore-lib/types/lib/script/script';
 import PublicKey from 'nexcore-lib/types/lib/publickey';
 

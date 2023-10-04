@@ -4,7 +4,7 @@ import { DesktopDB } from "../db/desktop.db";
 import { MobileDB } from "../db/mobile.db";
 import { ContractEntity, TransactionEntity } from "../models/db.entities";
 import { Balance } from "../models/wallet.entities";
-import { isMobilePlatform } from "../utils/functions";
+import { isMobilePlatform } from "../utils/common.utils";
 
 class DBProvider {
 

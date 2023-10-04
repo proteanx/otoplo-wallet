@@ -1,12 +1,12 @@
 import { Menu, MenuItem, Sidebar, useProSidebar } from 'react-pro-sidebar';
 import WalletBackup from '../wallet/WalletBackup';
 import Footer from './Footer';
-import { isMobileScreen } from '../utils/functions';
+import { isMobileScreen } from '../utils/common.utils';
 import nex from '../assets/img/nex.svg';
 import otoplo from '../assets/img/otoplo-logo-white.svg';
 import bigDecimal from 'js-big-decimal';
 import { useAppSelector } from '../store/hooks';
-import { walletState } from '../store/slices/wallet';
+import { walletState } from '../store/slices/wallet.slice';
 
 interface SideMenuProps {
   activeItem: string;

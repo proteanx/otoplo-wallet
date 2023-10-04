@@ -9,7 +9,7 @@ import nex from '../../assets/img/nex.svg';
 import { QRCode } from 'react-qrcode-logo';
 import Claim from './Claim';
 import { ListGroup, Offcanvas } from 'react-bootstrap';
-import { isMobileScreen } from '../../utils/functions';
+import { isMobileScreen } from '../../utils/common.utils';
 import { WalletKeys } from '../../models/wallet.entities';
 import { VaultInfo } from './Vault';
 import HDPrivateKey from 'nexcore-lib/types/lib/hdprivatekey';

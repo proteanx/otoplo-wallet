@@ -1,5 +1,5 @@
 import { Preferences } from "@capacitor/preferences";
-import { currentTimestamp, isMobilePlatform } from "../utils/functions";
+import { currentTimestamp, isMobilePlatform } from "../utils/common.utils";
 import { HodlStatus, TxStatus, WalletIndexes } from "../models/wallet.entities";
 import { RostrumParams, RostrumScheme } from "../models/rostrum.entities";
 

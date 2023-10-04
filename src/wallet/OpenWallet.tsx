@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import CreateWallet from './create/CreateWallet';
 import RecoverWallet from './recover/RecoverWallet';
-import { isMobilePlatform } from '../utils/functions';
+import { isMobilePlatform } from '../utils/common.utils';
 import { decryptMnemonic, isMnemonicValid } from '../utils/seed.utils';
 
 export default function OpenWallet({ encSeed, setDecSeed }: { encSeed: string, setDecSeed: Dispatch<SetStateAction<string>> }) {

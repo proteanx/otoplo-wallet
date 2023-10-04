@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
-import { isMobileScreen } from '../../utils/functions';
+import { isMobileScreen } from '../../utils/common.utils';
 import { clearLocalWallet } from '../../utils/wallet.utils';
 import { encryptAndStoreMnemonic, isMnemonicValid, validatePassword } from '../../utils/seed.utils';
 

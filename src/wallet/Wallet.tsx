@@ -8,7 +8,7 @@ import WalletLoader from './WalletLoader';
 import Vault from './vault/Vault';
 import { useAppDispatch } from '../store/hooks';
 import StorageProvider from '../providers/storage.provider';
-import { fetchBalance, fetchHeightAndPrice, setAccountKey, setKeys, syncWallet } from '../store/slices/wallet';
+import { fetchBalance, fetchHeightAndPrice, setAccountKey, setKeys, syncWallet } from '../store/slices/wallet.slice';
 import { discoverWallet, generateAccountKey, generateKeysAndAddresses, generateMasterKey } from '../utils/wallet.utils';
 import { rostrumProvider } from '../providers/rostrum.provider';
 import { discoverVaults, saveHodlAddress } from '../utils/vault.utils';

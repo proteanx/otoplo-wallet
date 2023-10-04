@@ -7,7 +7,7 @@ import * as Bip39 from 'bip39';
 import NexCore from 'nexcore-lib';
 import bigDecimal from "js-big-decimal";
 import { ITXHistory, ITXInput, ITXOutput } from "../models/rostrum.entities";
-import { currentTimestamp, isNullOrEmpty } from "./functions";
+import { currentTimestamp, isNullOrEmpty } from "./common.utils";
 import { TransactionEntity, TxEntityState } from "../models/db.entities";
 
 export enum TxTokenType {

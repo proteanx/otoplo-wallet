@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/esm/Row';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Step3 from './Step3';
-import { isMobileScreen } from '../../utils/functions';
+import { isMobileScreen } from '../../utils/common.utils';
 
 export default function Step2({ words, goBack, handleSeed }: { words: string[], goBack: () => void, handleSeed: () => void }) {
   let isMobile = isMobileScreen();

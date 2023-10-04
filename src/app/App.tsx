@@ -9,7 +9,7 @@ import Wallet from '../wallet/Wallet';
 import CreateWallet from '../wallet/create/CreateWallet';
 import OpenWallet from '../wallet/OpenWallet';
 import RecoverWallet from '../wallet/recover/RecoverWallet';
-import { currentTimestamp, isMobilePlatform, isMobileScreen } from '../utils/functions';
+import { currentTimestamp, isMobilePlatform, isMobileScreen } from '../utils/common.utils';
 import { useProSidebar } from 'react-pro-sidebar';
 import otoplo from '../assets/img/otoplo-logo-white.svg'
 import { SQLiteHook, useSQLite } from 'react-sqlite-hook';
