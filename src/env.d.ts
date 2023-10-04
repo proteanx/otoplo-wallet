@@ -1,4 +1,9 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-svgr/client" />
 
-declare module 'react-qr-scanner';
+interface ImportMetaEnv {
+    readonly VITE_PRICE_URL: string;
+    readonly VITE_VERSION: string;
+    readonly VITE_IS_DESKTOP: string;
+    readonly VITE_IS_HODL_ACTIVE: string;
+}

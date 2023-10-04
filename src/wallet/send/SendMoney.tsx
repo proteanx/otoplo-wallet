@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
-import QrReader from 'react-qr-scanner';
 import { currentTimestamp, getRawAmount, isMobilePlatform, parseAmountWithDecimals } from '../../utils/common.utils';
 import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 import bigDecimal from 'js-big-decimal';

@@ -42,15 +42,14 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "del-cli ./dist && tsc && vite build",
     "serve": "vite preview",
     "test": "vitest",
+    "build": "del-cli ./dist && tsc && vite build",
+    "build:mobile": "env-cmd -f .env.mobile npm run build",
+    "build:desktop": "env-cmd -f .env.desktop npm run build",
     "electron-dev": "set APP_DEV=true && electron .",
-    "package": "npm run build && electron-forge package",
-    "package-only": "electron-forge package",
-    "build-osx": "npm run build && electron-forge make --arch=universal",
-    "make-osx": "electron-forge make --arch=universal",
-    "build-mobile": "env-cmd -f .env.mobile npm run build"
+    "make:dekstop": "npm run build:desktop && electron-forge package",
+    "make:osx": "npm run build:desktop && electron-forge make --arch=universal"
   },
   "eslintConfig": {
     "globals": {
