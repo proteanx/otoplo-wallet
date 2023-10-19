@@ -18,5 +18,5 @@
     "types": ["node"],
     "outDir": "dist"
   },
-  "include": ["electron", "electron/env.d.ts"]
+  "include": ["electron"]
 }

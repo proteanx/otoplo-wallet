@@ -1,4 +1,4 @@
-import { Menu, MenuItem, Sidebar, useProSidebar } from 'react-pro-sidebar';
+import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
 import WalletBackup from '../wallet/WalletBackup';
 import Footer from './Footer';
 import { isMobileScreen } from '../utils/common.utils';
@@ -11,30 +11,30 @@ import { walletState } from '../store/slices/wallet.slice';
 interface SideMenuProps {
   activeItem: string;
   setActiveItem: (item: string) => void;
+  sidebarToggled: boolean;
+  setSidebarToggled: (toggle: boolean) => void;
 }
 
-export default function SideMenu({ activeItem, setActiveItem }: SideMenuProps) {
+export default function SideMenu({ activeItem, setActiveItem, sidebarToggled, setSidebarToggled }: SideMenuProps) {
   let isMobile = isMobileScreen();
 
   const reload = () => {
     window.location.reload();
   }
 
-  const { collapseSidebar, collapsed } = useProSidebar();
-
   const setItemAndCollapse = (item: string) => {
     setActiveItem(item);
     if (isMobile) {
-      collapseSidebar(true);
+      setSidebarToggled(false);
     }
   }
 
   const wallet = useAppSelector(walletState);
 
   return (
-    <Sidebar collapsedWidth='0' transitionDuration={100} width={isMobile ? '100%' : undefined} defaultCollapsed={isMobile} rootStyles={{border: 'none'}} backgroundColor='#343a40'>
+    <Sidebar width={isMobile ? '100%' : undefined} toggled={sidebarToggled} breakPoint={isMobile ? 'always' : undefined} rootStyles={{border: 'none'}} backgroundColor='#343a40'>
       <div className={isMobile ? 'pt-3' : 'pt-3 center'} style={isMobile ? {cursor: 'pointer', paddingLeft: '20px'} : {cursor: 'pointer'}}>
-        {isMobile && <i className="fa-solid fa-bars menu-btn" onClick={() => collapseSidebar(!collapsed)}/> }
+        {isMobile && <i className="fa-solid fa-bars menu-btn" onClick={() => setSidebarToggled(!sidebarToggled)}/> }
         <img alt="Nexa" src={otoplo} onClick={reload} className="header-image"/>
       </div>
       <hr/>
