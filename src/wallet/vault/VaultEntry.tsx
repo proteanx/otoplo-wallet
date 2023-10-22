@@ -9,7 +9,7 @@ import nex from '../../assets/img/nex.svg';
 import { QRCode } from 'react-qrcode-logo';
 import Claim from './Claim';
 import { ListGroup, Offcanvas } from 'react-bootstrap';
-import { isMobileScreen } from '../../utils/common.utils';
+import { copy, isMobileScreen } from '../../utils/common.utils';
 import { WalletKeys } from '../../models/wallet.entities';
 import { VaultInfo } from './Vault';
 import HDPrivateKey from 'nexcore-lib/types/lib/hdprivatekey';
@@ -18,8 +18,6 @@ import { dbProvider } from '../../providers/db.provider';
 
 interface VaultEntryProps {
   keys: WalletKeys;
-  entry: number;
-  copy: (value: string, elemId: string) => Promise<void>;
   heightVal: number;
   price: bigDecimal;
   vault: VaultInfo;
@@ -28,7 +26,7 @@ interface VaultEntryProps {
   openTx: (address: string) => void
 }
 
-export default function VaultEntry({ keys, entry, copy, heightVal, price, vault, vaultAccountKey, refreshVaults, openTx }: VaultEntryProps) {
+export default function VaultEntry({ keys, heightVal, price, vault, vaultAccountKey, refreshVaults, openTx }: VaultEntryProps) {
   let isMobile = isMobileScreen();
 
   const [showQR, setShowQR] = useState(false);
@@ -72,8 +70,7 @@ export default function VaultEntry({ keys, entry, copy, heightVal, price, vault,
                 <i className="mx-1 fa-solid fa-qrcode cursor" title='QR code' onClick={() => setShowQR(true)}/>
                 <div className='center' style={isMobile ? {width: '95%'} : {width: '70%'}} >                    
                   <span className='text-monospace nx'>{vaultAddress}</span>
-                  <i className="fa-regular fa-copy ms-1 cursor" aria-hidden="true" title='copy' onClick={() => copy(vaultAddress, "copy_v_" + entry)}/>
-                  <i id={"copy_v_" + entry} className="mx-1 fa fa-check nx hidden"/>
+                  <i className="fa-regular fa-copy ms-1 cursor" aria-hidden="true" title='copy' onClick={() => copy(vaultAddress)}/>
                 </div>
               </div>
               <div className='mt-2'>

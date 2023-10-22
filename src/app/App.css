@@ -273,6 +273,10 @@ code, .text-monospace {
     vertical-align: middle;
 }
 
+.confirmed {
+    color: rgb(19, 195, 19) !important;
+}
+
 .outgoing {
     color: red !important;
 }
@@ -313,4 +317,32 @@ code, .text-monospace {
     border: 1px solid #FF1E6F;
     color: #FF1E6F;
     margin-right: 20px;
+}
+
+.mobile-tx-row {
+    cursor: pointer;
+}
+
+.mobile-tx-row:active > td {
+    background-color: var(--bs-table-striped-bg);
+}
+
+.smaller {
+    font-size: smaller;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.larger {
+    font-size: larger;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
 }

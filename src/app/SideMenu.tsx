@@ -32,7 +32,7 @@ export default function SideMenu({ activeItem, setActiveItem, sidebarToggled, se
   const wallet = useAppSelector(walletState);
 
   return (
-    <Sidebar width={isMobile ? '100%' : undefined} toggled={sidebarToggled} breakPoint={isMobile ? 'always' : undefined} rootStyles={{border: 'none'}} backgroundColor='#343a40'>
+    <Sidebar width={isMobile ? '100%' : undefined} toggled={sidebarToggled} breakPoint={isMobile ? 'all' : undefined} rootStyles={{border: 'none'}} backgroundColor='#343a40'>
       <div className={isMobile ? 'pt-3' : 'pt-3 center'} style={isMobile ? {cursor: 'pointer', paddingLeft: '20px'} : {cursor: 'pointer'}}>
         {isMobile && <i className="fa-solid fa-bars menu-btn" onClick={() => setSidebarToggled(!sidebarToggled)}/> }
         <img alt="Nexa" src={otoplo} onClick={reload} className="header-image"/>

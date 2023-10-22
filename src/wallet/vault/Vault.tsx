@@ -9,7 +9,6 @@ import VaultEntry from './VaultEntry';
 import RecoverVault from './RecoverVault';
 import Archive from './Archive';
 import VaultTx from './VaultTx';
-import { Clipboard } from '@capacitor/clipboard';
 import { Balance } from '../../models/wallet.entities';
 import HDPrivateKey from 'nexcore-lib/types/lib/hdprivatekey';
 import { fetchAllVaultsBalances, getHodlVaults, getVaultBlockAndIndex } from '../../utils/vault.utils';
@@ -92,14 +91,6 @@ export default function Vault({ vaultAccountKey }: { vaultAccountKey: HDPrivateK
     }
   }
 
-  const copy = async (value: string, elemId: string) => {
-    await Clipboard.write({ string: value });
-    document.getElementById(elemId)!.classList.remove("hidden");
-    setTimeout(() => {
-      document.getElementById(elemId)!.classList.add("hidden");
-    }, 1000);
-  }
-
   const openTx = (address: string) => {
     setVaultTx(address);
     setShowTx(true);
@@ -144,7 +135,7 @@ export default function Vault({ vaultAccountKey }: { vaultAccountKey: HDPrivateK
       <div className="my-1 pt-3 center text-white">
         <Card.Title>My Vaults</Card.Title>
       </div>
-      { vaults?.map((hv, i) => <VaultEntry key={i} keys={wallet.keys} entry={i} copy={copy} heightVal={wallet.height} price={wallet.price} vault={hv} vaultAccountKey={vaultAccountKey} refreshVaults={refreshVaults} openTx={openTx}/>) }
+      { vaults?.map((hv, i) => <VaultEntry key={i} keys={wallet.keys} heightVal={wallet.height} price={wallet.price} vault={hv} vaultAccountKey={vaultAccountKey} refreshVaults={refreshVaults} openTx={openTx}/>) }
     </>
   )
 }

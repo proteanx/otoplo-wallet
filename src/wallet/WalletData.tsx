@@ -7,9 +7,8 @@ import bigDecimal from 'js-big-decimal';
 import { QRCode } from 'react-qrcode-logo';
 import nex from '../assets/img/nex.svg';
 import Consolidate from './send/Consolidate';
-import { Clipboard } from '@capacitor/clipboard';
 import { ListGroup, Offcanvas } from 'react-bootstrap';
-import { isMobileScreen } from '../utils/common.utils';
+import { copy, isMobileScreen } from '../utils/common.utils';
 import { useAppSelector } from '../store/hooks';
 import { walletState } from '../store/slices/wallet.slice';
 import SendMoney from './send/SendMoney';
@@ -44,14 +43,6 @@ export default function WalletData() {
     });
   }
 
-  const copy = async (value: string) => {
-    await Clipboard.write({ string: value });
-    document.getElementById("copy")!.classList.remove("hidden");
-    setTimeout(() => {
-      document.getElementById("copy")!.classList.add("hidden");
-    }, 1000);
-  }
-
   let val = {confirmed: new bigDecimal(wallet.balance.confirmed).divide(new bigDecimal(100), 2), unconfirmed: new bigDecimal(wallet.balance.unconfirmed).divide(new bigDecimal(100), 2)}
   if (val.unconfirmed.compareTo(new bigDecimal(0)) < 0) {
     val.confirmed = val.confirmed.add(val.unconfirmed);
@@ -77,7 +68,6 @@ export default function WalletData() {
         <div>                    
           <span className='text-monospace nx'>{mainAddr}</span>
           <i className="fa-regular fa-copy ms-1 cursor" aria-hidden="true" title='copy' onClick={() => copy(mainAddr)}/>
-          <i id="copy" className="mx-1 fa fa-check nx hidden"/>
         </div>
       </div>
       { isMobile ? (

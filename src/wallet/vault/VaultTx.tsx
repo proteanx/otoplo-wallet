@@ -38,7 +38,7 @@ export default function VaultTx({ heightVal, closeTx, vaultAddress }: VaultTxPro
           { spinner !== "" ? (
             <div className='center'>{spinner} Loading...</div>
           ) : err === "" ? (
-            <Table borderless responsive striped className='text-white' variant='dark'>
+            <Table borderless responsive className='text-white' variant='dark'>
               <tbody>
                 { transactions?.map((tx, i) => <TxRecord key={i} record={tx} height={heightVal}/>) }
               </tbody>
