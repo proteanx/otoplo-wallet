@@ -6,7 +6,6 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import { currentTimestamp, parseAmountWithDecimals } from '../../utils/common.utils';
 import bigDecimal from 'js-big-decimal';
-import Table from 'react-bootstrap/esm/Table';
 import Alert from 'react-bootstrap/Alert';
 import { Balance, WalletKeys } from '../../models/wallet.entities';
 import HDPrivateKey from 'nexcore-lib/types/lib/hdprivatekey';
@@ -17,6 +16,7 @@ import { dbProvider } from '../../providers/db.provider';
 import { TransactionEntity } from '../../models/db.entities';
 import nexcore from 'nexcore-lib';
 import { TxTemplateData, broadcastTransaction, buildAndSignConsolidateTransaction } from '../../utils/tx.utils';
+import { Table } from 'react-bootstrap';
 
 interface ClaimProps {
   eta: string;

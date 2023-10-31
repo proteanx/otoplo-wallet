@@ -5,7 +5,6 @@ import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import Spinner from 'react-bootstrap/Spinner';
 import InputGroup from 'react-bootstrap/InputGroup';
-import Table from 'react-bootstrap/esm/Table';
 import bigDecimal from 'js-big-decimal';
 import { currentTimestamp, getRawAmount, parseAmountWithDecimals } from '../../utils/common.utils';
 import { Balance, WalletKeys } from '../../models/wallet.entities';
@@ -17,6 +16,7 @@ import { isPasswordValid } from '../../utils/seed.utils';
 import { dbProvider } from '../../providers/db.provider';
 import { TransactionEntity } from '../../models/db.entities';
 import { broadcastTransaction, buildAndSignTransferTransaction } from '../../utils/tx.utils';
+import { Table } from 'react-bootstrap';
 
 interface CreateVaultProps {
   keys: WalletKeys;

@@ -8,11 +8,10 @@ import { currentTimestamp, getRawAmount, isMobilePlatform, parseAmountWithDecima
 import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 import bigDecimal from 'js-big-decimal';
 import nexcore from 'nexcore-lib';
-import Table from 'react-bootstrap/esm/Table';
 import Alert from 'react-bootstrap/Alert';
 import { BarcodeFormat, BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
 import { Dialog } from '@capacitor/dialog';
-import { Container, Dropdown } from 'react-bootstrap';
+import { Container, Dropdown, Table } from 'react-bootstrap';
 import { Balance, WalletKeys } from '../../models/wallet.entities';
 import { TxTokenType, isValidNexaAddress } from '../../utils/wallet.utils';
 import { isPasswordValid } from '../../utils/seed.utils';
