@@ -2,6 +2,7 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Placeholder from 'react-bootstrap/Placeholder';
+import nex from '../assets/img/nex.svg';
 
 export default function WalletLoader() {
   return (
@@ -10,27 +11,11 @@ export default function WalletLoader() {
         <Card.Body>
           <Row>
             <Col className='center'>
-              <Card.Title>Available</Card.Title>
+              <Card.Title className='mb-4'><img width={20} src={nex} alt=''/> Nexa</Card.Title>
               <Placeholder as={Card.Title} animation="glow">
                 <Placeholder xs={5} size="lg"/>
               </Placeholder>
-              <div className="my-3">
-                Pending
-                <div>
-                  <Placeholder as={Card.Text} animation="glow">
-                    <Placeholder xs={5}/>
-                  </Placeholder>
-                </div>
-              </div>
-              <div className="my-3">
-                Receiving Address
-                <div>                    
-                  <Placeholder as={Card.Text} animation="glow">
-                    <Placeholder xs={8} size="lg"/>
-                  </Placeholder>
-                </div>
-              </div>
-              <Placeholder as={Card.Text} animation="glow">
+              <Placeholder className='pt-4' as={Card.Text} animation="glow">
                 <Placeholder.Button xs={2} />
               </Placeholder>
             </Col>

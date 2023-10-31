@@ -53,7 +53,7 @@ export default function WalletBackup() {
     <>
       <MenuItem prefix={<i className="fa fa-file-shield"></i>} onClick={() => setShowPwSeed(true)}>Backup Seed</MenuItem>
 
-      <Modal show={showPwSeed} onHide={() => setShowPwSeed(false)} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showPwSeed} onHide={() => setShowPwSeed(false)} backdrop="static" keyboard={false} centered>
         <Modal.Header closeButton={true}>
           <Modal.Title>Backup Seed</Modal.Title>
         </Modal.Header>
@@ -73,7 +73,7 @@ export default function WalletBackup() {
         </Modal.Footer>
       </Modal>
 
-      <Modal className='center' show={showSeed} onHide={() => setShowSeed(false)} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' className='center' show={showSeed} onHide={() => setShowSeed(false)} backdrop="static" keyboard={false} centered>
         <Modal.Header closeButton={true}>
           <Modal.Title>Backup Seed</Modal.Title>
         </Modal.Header>

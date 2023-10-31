@@ -34,7 +34,7 @@ export default function TxRecord({ record, height }: { record: TransactionEntity
 
   return (
     <>
-      <tr className={isMobile ? 'tr-border mobile-tx-row' : 'tr-border'} onClick={() => setShowDetails(true)}>
+      <tr className='tr-border tx-row' onClick={() => setShowDetails(true)}>
         { isMobile || 
           <td className='center va td-min'>
             <Confirmation record={record} height={height}/>
@@ -46,9 +46,8 @@ export default function TxRecord({ record, height }: { record: TransactionEntity
             {typeTxt}
           </td>
         ) : (
-          <td className='va' style={{wordBreak: 'break-all'}}>
-            <div className='url' ><a href={"https://explorer.nexa.org/tx/"  + record.txIdem} target='_blank'>{record.txIdem}</a></div>
-            <div>{(incoming ? '' : "Sent to: ") + record.payTo}</div>
+          <td className='va small' style={{wordBreak: 'break-all'}}>
+            <div>{(incoming ? '' : "Sent to: ") + truncateStringMiddle(record.payTo, 55)}</div>
           </td>
         )}
         <td className='va right' style={{whiteSpace: 'nowrap'}}>

@@ -125,9 +125,23 @@ body.barcode-scanning-active {
     --bs-btn-disabled-border-color: #FF1E6F;
 }
 
+.btn {
+    font-size: smaller;
+}
+
+.act-btn { 
+   display: inline-block;
+   text-align: center;
+}
+
+.act-btn span { 
+    color: #FF1E6F;
+    font-size: smaller;
+ }
+
 .table-dark {
-    --bs-table-bg: #202224;
-    --bs-table-striped-bg: #2c3034;
+    --bs-table-bg: #282d33;
+    --bs-table-striped-bg: #232b35;
 }
 
 .form-check-input {
@@ -199,8 +213,7 @@ footer {
 }
 
 .bg-custom-card {
-    background-color: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: #282d33;
 }
 
 .tr-border td {
@@ -319,11 +332,15 @@ code, .text-monospace {
     margin-right: 20px;
 }
 
-.mobile-tx-row {
+.tx-row {
     cursor: pointer;
 }
 
-.mobile-tx-row:active > td {
+.tx-row:active > td {
+    background-color: var(--bs-table-striped-bg);
+}
+
+.tx-row:hover > td {
     background-color: var(--bs-table-striped-bg);
 }
 

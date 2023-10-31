@@ -85,7 +85,6 @@ export default function CreateVault({ keys, balance, vaultAccountKey, heightVal,
 
   const changeDate = () => {
     if (dateRef.current && heightVal > 0 && dateRef.current.valueAsNumber > Date.now()) {
-      console.log(dateRef.current.valueAsNumber)
       let estimateBlocks = Math.ceil((dateRef.current.valueAsNumber - Date.now()) / 1000 / 60 / 2);
       var block = heightVal + estimateBlocks;
       setHodlBlock(block);
@@ -127,7 +126,6 @@ export default function CreateVault({ keys, balance, vaultAccountKey, heightVal,
     setSpinner(<Spinner animation="border" size="sm"/>);
     try {
       let tx = await buildAndSignTransferTransaction(keys, address, getRawAmount(nexAmount, 2));
-      console.log(tx.serialize())
       setFinalTx(tx);
       setToAddress(address);
       setTotalFee(tx.getFee());
@@ -151,7 +149,7 @@ export default function CreateVault({ keys, balance, vaultAccountKey, heightVal,
             txIdem: res,
             txId: finalTx.id,
             payTo: toAddress,
-            value: nexAmount.toString(),
+            value: getRawAmount(nexAmount, 2),
             time: currentTimestamp(),
             height: 0,
             extraGroup: "",
@@ -199,7 +197,7 @@ export default function CreateVault({ keys, balance, vaultAccountKey, heightVal,
     <>
       <Button onClick={() => setShowCreateDialog(true)}>Create</Button>
 
-      <Modal show={showCreateDialog} onHide={cancelCreateDialog} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showCreateDialog} onHide={cancelCreateDialog} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton>
           <Modal.Title>Create Vault</Modal.Title>
         </Modal.Header>
@@ -236,7 +234,7 @@ export default function CreateVault({ keys, balance, vaultAccountKey, heightVal,
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showPwSeed} onHide={closePasswordDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showPwSeed} onHide={closePasswordDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton={true}>
           <Modal.Title>Confirmation</Modal.Title>
         </Modal.Header>

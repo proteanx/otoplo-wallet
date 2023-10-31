@@ -94,7 +94,7 @@ export default function RecoverWallet({ cancelRecover, setDecSeed }: { cancelRec
         <Button className='mx-1' onClick={next}>Next</Button>
       </div>
 
-    <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={show} onHide={handleClose} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton={true}>
         <Modal.Title>Protect wallet</Modal.Title>
       </Modal.Header>

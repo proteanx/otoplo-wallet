@@ -22,7 +22,7 @@ import Transaction from 'nexcore-lib/types/lib/transaction/transaction';
 import { broadcastTransaction, buildAndSignTransferTransaction } from '../../utils/tx.utils';
 import { QrScanner } from '@yudiel/react-qr-scanner';
 
-export default function SendMoney({ balance, keys }: { balance: Balance, keys: WalletKeys}) {
+export default function SendMoney({ balance, keys, isMobile }: { balance: Balance, keys: WalletKeys, isMobile?: boolean}) {
   const [scannedAddress, setScannedAddress] = useState("");
   const [scannedAmount, setScannedAmount] = useState("");
   const [showScanDialog, setShowScanDialog] = useState(false);
@@ -143,9 +143,9 @@ export default function SendMoney({ balance, keys }: { balance: Balance, keys: W
         setFinalTx(tx);
         setTxSize(new bigDecimal(tx._estimateSize()));
         setToAddress(toAddressRef.current.value);
-        setTxAmount(new bigDecimal(tx.outputs[0].satoshis).divide(new bigDecimal(100), 2));
-        setTotalFee(new bigDecimal(tx._getUnspentValue()).divide(new bigDecimal(100), 2));
-        setRequiredFee(new bigDecimal(tx._estimateSize() * 3).divide(new bigDecimal(100), 2));
+        setTxAmount(new bigDecimal(sendAmount));
+        setTotalFee(new bigDecimal(tx._getUnspentValue()));
+        setRequiredFee(new bigDecimal(tx._estimateSize() * 3));
         setShowPwSeed(true);
       } catch (e) {
         if (e instanceof Error) {
@@ -308,9 +308,17 @@ export default function SendMoney({ balance, keys }: { balance: Balance, keys: W
 
   return (
     <>
-      <Button className='ms-2' onClick={() => setShowSendDialog(true)}>Send</Button>
+      { isMobile ? (
+        <div className='act-btn mx-3'>
+          <Button onClick={() => setShowSendDialog(true)}><i className="fa fa-upload"/></Button>
+          <br/>
+          <span>Send</span>
+        </div>
+      ) : (
+        <Button className='ms-2' onClick={() => setShowSendDialog(true)}><i className="fa fa-upload"/> Send</Button>
+      )}
 
-      <Modal show={showSendDialog} onHide={cancelSendDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showSendDialog} onHide={cancelSendDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton>
           <Modal.Title>Send Nexa</Modal.Title>
         </Modal.Header>
@@ -344,7 +352,7 @@ export default function SendMoney({ balance, keys }: { balance: Balance, keys: W
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showPwSeed} onHide={closePasswordDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showPwSeed} onHide={closePasswordDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton={true}>
           <Modal.Title>Confirmation</Modal.Title>
         </Modal.Header>
@@ -357,18 +365,18 @@ export default function SendMoney({ balance, keys }: { balance: Balance, keys: W
               </tr>
               <tr>
                 <td>Amount:</td>
-                <td>{txAmount.getPrettyValue()} NEXA</td>
+                <td>{parseAmountWithDecimals(txAmount.getValue(), 2)} NEXA</td>
               </tr>
               <tr>
                 <td>Fee:</td>
                 <td>
-                  <div>{totalFee.getPrettyValue()} NEXA</div>
-                  <div>(Recommended: {requiredFee.getPrettyValue()} NEXA, Size: {txSize.divide(new bigDecimal(1000), 3).getPrettyValue()} kB)</div>
+                  <div>{parseAmountWithDecimals(totalFee.getValue(), 2)} NEXA</div>
+                  <div>(Recommended: {parseAmountWithDecimals(requiredFee.getValue(), 2)} NEXA, Size: {txSize.divide(new bigDecimal(1000), 3).getPrettyValue()} kB)</div>
                 </td>
               </tr>
               <tr>
                 <td>Total:</td>
-                <td>{txAmount.add(totalFee).getPrettyValue()} NEXA</td>
+                <td>{parseAmountWithDecimals(txAmount.add(totalFee).getValue(), 2)} NEXA</td>
               </tr>
             </tbody>
           </Table>
@@ -387,7 +395,7 @@ export default function SendMoney({ balance, keys }: { balance: Balance, keys: W
         </Modal.Footer>
       </Modal>
 
-      <Modal size='sm' show={showScanDialog} onHide={() => setShowScanDialog(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' size='sm' show={showScanDialog} onHide={() => setShowScanDialog(false)} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton={true}>
           <Modal.Title>Scan QR</Modal.Title>
         </Modal.Header>

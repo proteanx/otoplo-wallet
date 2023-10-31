@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/esm/Table';
 import bigDecimal from 'js-big-decimal';
-import { QRCode } from 'react-qrcode-logo';
 import nex from '../assets/img/nex.svg';
 import Consolidate from './send/Consolidate';
 import { ListGroup, Offcanvas } from 'react-bootstrap';
-import { copy, isMobileScreen } from '../utils/common.utils';
+import { isMobileScreen } from '../utils/common.utils';
 import { useAppSelector } from '../store/hooks';
 import { walletState } from '../store/slices/wallet.slice';
 import SendMoney from './send/SendMoney';
 import { scanForNewAddresses } from '../utils/wallet.utils';
+import ReceiveMoney from './send/ReceiveMoney';
 
 export default function WalletData() {
   let isMobile = isMobileScreen();
 
   const [showOffCanvas, setShowOffCanvas] = useState(false);
   const [showAddrs, setShowAddrs] = useState(false);
-  const [showQR, setShowQR] = useState(false);
   const [scanMsg, setScanMsg] = useState("");
 
   const wallet = useAppSelector(walletState);
@@ -52,60 +51,52 @@ export default function WalletData() {
 
   return (
     <>
-      <Card.Title>Available {wallet.sync && <i className="fas fa-sync fa-spin"/>}</Card.Title>
+      <Card.Title className='mb-4'><img width={25} src={nex} alt=''/> Nexa {wallet.sync && <i className="fas fa-sync fa-spin"/>}</Card.Title>
       <Card.Title>{val.confirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA
         <div style={{fontSize: "0.9rem", fontWeight: "400"}}>
           {wallet.price.compareTo(new bigDecimal(0)) > 0 && "($"+wallet.price.multiply(val.confirmed).round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()+")"}
         </div>
       </Card.Title>
-      <div className="my-3">
-        Pending
-        <div>{val.unconfirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA</div>
-      </div>
-      <div className="my-3">
-        Receiving Address
-        <i className="mx-1 fa-solid fa-qrcode cursor" title='QR code' onClick={() => setShowQR(true)}/>
-        <div>                    
-          <span className='text-monospace nx'>{mainAddr}</span>
-          <i className="fa-regular fa-copy ms-1 cursor" aria-hidden="true" title='copy' onClick={() => copy(mainAddr)}/>
+      { val.unconfirmed.compareTo(new bigDecimal(0)) > 0 && 
+        <div className="my-2 smaller">
+          <i title='Pending' className="fa-regular fa-clock nx"/> {val.unconfirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA
         </div>
-      </div>
-      { isMobile ? (
-          <>
-            <SendMoney balance={wallet.balance} keys={wallet.keys}/>
-            <Consolidate nexKeys={wallet.keys} balance={wallet.balance}/>
-            <Button onClick={() => setShowOffCanvas(true)}><i className="fa-solid fa-ellipsis"></i></Button>
-
-            <Offcanvas show={showOffCanvas} onHide={() => setShowOffCanvas(false)} placement='bottom'>
-              <Offcanvas.Header>
-                <Offcanvas.Title className='center' style={{fontSize: "1.7rem"}}>Wallet Options</Offcanvas.Title>
-              </Offcanvas.Header>
-              <Offcanvas.Body className='center' style={{fontSize: "1.2rem"}}>
-                <ListGroup variant="flush">
-                  <ListGroup.Item onClick={() => setShowAddrs(true)} action>
-                    My Addresses
-                  </ListGroup.Item>
-                  <ListGroup.Item action onClick={scanMoreAddresses} disabled={scanMsg !== ''}>
-                    Scan More Addresses
-                  </ListGroup.Item>
-                </ListGroup>
-              </Offcanvas.Body>
-            </Offcanvas>
-          </>
-        ) : (
-          <>
-            <Button className='mx-2' variant="outline-primary" onClick={() => setShowAddrs(true)}>My Addresses</Button>
-            <Button variant="outline-primary" onClick={scanMoreAddresses} disabled={scanMsg !== ''}>Scan More Addresses</Button>
-            <SendMoney balance={wallet.balance} keys={wallet.keys}/>
-            <Consolidate nexKeys={wallet.keys} balance={wallet.balance}/>
-          </>
-        )
       }
+      <div className='pt-4'>
+        <SendMoney balance={wallet.balance} keys={wallet.keys} isMobile={isMobile}/>
+        <ReceiveMoney address={mainAddr} isMobile={isMobile}/>
+        <Consolidate nexKeys={wallet.keys} balance={wallet.balance} isMobile={isMobile}/>
+        { isMobile ? (
+          <div className='act-btn ms-3'>
+            <Button onClick={() => setShowOffCanvas(true)}><i className="fa-solid fa-ellipsis"/></Button>
+            <br/>
+            <span>More</span>
+          </div>
+        ) : (
+          <Button onClick={() => setShowOffCanvas(true)}><i className="fa-solid fa-ellipsis"/> More</Button>
+        )}
+
+        <Offcanvas data-bs-theme='dark' show={showOffCanvas} onHide={() => setShowOffCanvas(false)} placement='bottom'>
+          <Offcanvas.Header>
+            <Offcanvas.Title className='center' style={{fontSize: "1.7rem"}}>Wallet Options</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body className='center' style={{fontSize: "1.2rem"}}>
+            <ListGroup variant="flush">
+              <ListGroup.Item onClick={() => setShowAddrs(true)} action>
+                My Addresses
+              </ListGroup.Item>
+              <ListGroup.Item action onClick={scanMoreAddresses} disabled={scanMsg !== ''}>
+                Scan More Addresses
+              </ListGroup.Item>
+            </ListGroup>
+          </Offcanvas.Body>
+        </Offcanvas>
+      </div>
       <div className='mt-1'>
         {scanMsg}
       </div>
 
-      <Modal show={showAddrs} onHide={() => setShowAddrs(false)} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showAddrs} onHide={() => setShowAddrs(false)} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton>
           <Modal.Title>Receive Addresses</Modal.Title>
         </Modal.Header>
@@ -118,18 +109,6 @@ export default function WalletData() {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => setShowAddrs(false)}>Ok</Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal size='sm' show={showQR} onHide={() => setShowQR(false)} aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Address QR Code</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className='center'>
-          <QRCode value={mainAddr} size={200} logoImage={nex} logoWidth={35} logoPadding={1}/>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={() => setShowQR(false)}>Close</Button>
         </Modal.Footer>
       </Modal>
     </>

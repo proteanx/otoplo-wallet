@@ -13,6 +13,7 @@ export interface WalletState {
     accountKey?: HDPrivateKey;
     keys: WalletKeys;
     balance: Balance;
+    tokensBalance: Record<string, Balance>;
     height: number;
     price: bigDecimal;
     sync: boolean;
@@ -21,6 +22,7 @@ export interface WalletState {
 const initialState: WalletState = {
     keys: {receiveKeys: [], changeKeys: []},
     balance: {confirmed: "0", unconfirmed: "0"},
+    tokensBalance: {},
     height: 0,
     price: new bigDecimal(0),
     sync: false
@@ -53,7 +55,9 @@ export const fetchBalance = createAsyncThunk('wallet/fetchBalance', async (_, th
     let wKeys = WalletUtils.generateKeysAndAddresses(state.accountKey!, 0, walletIdx.rIndex, 0, walletIdx.cIndex);
 
     let balances = await WalletUtils.fetchTotalBalance(wKeys.receiveKeys.concat(wKeys.changeKeys));
-    return { balance: WalletUtils.sumBlance(balances), keys: wKeys };
+    let tokenBalances = wKeys.receiveKeys.concat(wKeys.changeKeys).map(k => k.tokensBalance);
+
+    return { balance: WalletUtils.sumBalance(balances), tokensBalance: WalletUtils.sumTokensBalance(tokenBalances), keys: wKeys };
 });
 
 export const syncWallet = createAsyncThunk('wallet/syncWallet', async (_, thunkAPI) => {
@@ -89,6 +93,7 @@ export const syncWallet = createAsyncThunk('wallet/syncWallet', async (_, thunkA
     let updateWalletKeys = false;
     let walletKeys = state.keys;
     let balance: Balance = { confirmed: "0", unconfirmed: "0" };
+    let tokensBalance: Record<string, Balance> = {};
     if (updateBalance) {
         updateWalletKeys = true;
         let walletIdx = await StorageProvider.getWalletIndexes();
@@ -99,7 +104,9 @@ export const syncWallet = createAsyncThunk('wallet/syncWallet', async (_, thunkA
             walletKeys = WalletUtils.generateKeysAndAddresses(state.accountKey!, 0, walletIdx.rIndex, 0, walletIdx.cIndex);
         }
         let balances = await WalletUtils.fetchTotalBalance(walletKeys.receiveKeys.concat(walletKeys.changeKeys));
-        balance = WalletUtils.sumBlance(balances);
+        let tokenBalances = walletKeys.receiveKeys.concat(walletKeys.changeKeys).map(k => k.tokensBalance);
+        balance = WalletUtils.sumBalance(balances);
+        tokensBalance = WalletUtils.sumTokensBalance(tokenBalances)
     }
 
     await Promise.all(txPromises);
@@ -108,7 +115,7 @@ export const syncWallet = createAsyncThunk('wallet/syncWallet', async (_, thunkA
         await StorageProvider.setTransactionsState({ height: Math.max(rData.lastHeight, cData.lastHeight) });
     }
 
-    return {updateBalance: updateBalance, updateKeys: updateWalletKeys, balance: balance, walletKeys: walletKeys};
+    return {updateBalance: updateBalance, updateKeys: updateWalletKeys, balance: balance, tokensBalance: tokensBalance, walletKeys: walletKeys};
 });
 
 export const walletSlice = createSlice({
@@ -129,6 +136,7 @@ export const walletSlice = createSlice({
         builder
             .addCase(fetchBalance.fulfilled, (state, action) => {
                 state.balance = action.payload.balance;
+                state.tokensBalance = action.payload.tokensBalance;
                 state.keys = action.payload.keys;
             })
             .addCase(fetchBalance.rejected, (_state, action) => {
@@ -141,6 +149,7 @@ export const walletSlice = createSlice({
                 let payload = action.payload
                 if (payload.updateBalance) {
                     state.balance = payload.balance;
+                    state.tokensBalance = action.payload.tokensBalance;
                 }
                 if (payload.updateKeys) {
                     state.keys = payload.walletKeys;

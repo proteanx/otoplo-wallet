@@ -62,7 +62,7 @@ export default function Claim({ eta, balance, vaultKey, vaultAddress, vaultInfo,
     setSpinner(<Spinner animation="border" size="sm"/>);
 
     let toAddress = nexKeys.receiveKeys[nexKeys.receiveKeys.length - 1].address;
-    let vaultKeys: WalletKeys = {receiveKeys: [{key: vaultKey, address: vaultAddress, balance: vaultBalance.toString()}], changeKeys: []};
+    let vaultKeys: WalletKeys = {receiveKeys: [{key: vaultKey, address: vaultAddress, balance: vaultBalance.toString(), tokensBalance: {}}], changeKeys: []};
 
     let templateData: TxTemplateData = {
       templateScript: getHodlTemplate(),
@@ -131,7 +131,7 @@ export default function Claim({ eta, balance, vaultKey, vaultAddress, vaultInfo,
     <>
       <Button disabled={disabled} className='mx-2' onClick={claimVault}>{spinner !== "" ? spinner : "Claim"}</Button>
       
-      <Modal show={showPwSeed} onHide={closePasswordDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showPwSeed} onHide={closePasswordDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirmation</Modal.Title>
         </Modal.Header>
@@ -174,7 +174,7 @@ export default function Claim({ eta, balance, vaultKey, vaultAddress, vaultInfo,
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showError} onHide={() => setShowError(false)} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showError} onHide={() => setShowError(false)} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton={true}>
           <Modal.Title>Error</Modal.Title>
         </Modal.Header>

@@ -57,7 +57,7 @@ export default function RecoverVault({ vaultAccountKey, keys, refreshVaults }: R
     <>
       <Button className='mx-2' variant="outline-primary" onClick={() => setShowRecoverDialog(true)}>Recover</Button>
 
-      <Modal show={showRecoverDialog} onHide={cancelRecoverDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showRecoverDialog} onHide={cancelRecoverDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton={spinner === ""}>
           <Modal.Title>Recover Vault</Modal.Title>
         </Modal.Header>

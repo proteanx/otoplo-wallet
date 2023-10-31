@@ -70,7 +70,7 @@ export default function VaultEntry({ keys, heightVal, price, vault, vaultAccount
                 <i className="mx-1 fa-solid fa-qrcode cursor" title='QR code' onClick={() => setShowQR(true)}/>
                 <div className='center' style={isMobile ? {width: '95%'} : {width: '70%'}} >                    
                   <span className='text-monospace nx'>{vaultAddress}</span>
-                  <i className="fa-regular fa-copy ms-1 cursor" aria-hidden="true" title='copy' onClick={() => copy(vaultAddress)}/>
+                  <i className="fa-regular fa-copy ms-1 cursor" aria-hidden="true" title='copy' onClick={() => copy(vaultAddress, 'top-center')}/>
                 </div>
               </div>
               <div className='mt-2'>
@@ -79,10 +79,11 @@ export default function VaultEntry({ keys, heightVal, price, vault, vaultAccount
                   <b>{val.confirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA @ {"$"+price.multiply(val.confirmed).round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()}</b>
                 </div>
               </div>
-              <div className="mt-2">
-                Pending
-                <div style={{fontWeight: "300"}}>{val.unconfirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA</div>
-              </div>
+              { val.unconfirmed.compareTo(new bigDecimal(0)) > 0 && 
+                <div className="mt-2 smaller">
+                  <i title='Pending' className="fa-regular fa-clock nx"/> {val.unconfirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA
+                </div>
+              }
               <div className='mt-2'>
                 { eta ? "Locked until block: " + new bigDecimal(block).getPrettyValue() + " (estimate date: "+ eta +")" : "🔓 Unlocked" }
               </div>
@@ -91,7 +92,7 @@ export default function VaultEntry({ keys, heightVal, price, vault, vaultAccount
                     <Claim eta={eta} balance={vault.balance} vaultKey={vaultKey} vaultAddress={vaultAddress} vaultInfo={vaultInfo} nexKeys={keys} refreshVaults={refreshVaults}/>
                     <Button onClick={() => setShowOffCanvas(true)}><i className="fa-solid fa-ellipsis"></i></Button>
                     
-                      <Offcanvas show={showOffCanvas} onHide={() => setShowOffCanvas(false)} placement='bottom'>
+                      <Offcanvas data-bs-theme='dark' show={showOffCanvas} onHide={() => setShowOffCanvas(false)} placement='bottom'>
                         <Offcanvas.Header>
                           <Offcanvas.Title className='center' style={{fontSize: "1.7rem"}}>Vault Options</Offcanvas.Title>
                         </Offcanvas.Header>
@@ -117,19 +118,19 @@ export default function VaultEntry({ keys, heightVal, price, vault, vaultAccount
         </Card.Body>
       </Card>
 
-      <Modal size='sm' show={showQR} onHide={() => setShowQR(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' size='sm' show={showQR} onHide={() => setShowQR(false)} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton>
           <Modal.Title>Address QR Code</Modal.Title>
         </Modal.Header>
         <Modal.Body className='center'>
-          <QRCode value={vaultAddress} size={200} logoImage={nex} logoWidth={35} logoPadding={1}/>
+          <QRCode value={vaultAddress} size={220} logoImage={nex} logoWidth={35} logoPadding={1}/>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => setShowQR(false)}>Close</Button>
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showArchiveDialog} onHide={() => setShowArchiveDialog(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showArchiveDialog} onHide={() => setShowArchiveDialog(false)} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton>
           <Modal.Title>Move to Archive</Modal.Title>
         </Modal.Header>

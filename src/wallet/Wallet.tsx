@@ -12,6 +12,7 @@ import { fetchBalance, fetchHeightAndPrice, setAccountKey, setKeys, setSync, syn
 import { discoverWallet, generateAccountKey, generateKeysAndAddresses, generateMasterKey } from '../utils/wallet.utils';
 import { rostrumProvider } from '../providers/rostrum.provider';
 import { discoverVaults, saveHodlAddress } from '../utils/vault.utils';
+import { Id, toast } from 'react-toastify';
 
 interface WalletProps {
   seed: string;
@@ -30,10 +31,22 @@ export default function Wallet({ seed, item }: WalletProps) {
     let accountKey = generateAccountKey(masterKey, 0);
     dispatch(setAccountKey(accountKey));
 
-    let recoverVaults = false;
+    let recoverVaults = false, recoverTokens = false;
     let indexes = await StorageProvider.getWalletIndexes();
+    let toastId: Id = 0;
     if (indexes.rIndex === 0) {
+      toastId = toast.loading("Discovering Wallet...", {
+        position: 'top-center',
+        autoClose: false,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "dark",
+      });
       dispatch(setSync());
+      recoverTokens = true;
       recoverVaults = import.meta.env.VITE_IS_HODL_ACTIVE === "true" && (await StorageProvider.getHodlState()).idx === 0;
       indexes = await discoverWallet(accountKey);
     }
@@ -57,6 +70,9 @@ export default function Wallet({ seed, item }: WalletProps) {
     
     dispatch(setKeys(walletKeys));
     dispatch(fetchBalance());
+    if (toastId !== 0) {
+      toast.update(toastId, { autoClose: 1, type: 'default', isLoading: false });
+    }
   }
 
   const refreshWallet = () => {

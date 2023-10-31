@@ -55,7 +55,7 @@ export default function Archive({ setArchive, refreshVaults }: { setArchive: Rea
         </Card.Body>
       </Card>
 
-      <Modal show={showArchiveDialog} onHide={() => setShowArchiveDialog(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showArchiveDialog} onHide={() => setShowArchiveDialog(false)} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton>
           <Modal.Title>Move to Vault</Modal.Title>
         </Modal.Header>

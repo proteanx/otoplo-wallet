@@ -45,12 +45,12 @@ export function generateKeysAndAddresses(accountKey: HDPrivateKey, fromRIndex: n
     for (let index = fromRIndex; index < rIndex; index++) {
         let k = receive.deriveChild(index, false);
         let addr = k.getPublicKey().toAddress().toString();
-        rKeys.push({key: k, address: addr, balance: "0"});
+        rKeys.push({key: k, address: addr, balance: "0", tokensBalance: {}});
     }
     for (let index = fromCIndex; index < cIndex; index++) {
         let k = change.deriveChild(index, false);
         let addr = k.getPublicKey().toAddress().toString();
-        cKeys.push({key: k, address: addr, balance: "0"});
+        cKeys.push({key: k, address: addr, balance: "0", tokensBalance: {}});
     }
     return {receiveKeys: rKeys, changeKeys: cKeys};
 }
@@ -101,9 +101,34 @@ async function isAddressUsed(address: string) {
     }
 }
 
+async function getKeyTokenBalance(key: AddressKey) {
+    let tokensBalance = await rostrumProvider.getTokensBalance(key.address);
+    let balance: Record<string, Balance> = {};
+
+    for (const cToken in tokensBalance.confirmed) {
+        if (tokensBalance.confirmed[cToken] != 0) {
+            balance[cToken] = { confirmed: BigInt(tokensBalance.confirmed[cToken]).toString(), unconfirmed: "0" }
+        }
+    }
+
+    for (const uToken in tokensBalance.unconfirmed) {
+        if (tokensBalance.unconfirmed[uToken] != 0) {
+            if (balance[uToken]) {
+                balance[uToken].unconfirmed = BigInt(tokensBalance.unconfirmed[uToken]).toString();
+            } else {
+                balance[uToken] = { confirmed: "0", unconfirmed: BigInt(tokensBalance.unconfirmed[uToken]).toString() }
+            }
+        }
+    }
+
+    return balance;
+}
+
 async function getAndUpdateAddressKeyBalance(key: AddressKey) {
     let balance = await rostrumProvider.getBalance(key.address);
     key.balance = (BigInt(balance.confirmed) + BigInt(balance.unconfirmed)).toString();
+    key.tokensBalance = await getKeyTokenBalance(key);
+
     return balance;
 }
 
@@ -117,13 +142,29 @@ export async function fetchTotalBalance(keys: AddressKey[]) {
     return await Promise.all(promises);
 }
 
-export function sumBlance(balances: Balance[]): Balance {
+export function sumBalance(balances: Balance[]): Balance {
     let confirmed = new bigDecimal(0), unconfirmed = new bigDecimal(0);
     balances.forEach(b => {
         confirmed = confirmed.add(new bigDecimal(b.confirmed));
         unconfirmed = unconfirmed.add(new bigDecimal(b.unconfirmed));
     });
     return {confirmed: confirmed.getValue(), unconfirmed: unconfirmed.getValue()};
+}
+
+export function sumTokensBalance(balances: Record<string, Balance>[]) {
+    let tokensBalance: Record<string, Balance> = {};
+    balances.forEach(b => {
+        for (const key in b) {
+            if (tokensBalance[key]) {
+                tokensBalance[key].confirmed = (BigInt(tokensBalance[key].confirmed) + BigInt(b[key].confirmed)).toString();
+                tokensBalance[key].unconfirmed = (BigInt(tokensBalance[key].unconfirmed) + BigInt(b[key].unconfirmed)).toString();
+            } else {
+                tokensBalance[key] = { confirmed: b[key].confirmed, unconfirmed: b[key].unconfirmed };
+            }
+        }
+    });
+
+    return tokensBalance;
 }
 
 export async function fetchTransactionsHistory(addresses: string[], fromHeight: number) {

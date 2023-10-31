@@ -22,6 +22,7 @@ export interface AddressKey {
     key: HDPrivateKey;
     address: string;
     balance: string;
+    tokensBalance: Record<string, Balance>;
 }
 
 export interface Balance {

@@ -23,6 +23,12 @@ export interface IFirstUse {
     tx_hash: string;
 }
 
+export interface ITokensBalance {
+    cursor?: any;
+    confirmed: Record<string, bigint | number>;
+    unconfirmed: Record<string, bigint | number>;
+}
+
 export interface ITokenListUnspent {
     cursor?: any;
     unspent: ITokenUtxo[];

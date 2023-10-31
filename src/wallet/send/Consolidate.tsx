@@ -10,7 +10,7 @@ import { TxTokenType } from '../../utils/wallet.utils';
 import { TransactionEntity } from '../../models/db.entities';
 import { broadcastTransaction, buildAndSignConsolidateTransaction } from '../../utils/tx.utils';
 
-export default function Consolidate({ nexKeys, balance }: { nexKeys: WalletKeys, balance: Balance }) {
+export default function Consolidate({ nexKeys, balance, isMobile }: { nexKeys: WalletKeys, balance: Balance, isMobile?: boolean }) {
   const [showError, setShowError] = useState(false);
   const [showPwSeed, setShowPwSeed] = useState(false);
   const [showPw, setShowPw] = useState(false);
@@ -100,9 +100,17 @@ export default function Consolidate({ nexKeys, balance }: { nexKeys: WalletKeys,
 
   return (
     <>
-      <Button disabled={disabled} className='mx-2' onClick={consolidate}>{spinner !== "" ? spinner : "Consolidate"}</Button>
+      { isMobile ? (
+        <div className='act-btn ms-3'>
+          <Button disabled={disabled} onClick={consolidate}>{spinner !== "" ? spinner : <i className="fa fa-repeat"/>}</Button>
+          <br/>
+          <span>Consolidate</span>
+        </div>
+      ) : (
+        <Button disabled={disabled} className='mx-2'  onClick={consolidate}>{spinner !== "" ? spinner : <><i className="fa fa-repeat"/> Consolidate</>}</Button>
+      )}
 
-      <Modal show={showPwSeed} onHide={closePasswordDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal contentClassName="text-bg-dark" data-bs-theme='dark' show={showPwSeed} onHide={closePasswordDialog} backdrop="static" keyboard={false} centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirmation</Modal.Title>
         </Modal.Header>
@@ -149,7 +157,7 @@ export default function Consolidate({ nexKeys, balance }: { nexKeys: WalletKeys,
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showError} onHide={() => setShowError(false)} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showError} onHide={() => setShowError(false)} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton={true}>
           <Modal.Title>Error</Modal.Title>
         </Modal.Header>
