@@ -51,13 +51,16 @@ export default function WalletData() {
   return (
     <>
       <Card.Title className='mb-4'><img width={25} src={nex} alt=''/> Nexa {wallet.sync && <i className="fas fa-sync fa-spin"/>}</Card.Title>
-      <Card.Title>{val.confirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA
-        <div style={{fontSize: "0.9rem", fontWeight: "400"}}>
+      <Card.Title>
+        <div className='larger'>
+          {val.confirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA
+        </div>
+        <div className='smaller' style={{fontWeight: "400"}}>
           {wallet.price.compareTo(new bigDecimal(0)) > 0 && "($"+wallet.price.multiply(val.confirmed).round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()+")"}
         </div>
       </Card.Title>
       { val.unconfirmed.compareTo(new bigDecimal(0)) > 0 && 
-        <div className="my-2 smaller">
+        <div className="my-2">
           <i title='Pending' className="fa-regular fa-clock nx"/> {val.unconfirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA
         </div>
       }
