@@ -125,13 +125,9 @@ body.barcode-scanning-active {
     --bs-btn-disabled-border-color: #FF1E6F;
 }
 
-.btn {
-    font-size: smaller;
-}
-
 .act-btn { 
    display: inline-block;
-   text-align: center;
+   min-width: 25%;
 }
 
 .act-btn span { 

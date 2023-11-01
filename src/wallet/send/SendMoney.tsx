@@ -308,7 +308,7 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
   return (
     <>
       { isMobile ? (
-        <div className='act-btn mx-3'>
+        <div className='act-btn'>
           <Button onClick={() => setShowSendDialog(true)}><i className="fa fa-upload"/></Button>
           <br/>
           <span>Send</span>

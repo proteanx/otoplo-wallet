@@ -66,7 +66,7 @@ export default function WalletData() {
         <ReceiveMoney address={mainAddr} isMobile={isMobile}/>
         <Consolidate nexKeys={wallet.keys} balance={wallet.balance} isMobile={isMobile}/>
         { isMobile ? (
-          <div className='act-btn ms-3'>
+          <div className='act-btn'>
             <Button onClick={() => setShowOffCanvas(true)}><i className="fa-solid fa-ellipsis"/></Button>
             <br/>
             <span>More</span>

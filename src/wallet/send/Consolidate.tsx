@@ -101,7 +101,7 @@ export default function Consolidate({ nexKeys, balance, isMobile }: { nexKeys: W
   return (
     <>
       { isMobile ? (
-        <div className='act-btn ms-3'>
+        <div className='act-btn'>
           <Button disabled={disabled} onClick={consolidate}>{spinner !== "" ? spinner : <i className="fa fa-repeat"/>}</Button>
           <br/>
           <span>Consolidate</span>

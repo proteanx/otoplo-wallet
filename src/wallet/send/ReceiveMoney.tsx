@@ -10,7 +10,7 @@ export default function ReceiveMoney({ address, isMobile }: { address: string, i
   return (
     <>
       { isMobile ? (
-        <div className='act-btn ms-3'>
+        <div className='act-btn'>
           <Button onClick={() => setShowQR(true)}><i className="fa fa-download"/></Button>
           <br/>
           <span>Receive</span>
