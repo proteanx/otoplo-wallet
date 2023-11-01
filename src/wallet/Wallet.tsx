@@ -31,7 +31,7 @@ export default function Wallet({ seed, item }: WalletProps) {
     let accountKey = generateAccountKey(masterKey, 0);
     dispatch(setAccountKey(accountKey));
 
-    let recoverVaults = false, recoverTokens = false;
+    let recoverVaults = false;
     let indexes = await StorageProvider.getWalletIndexes();
     let toastId: Id = 0;
     if (indexes.rIndex === 0) {
@@ -46,7 +46,6 @@ export default function Wallet({ seed, item }: WalletProps) {
         theme: "dark",
       });
       dispatch(setSync());
-      recoverTokens = true;
       recoverVaults = import.meta.env.VITE_IS_HODL_ACTIVE === "true" && (await StorageProvider.getHodlState()).idx === 0;
       indexes = await discoverWallet(accountKey);
     }

@@ -202,7 +202,7 @@ export async function scanForNewAddresses(accountKey: HDPrivateKey) {
     let state = await StorageProvider.getTransactionsState();
     if (minHeight > 0) {
         if (minHeight < state.height) {
-            state.height = minHeight;
+            state.height = minHeight - 1;
             await StorageProvider.setTransactionsState(state);
         }
         if (rRes.index > 0 || cRes.index > 0) {

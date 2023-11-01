@@ -370,7 +370,7 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
                 <td>Fee:</td>
                 <td>
                   <div>{parseAmountWithDecimals(totalFee.getValue(), 2)} NEXA</div>
-                  <div>(Recommended: {parseAmountWithDecimals(requiredFee.getValue(), 2)} NEXA, Size: {txSize.divide(new bigDecimal(1000), 3).getPrettyValue()} kB)</div>
+                  <div>(Recommended: {parseAmountWithDecimals(requiredFee.getValue(), 2)} NEXA, Size: {parseAmountWithDecimals(txSize.getValue(), 3)} kB)</div>
                 </td>
               </tr>
               <tr>
