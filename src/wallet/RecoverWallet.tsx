@@ -6,9 +6,9 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
-import { isMobileScreen } from '../../utils/common.utils';
-import { clearLocalWallet } from '../../utils/wallet.utils';
-import { encryptAndStoreMnemonic, isMnemonicValid, validatePassword } from '../../utils/seed.utils';
+import { isMobileScreen } from '../utils/common.utils';
+import { clearLocalWallet } from '../utils/wallet.utils';
+import { encryptAndStoreMnemonic, isMnemonicValid, validatePassword } from '../utils/seed.utils';
 
 export default function RecoverWallet({ cancelRecover, setDecSeed }: { cancelRecover: () => void, setDecSeed: Dispatch<SetStateAction<string>> }) {
   let isMobile = isMobileScreen();
@@ -94,30 +94,30 @@ export default function RecoverWallet({ cancelRecover, setDecSeed }: { cancelRec
         <Button className='mx-1' onClick={next}>Next</Button>
       </div>
 
-    <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={show} onHide={handleClose} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
-      <Modal.Header closeButton={true}>
-        <Modal.Title>Protect wallet</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <p>Enter password to protect your wallet.</p>
-        <p>Note: Password is not part of your seed, it only encrypts the seed locally in your device.</p>
-        <InputGroup>
-          <Form.Control type={!showPw ? "password" : "text"} ref={pwRef} placeholder="Password" autoFocus/>
-          <InputGroup.Text className='cursor' onClick={reveal}>{!showPw ? <i className="fa fa-eye" aria-hidden="true"></i> : <i className="fa fa-eye-slash" aria-hidden="true"></i>}</InputGroup.Text>
-        </InputGroup>
-        <InputGroup className='mt-3'>
-          <Form.Control type={!showPw ? "password" : "text"} ref={pwValidRef} placeholder="Confirm Password" onKeyDown={keyDown}/>
-          <InputGroup.Text className='cursor' onClick={reveal}>{!showPw ? <i className="fa fa-eye" aria-hidden="true"></i> : <i className="fa fa-eye-slash" aria-hidden="true"></i>}</InputGroup.Text>
-        </InputGroup>
-        <span className='bad'>
-          {pwErr}
-        </span>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-        <Button onClick={confirm}>Confirm</Button>
-      </Modal.Footer>
-    </Modal>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={show} onHide={handleClose} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal.Header closeButton={true}>
+          <Modal.Title>Protect wallet</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Enter password to protect your wallet.</p>
+          <p>Note: Password is not part of your seed, it only encrypts the seed locally in your device.</p>
+          <InputGroup>
+            <Form.Control type={!showPw ? "password" : "text"} ref={pwRef} placeholder="Password" autoFocus/>
+            <InputGroup.Text className='cursor' onClick={reveal}>{!showPw ? <i className="fa fa-eye" aria-hidden="true"></i> : <i className="fa fa-eye-slash" aria-hidden="true"></i>}</InputGroup.Text>
+          </InputGroup>
+          <InputGroup className='mt-3'>
+            <Form.Control type={!showPw ? "password" : "text"} ref={pwValidRef} placeholder="Confirm Password" onKeyDown={keyDown}/>
+            <InputGroup.Text className='cursor' onClick={reveal}>{!showPw ? <i className="fa fa-eye" aria-hidden="true"></i> : <i className="fa fa-eye-slash" aria-hidden="true"></i>}</InputGroup.Text>
+          </InputGroup>
+          <span className='bad'>
+            {pwErr}
+          </span>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>Cancel</Button>
+          <Button onClick={confirm}>Confirm</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

@@ -29,7 +29,7 @@ export default function TxRecord({ record, height }: { record: TransactionEntity
   if (record.height == 0) {
     status = <span className='outgoing'>Unconfirmed</span>;
   } else {
-    status = <span className='confirmed'>Confirmed ({height - record.height})</span>;
+    status = <span className='confirmed'>Confirmed ({height - record.height + 1})</span>;
   }
 
   return (

@@ -4,14 +4,14 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import bigDecimal from 'js-big-decimal';
 import nex from '../assets/img/nex.svg';
-import Consolidate from './send/Consolidate';
+import Consolidate from './actions/Consolidate';
 import { ListGroup, Offcanvas, Table } from 'react-bootstrap';
 import { isMobileScreen } from '../utils/common.utils';
 import { useAppSelector } from '../store/hooks';
 import { walletState } from '../store/slices/wallet.slice';
-import SendMoney from './send/SendMoney';
+import SendMoney from './actions/SendMoney';
 import { scanForNewAddresses } from '../utils/wallet.utils';
-import ReceiveMoney from './send/ReceiveMoney';
+import ReceiveMoney from './actions/ReceiveMoney';
 
 export default function WalletData() {
   let isMobile = isMobileScreen();

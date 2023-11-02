@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import CreateWallet from './create/CreateWallet';
-import RecoverWallet from './recover/RecoverWallet';
+import RecoverWallet from './RecoverWallet';
 import { isMobilePlatform } from '../utils/common.utils';
 import { decryptMnemonic, isMnemonicValid } from '../utils/seed.utils';
 
