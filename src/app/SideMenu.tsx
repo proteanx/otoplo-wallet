@@ -32,7 +32,7 @@ export default function SideMenu({ activeItem, setActiveItem, sidebarToggled, se
   const wallet = useAppSelector(walletState);
 
   return (
-    <Sidebar width={isMobile ? '100%' : undefined} toggled={sidebarToggled} breakPoint={isMobile ? 'all' : undefined} rootStyles={{border: 'none'}} backgroundColor='#343a40'>
+    <Sidebar width={isMobile ? '75%' : undefined} toggled={sidebarToggled} breakPoint={isMobile ? 'all' : undefined} rootStyles={{border: 'none'}} onBackdropClick={() => setSidebarToggled(false)}>
       <div className={isMobile ? 'pt-3' : 'pt-3 center'} style={isMobile ? {cursor: 'pointer', paddingLeft: '20px'} : {cursor: 'pointer'}}>
         {isMobile && <i className="fa-solid fa-bars menu-btn" onClick={() => setSidebarToggled(!sidebarToggled)}/> }
         <img alt="Nexa" src={otoplo} onClick={reload} className="header-image"/>
@@ -43,7 +43,7 @@ export default function SideMenu({ activeItem, setActiveItem, sidebarToggled, se
         {import.meta.env.VITE_IS_HODL_ACTIVE === "true" && <MenuItem active={activeItem === 'VAULT'} prefix={<i className="fa-solid fa-vault"></i>} onClick={() => setItemAndCollapse("VAULT")}>HODL Vault</MenuItem>}
         <WalletBackup/>
         <MenuItem prefix={<i className="fa fa-house-lock"></i>} onClick={reload}>Lock</MenuItem>
-        <hr></hr>
+        <hr/>
         <MenuItem disabled suffix={wallet.height ? "Online" : "Offline"}>Status:</MenuItem>
         <MenuItem disabled suffix={"nexa"}>Network:</MenuItem>
         <MenuItem disabled suffix={import.meta.env.VITE_VERSION}>Version:</MenuItem>
