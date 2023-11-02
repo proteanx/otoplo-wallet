@@ -65,4 +65,20 @@ export class DesktopDB extends Dexie implements IAppDB {
   public async updateVaultBalance(address: string, balance: Balance) {
     await this.contracts.update(address, {confirmed: balance.confirmed, unconfirmed: balance.unconfirmed});
   }
+
+  public async upsertToken(token: TokenEntity) {
+    await this.tokens.put(token, token.tokenIdHex);
+  }
+
+  public async findTokenById(id: string) {
+    return await this.tokens.where('tokenIdHex').equals(id).or('token').equals(id).first();
+  }
+
+  public async upsertNft(nft: NftEntity) {
+    await this.nfts.put(nft, nft.tokenIdHex);
+  }
+
+  public async deleteNft(id: string) {
+    return await this.nfts.delete(id);
+  }
 }

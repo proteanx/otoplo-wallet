@@ -2,7 +2,7 @@ import { txUpdateTrigger } from "../app/App";
 import { IAppDB } from "../db/db.interface";
 import { DesktopDB } from "../db/desktop.db";
 import { MobileDB } from "../db/mobile.db";
-import { ContractEntity, TransactionEntity } from "../models/db.entities";
+import { ContractEntity, NftEntity, TokenEntity, TransactionEntity } from "../models/db.entities";
 import { Balance } from "../models/wallet.entities";
 import { isMobilePlatform } from "../utils/common.utils";
 
@@ -58,6 +58,22 @@ class DBProvider {
 
     public async updateLocalVaultBalance(address: string, balance: Balance) {
         return await this.appdb.updateVaultBalance(address, balance);
+    }
+
+    public async saveToken(token: TokenEntity) {
+        return await this.appdb.upsertToken(token);
+    }
+
+    public async getTokenById(id: string) {
+        return await this.appdb.findTokenById(id);
+    }
+
+    public async saveNft(nft: NftEntity) {
+        return await this.appdb.upsertNft(nft);
+    }
+
+    public async deleteNft(id: string) {
+        return await this.appdb.deleteNft(id);
     }
 }
 

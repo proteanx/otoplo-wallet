@@ -9,6 +9,8 @@ import bigDecimal from "js-big-decimal";
 import { ITXHistory, ITXInput, ITXOutput } from "../models/rostrum.entities";
 import { currentTimestamp, isNullOrEmpty } from "./common.utils";
 import { TransactionEntity, TxEntityState } from "../models/db.entities";
+import NiftyProvider from "../providers/nifty.provider";
+import { fetchAndSaveNFT, removeLocalNFT } from "./token.utils";
 
 export enum TxTokenType {
     NO_GROUP,
@@ -280,19 +282,18 @@ export async function classifyTransaction(txHistory: ITXHistory, myAddresses: st
     return txEntry;
 }
 
-export async function classifyAndSaveTransaction(txHistory: ITXHistory, myAddresses: string[], correlationId: string) {
+export async function classifyAndSaveTransaction(txHistory: ITXHistory, myAddresses: string[]) {
     let txEntry = await classifyTransaction(txHistory, myAddresses);
 
-    // if (txGroup !== 'none' && NiftyProvider.isNiftySubgroup(txGroup)) {
-    //     if (txEntry.state === 'incoming') {
-    //         await fetchAndSaveNFT(txGroup, NiftyProvider.NIFTY_TOKEN.token);
-    //     } else if (txEntry.state === 'outgoing') {
-    //         await removeLocalNFT(txGroup);
-    //     }
-    //     txEntry.extraGroup = NiftyProvider.NIFTY_TOKEN.token;
-    // }
+    if (txEntry.group !== 'none' && NiftyProvider.isNiftySubgroup(txEntry.group)) {
+        if (txEntry.state === 'incoming') {
+            await fetchAndSaveNFT(txEntry.group, NiftyProvider.NIFTY_TOKEN.token);
+        } else if (txEntry.state === 'outgoing') {
+            await removeLocalNFT(txEntry.group);
+        }
+        txEntry.extraGroup = NiftyProvider.NIFTY_TOKEN.token;
+    }
 
-    //await notifyIfNeeded(txEntry.idem, correlationId);
     await dbProvider.addLocalTransaction(txEntry);
 
     return txEntry;

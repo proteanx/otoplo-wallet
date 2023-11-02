@@ -2,7 +2,7 @@ import { SQLiteDBConnection, SQLiteHook } from "react-sqlite-hook";
 import { existingConn, sqlite } from "../app/App";
 import { IAppDB } from "./db.interface";
 import { capSQLiteSet } from "@capacitor-community/sqlite";
-import { ContractEntity, TransactionEntity } from "../models/db.entities";
+import { ContractEntity, NftEntity, TokenEntity, TransactionEntity } from "../models/db.entities";
 import { Balance } from "../models/wallet.entities";
 
 const createSchemaV1 =  [
@@ -160,6 +160,27 @@ export class MobileDB implements IAppDB {
 
   public async updateVaultBalance(address: string, balance: Balance) {
     await this.execRun("UPDATE contracts SET confirmed = ?, unconfirmed = ? WHERE address = ?;", [balance.confirmed, balance.unconfirmed, address]);
+  }
+
+  public async upsertToken(token: TokenEntity) {
+    var query = 'INSERT OR REPLACE INTO tokens (tokenIdHex,token,name,ticker,iconUrl,decimals,parentGroup,addedTime) VALUES (?,?,?,?,?,?,?,?);';
+    var params = [token.tokenIdHex, token.token, token.name, token.ticker, token.iconUrl, token.decimals, token.parentGroup, token.addedTime];
+    await this.execRun(query, params);
+  }
+
+  public async findTokenById(id: string): Promise<TokenEntity | undefined> {
+    let res = await this.execQuery("SELECT * FROM tokens WHERE tokenIdHex = ? OR token = ?;", [id, id]);
+    return res ? res[0] : undefined;
+  }
+
+  public async upsertNft(nft: NftEntity) {
+    var query = 'INSERT OR REPLACE INTO nfts (tokenIdHex,token,zipData,parentGroup,addedTime) VALUES (?,?,?,?,?);';
+    var params = [nft.tokenIdHex, nft.token, nft.zipData, nft.parentGroup, nft.addedTime];
+    await this.execRun(query, params);
+  }
+
+  public async deleteNft(id: string) {
+    await this.execRun('DELETE FROM nfts WHERE tokenIdHex = ? OR token = ?;', [id, id]);
   }
 
   private async getDBConnection() {

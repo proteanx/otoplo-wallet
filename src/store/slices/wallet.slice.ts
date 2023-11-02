@@ -83,10 +83,9 @@ export const syncWallet = createAsyncThunk('wallet/syncWallet', async (_, thunkA
 
     let updateBalance = false;
     let txPromises: Promise<TransactionEntity>[] = [];
-    let correlationId = crypto.randomUUID();
     for (let tx of txHistory.values()) {
         updateBalance = true;
-        let t = WalletUtils.classifyAndSaveTransaction(tx, allAddresses, correlationId);
+        let t = WalletUtils.classifyAndSaveTransaction(tx, allAddresses);
         txPromises.push(t);
     }
 
