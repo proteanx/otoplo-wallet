@@ -3,6 +3,8 @@ import { Capacitor, CapacitorHttp } from '@capacitor/core';
 import bigDecimal from 'js-big-decimal';
 import { toast, ToastPosition, ToastTransition } from 'react-toastify';
 
+export const MAX_INT64: bigint = 9223372036854775807n;
+
 export async function getNexaPrice() {
     var res = await CapacitorHttp.get({ url: import.meta.env.VITE_PRICE_URL });
     return handleResponse(res);

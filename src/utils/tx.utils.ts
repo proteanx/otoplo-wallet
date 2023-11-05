@@ -4,7 +4,7 @@ import { rostrumProvider } from '../providers/rostrum.provider';
 import Transaction from 'nexcore-lib/types/lib/transaction/transaction';
 import PrivateKey from 'nexcore-lib/types/lib/privatekey';
 import { WalletKeys } from '../models/wallet.entities';
-import { isNullOrEmpty, parseAmountWithDecimals } from './common.utils';
+import { MAX_INT64, isNullOrEmpty, parseAmountWithDecimals } from './common.utils';
 import Script from 'nexcore-lib/types/lib/script/script';
 import PublicKey from 'nexcore-lib/types/lib/publickey';
 
@@ -46,7 +46,7 @@ export async function buildAndSignTransferTransaction(keys: WalletKeys, toAddr: 
     let tx = prepareTransaction(toAddr, amount, token);
     let tokenPrivKeys: PrivateKey[] = [];
     if (token) {
-        //tokenPrivKeys = await populateTokenInputsAndChange(tx, keys, token, BigInt(amount));
+        tokenPrivKeys = await populateTokenInputsAndChange(tx, keys, token, BigInt(amount));
     }
     let privKeys = await populateNexaInputsAndChange(tx, keys, txOptions);
     return await finalizeTransaciton(tx, privKeys.concat(tokenPrivKeys));
@@ -108,7 +108,7 @@ async function populateNexaInputsAndChange(tx: Transaction, keys: WalletKeys, op
                 }
             } else {
                 if (tx.inputs.length > MAX_INPUTS_OUTPUTS) {
-                    throw new Error("Too many inputs. Consider consolidating transactions or reduce the send amount.");
+                    throw new Error("Too many inputs. Consider consolidate transactions or reduce the send amount.");
                 }
 
                 let avail = options.feeFromAmount ? tx.inputAmount - tx.outputs[0].satoshis : tx.inputAmount - (tx.outputs[0].satoshis + getRequiredFee(tx, options.manuelFee));
@@ -181,6 +181,57 @@ function prepareTransaction(toAddr: string, amount: string, token?: string) {
     }
 
     return tx;
+}
+
+async function populateTokenInputsAndChange(tx: Transaction, keys: WalletKeys, token: string, outTokenAmount: bigint) {
+    let tokenHex = nexcore.Address.decodeNexaAddress(token).getHashBuffer().toString('hex');
+    let rKeys = keys.receiveKeys.filter(k => Object.keys(k.tokensBalance).includes(tokenHex));
+    let cKeys = keys.changeKeys.filter(k => Object.keys(k.tokensBalance).includes(tokenHex));
+    let allKeys = rKeys.concat(cKeys);
+
+    if (isNullOrEmpty(allKeys)) {
+        throw new Error("Not enough token balance.");
+    }
+
+    let usedKeys = new Map<string, PrivateKey>();
+    let inTokenAmount = 0n;
+
+    for (let key of allKeys) {
+        let utxos = await rostrumProvider.getTokenUtxos(key.address, token);
+        for (let utxo of utxos) {
+            if (utxo.token_amount < 0) {
+                continue;
+            }
+            tx.from({
+                txId: utxo.outpoint_hash,
+                outputIndex: utxo.tx_pos,
+                address: key.address,
+                satoshis: utxo.value
+            });
+
+            inTokenAmount = inTokenAmount + BigInt(utxo.token_amount);
+            if (!usedKeys.has(key.address)) {
+                usedKeys.set(key.address, key.key.getPrivateKey());
+            }
+
+            if (inTokenAmount > MAX_INT64) {
+                throw new Error("Token inputs exceeded max amount. Consider sending in small chunks");
+            }
+            if (tx.inputs.length > MAX_INPUTS_OUTPUTS) {
+                throw new Error("Too many inputs. Consider consolidating transactions or reduce the send amount.");
+            }
+            
+            if (inTokenAmount == outTokenAmount) {
+                return Array.from(usedKeys.values());
+            }
+            if (inTokenAmount > outTokenAmount) {
+                tx.toGrouped(keys.changeKeys.at(-1)!.address, token, inTokenAmount - outTokenAmount);
+                return Array.from(usedKeys.values());
+            }
+        }
+    }
+
+    throw new Error("Not enough token balance");
 }
 
 async function finalizeTransaciton(tx: Transaction, privKeys: PrivateKey[]) {
