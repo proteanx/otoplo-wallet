@@ -6,8 +6,8 @@ export interface IAppDB {
     initSchema(): Promise<boolean>;
 
     upsertTransaction(txEntry: TransactionEntity): Promise<void>;
-    getPageTransactions(pageNum: number, pageSize: number): Promise<TransactionEntity[] | undefined>;
-    countTransactions(): Promise<number>;
+    getPageTransactions(pageNum: number, pageSize: number, tokenId?: string): Promise<TransactionEntity[] | undefined>;
+    countTransactions(tokenId?: string): Promise<number>;
 
     getVaults(isArchive: number): Promise<ContractEntity[] | undefined>;
     getVaultsAddresses(): Promise<ContractEntity[] | undefined>;
@@ -17,6 +17,7 @@ export interface IAppDB {
 
     upsertToken(token: TokenEntity): Promise<void>;
     findTokenById(id: string): Promise<TokenEntity | undefined>;
+    getTokens(): Promise<TokenEntity[] | undefined>
 
     upsertNft(nft: NftEntity): Promise<void>;
     deleteNft(id: string): Promise<void>;

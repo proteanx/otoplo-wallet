@@ -1,4 +1,4 @@
-import { txUpdateTrigger } from "../app/App";
+import { nftUpdateTrigger, tokenUpdateTrigger, txUpdateTrigger } from "../app/App";
 import { IAppDB } from "../db/db.interface";
 import { DesktopDB } from "../db/desktop.db";
 import { MobileDB } from "../db/mobile.db";
@@ -31,12 +31,12 @@ class DBProvider {
         }
     }
 
-    public async getPageLocalTransactions(pageNum: number, pageSize: number) {
-        return await this.appdb.getPageTransactions(pageNum, pageSize);
+    public async getPageLocalTransactions(pageNum: number, pageSize: number, tokenId?: string) {
+        return await this.appdb.getPageTransactions(pageNum, pageSize, tokenId);
     }
 
-    public async countLocalTransactions() {
-        return await this.appdb.countTransactions();
+    public async countLocalTransactions(tokenId?: string) {
+        return await this.appdb.countTransactions(tokenId);
     }
 
     public async getLocalVaults(archive: boolean) {
@@ -61,15 +61,21 @@ class DBProvider {
     }
 
     public async saveToken(token: TokenEntity) {
-        return await this.appdb.upsertToken(token);
+        await this.appdb.upsertToken(token);
+        tokenUpdateTrigger.setUpdateTrigger((prev) => prev + 1);
     }
 
     public async getTokenById(id: string) {
         return await this.appdb.findTokenById(id);
     }
 
+    public async getLocalTokens() {
+        return await this.appdb.getTokens();
+    }
+
     public async saveNft(nft: NftEntity) {
-        return await this.appdb.upsertNft(nft);
+        await this.appdb.upsertNft(nft);
+        nftUpdateTrigger.setUpdateTrigger((prev) => prev + 1);
     }
 
     public async deleteNft(id: string) {

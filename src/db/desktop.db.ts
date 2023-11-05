@@ -38,11 +38,17 @@ export class DesktopDB extends Dexie implements IAppDB {
     await this.transactions.put(tx, tx.txIdem);
   }
 
-  public async getPageTransactions(pageNum: number, pageSize: number): Promise<TransactionEntity[]> {
+  public async getPageTransactions(pageNum: number, pageSize: number, tokenId?: string): Promise<TransactionEntity[]> {
+    if (tokenId) {
+      return await this.transactions.where("group").equals(tokenId).reverse().offset((pageNum-1)*pageSize).limit(pageSize).sortBy("time");
+    }
     return await this.transactions.orderBy('time').reverse().offset((pageNum-1)*pageSize).limit(pageSize).toArray();
   }
 
-  public async countTransactions(): Promise<number> {
+  public async countTransactions(tokenId?: string): Promise<number> {
+    if (tokenId) {
+      return await this.transactions.where("group").equals(tokenId).count();
+    }
     return await this.transactions.count();
   }
 
@@ -72,6 +78,10 @@ export class DesktopDB extends Dexie implements IAppDB {
 
   public async findTokenById(id: string) {
     return await this.tokens.where('tokenIdHex').equals(id).or('token').equals(id).first();
+  }
+
+  public async getTokens() {
+    return await this.tokens.orderBy('addedTime').reverse().toArray();
   }
 
   public async upsertNft(nft: NftEntity) {

@@ -7,6 +7,8 @@ import otoplo from '../assets/img/otoplo-logo-white.svg';
 import bigDecimal from 'js-big-decimal';
 import { useAppSelector } from '../store/hooks';
 import { walletState } from '../store/slices/wallet.slice';
+import dummy from '../assets/img/token-icon-placeholder.svg';
+import nft from '../assets/img/nft.svg';
 
 interface SideMenuProps {
   activeItem: string;
@@ -43,6 +45,9 @@ export default function SideMenu({ activeItem, setActiveItem, sidebarToggled, se
         {import.meta.env.VITE_IS_HODL_ACTIVE === "true" && <MenuItem active={activeItem === 'VAULT'} prefix={<i className="fa-solid fa-vault"></i>} onClick={() => setItemAndCollapse("VAULT")}>HODL Vault</MenuItem>}
         <WalletBackup/>
         <MenuItem prefix={<i className="fa fa-house-lock"></i>} onClick={reload}>Lock</MenuItem>
+        <hr/>
+        <MenuItem active={activeItem === 'TOKEN'} prefix={<img alt="Nexa" src={dummy} width={20}/>} onClick={() => setItemAndCollapse("TOKEN")}>My Tokens</MenuItem>
+        <MenuItem active={activeItem === 'NFT'} prefix={<img alt="Nexa" src={nft} width={20}/>} onClick={() => setItemAndCollapse("NFT")}>My NFTs</MenuItem>
         <hr/>
         <MenuItem disabled suffix={wallet.height ? "Online" : "Offline"}>Status:</MenuItem>
         <MenuItem disabled suffix={"nexa"}>Network:</MenuItem>

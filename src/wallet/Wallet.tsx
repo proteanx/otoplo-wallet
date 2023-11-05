@@ -13,6 +13,7 @@ import { discoverWallet, generateAccountKey, generateKeysAndAddresses, generateM
 import { rostrumProvider } from '../providers/rostrum.provider';
 import { discoverVaults, saveHodlAddress } from '../utils/vault.utils';
 import { Id, toast } from 'react-toastify';
+import Tokens from './tokens/Tokens';
 
 interface WalletProps {
   seed: string;
@@ -125,11 +126,13 @@ export default function Wallet({ seed, item }: WalletProps) {
     return <WalletLoader/>;
   }
 
-  // if (item !== 'NEXA') {
-  //   return (
-  //     <TokenData item={item} mainAddr={mainAddress} keys={keys}/>
-  //   )
-  // }
+  if (item === 'TOKEN') {
+    return <Tokens/>;
+  }
+
+  if (item === 'NFT') {
+    return;
+  }
 
   if (item === 'VAULT') {
     let vaultAccountKey = generateAccountKey(masterKey, 1);

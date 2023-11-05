@@ -1,6 +1,8 @@
-import { NftEntity } from "../models/db.entities";
+import { CapacitorHttp } from "@capacitor/core";
+import { NftEntity, TokenEntity } from "../models/db.entities";
 import { dbProvider } from "../providers/db.provider";
 import NiftyProvider from "../providers/nifty.provider";
+import { rostrumProvider } from "../providers/rostrum.provider";
 import { currentTimestamp } from "./common.utils";
 import NexCore from 'nexcore-lib';
 
@@ -28,5 +30,49 @@ export async function removeLocalNFT(token: string) {
         await dbProvider.deleteNft(hexId);
     } catch (e) {
         console.log('failed to remove local NFT');
+    }
+}
+
+export async function getTokenInfo(token: string) {
+    try {
+        let genesis = await rostrumProvider.getTokenGenesis(token);
+        let groupId = Buffer.from(genesis.token_id_hex, 'hex');
+        let parent = "";
+        let iconUrl = "";
+
+        if (NexCore.GroupToken.isSubgroup(groupId)) {
+            parent = new NexCore.Address(groupId.subarray(0, 32), NexCore.Networks.defaultNetwork, NexCore.Address.GroupIdAddress).toString();
+        }
+
+        if (genesis.document_url) {
+            let res = await CapacitorHttp.get({ url: genesis.document_url });
+            if (res.status == 200 && res.data && res.data[0]?.icon) {
+                let icon = res.data[0].icon;
+                if (typeof icon === 'string') {
+                    if (icon.startsWith('http')) {
+                        iconUrl = icon;
+                    } else {
+                        var url = new URL(genesis.document_url);
+                        iconUrl = `${url.origin}${icon}`;
+                    }
+                }
+            }
+        }
+
+        let tokenEntity: TokenEntity = {
+            token: genesis.group,
+            tokenIdHex: genesis.token_id_hex,
+            decimals: genesis.decimal_places ?? 0,
+            parentGroup: parent,
+            name: genesis.name ?? "",
+            ticker: genesis.ticker ?? "",
+            addedTime: 0,
+            iconUrl: iconUrl
+        };
+
+        return tokenEntity;
+    } catch (e) {
+        console.error(e)
+        return false;
     }
 }

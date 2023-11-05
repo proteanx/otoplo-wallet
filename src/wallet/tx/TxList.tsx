@@ -1,28 +1,28 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import TxRecord from './TxRecord'
 import Table from 'react-bootstrap/Table';
 import Card from 'react-bootstrap/Card';
 import Pagination from 'react-bootstrap/Pagination';
 import { txUpdateTrigger } from '../../app/App';
 import { dbProvider } from '../../providers/db.provider';
-import { TransactionEntity } from '../../models/db.entities';
+import { TokenEntity, TransactionEntity } from '../../models/db.entities';
 import { useAppSelector } from '../../store/hooks';
 import { walletState } from '../../store/slices/wallet.slice';
 
-export default function TxList() {
+export default function TxList({ token }: { token?: TokenEntity }) {
   const [pageNum, setPageNum] = useState(1);
   const [pageSize] = useState(10);
   const [txCount, setTxCount] = useState(0);
   const [transactions, setTransactions] = useState<TransactionEntity[]>([]);
 
   useEffect(() => {
-    dbProvider.countLocalTransactions().then(c => {
+    dbProvider.countLocalTransactions(token?.token).then(c => {
       setTxCount(c);
     });
   }, [txUpdateTrigger.updateTrigger]);
 
   useEffect(() => {
-    dbProvider.getPageLocalTransactions(pageNum, pageSize).then(res => {
+    dbProvider.getPageLocalTransactions(pageNum, pageSize, token?.token).then(res => {
       if (res) {
         setTransactions(res);
       }
@@ -84,7 +84,7 @@ export default function TxList() {
         <hr/>
         <Table borderless responsive variant='dark' className='text-white'>
           <tbody>
-            { transactions?.map((tx, i) => <TxRecord key={i} record={tx} height={wallet.height}/>) }
+            { transactions?.map((tx, i) => <TxRecord key={i} record={tx} height={wallet.height} token={token}/>) }
           </tbody>
         </Table>
         {pagination}

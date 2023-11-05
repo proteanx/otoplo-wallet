@@ -1,6 +1,6 @@
 import { ElectrumClient } from "@vgrunner/electrum-cash";
 import StorageProvider from "./storage.provider";
-import { BlockTip, IFirstUse, IListUnspentRecord, ITXHistory, ITokensBalance, ITokenListUnspent, ITransaction, IUtxo, RostrumParams } from "../models/rostrum.entities";
+import { BlockTip, IFirstUse, IListUnspentRecord, ITXHistory, ITokensBalance, ITokenListUnspent, ITransaction, IUtxo, RostrumParams, ITokenGenesis } from "../models/rostrum.entities";
 import { Balance } from "../models/wallet.entities";
 
 type RPCParameter = string | number | boolean | null;
@@ -55,6 +55,10 @@ export class RostrumProvider {
             return await this.execute<ITokensBalance>('token.address.get_balance', address, null, token);
         }
         return await this.execute<ITokensBalance>('token.address.get_balance', address);
+    }
+
+    public async getTokenGenesis(token: string) {
+        return await this.execute<ITokenGenesis>('token.genesis.info', token);
     }
 
     public async broadcast(txHex: string) {

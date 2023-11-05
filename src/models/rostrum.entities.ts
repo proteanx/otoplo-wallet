@@ -23,6 +23,20 @@ export interface IFirstUse {
     tx_hash: string;
 }
 
+export interface ITokenGenesis {
+    decimal_places?: number,
+    document_hash?: string;
+    document_url?: string;
+    group: string;
+    height: number;
+    name?: string;
+    op_return?: string;
+    ticker?: string;
+    token_id_hex: string;
+    txid: string;
+    txidem: string;
+}
+
 export interface ITokensBalance {
     cursor?: any;
     confirmed: Record<string, bigint | number>;

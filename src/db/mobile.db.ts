@@ -131,12 +131,20 @@ export class MobileDB implements IAppDB {
     await this.execRun(query, params);
   }
 
-  public async getPageTransactions(pageNum: number, pageSize: number): Promise<TransactionEntity[] | undefined> {
+  public async getPageTransactions(pageNum: number, pageSize: number, tokenId?: string): Promise<TransactionEntity[] | undefined> {
+    if (tokenId) {
+      return await this.execQuery("SELECT * FROM transactions WHERE group = ? ORDER BY time DESC LIMIT ? OFFSET ?;", [tokenId, pageSize, (pageNum-1)*pageSize]);
+    }
     return await this.execQuery("SELECT * FROM transactions ORDER BY time DESC LIMIT ? OFFSET ?;", [pageSize, (pageNum-1)*pageSize]);
   }
 
-  public async countTransactions(): Promise<number> {
-    let vals = await this.execQuery("SELECT COUNT(*) AS c FROM transactions;");
+  public async countTransactions(tokenId?: string): Promise<number> {
+    let vals;
+    if (tokenId) {
+      vals = await this.execQuery("SELECT COUNT(*) AS c FROM transactions WHERE group = ?;", [tokenId]);
+    } else {
+      vals = await this.execQuery("SELECT COUNT(*) AS c FROM transactions;");
+    }
     return vals ? vals[0].c : 0;
   }
 
@@ -171,6 +179,10 @@ export class MobileDB implements IAppDB {
   public async findTokenById(id: string): Promise<TokenEntity | undefined> {
     let res = await this.execQuery("SELECT * FROM tokens WHERE tokenIdHex = ? OR token = ?;", [id, id]);
     return res ? res[0] : undefined;
+  }
+
+  public async getTokens(): Promise<TokenEntity[] | undefined> {
+    return await this.execQuery("SELECT * FROM tokens ORDER BY addedTime DESC;");
   }
 
   public async upsertNft(nft: NftEntity) {

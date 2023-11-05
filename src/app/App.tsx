@@ -26,6 +26,8 @@ export let sqlite: SQLiteHook;
 export let existingConn: { setExistConn: Dispatch<SetStateAction<boolean>>; existConn: boolean; };
 
 export let txUpdateTrigger: { setUpdateTrigger: Dispatch<SetStateAction<number>>; updateTrigger: number; };
+export let tokenUpdateTrigger: { setUpdateTrigger: Dispatch<SetStateAction<number>>; updateTrigger: number; };
+export let nftUpdateTrigger: { setUpdateTrigger: Dispatch<SetStateAction<number>>; updateTrigger: number; };
 
 function App() {
   let isMobile = isMobileScreen();
@@ -33,8 +35,14 @@ function App() {
   const [existConn, setExistConn] = useState(false);
   existingConn = {existConn: existConn, setExistConn: setExistConn};
 
-  const [updateTrigger, setUpdateTrigger] = useState(0);
-  txUpdateTrigger = {updateTrigger: updateTrigger, setUpdateTrigger: setUpdateTrigger};
+  const [txsUpdateTrigger, setTxsUpdateTrigger] = useState(0);
+  txUpdateTrigger = {updateTrigger: txsUpdateTrigger, setUpdateTrigger: setTxsUpdateTrigger};
+
+  const [tokensUpdateTrigger, setTokensUpdateTrigger] = useState(0);
+  tokenUpdateTrigger = {updateTrigger: tokensUpdateTrigger, setUpdateTrigger: setTokensUpdateTrigger};
+
+  const [nftsUpdateTrigger, setNftsUpdateTrigger] = useState(0);
+  nftUpdateTrigger = {updateTrigger: nftsUpdateTrigger, setUpdateTrigger: setNftsUpdateTrigger};
 
   sqlite = useSQLite();
   
