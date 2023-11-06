@@ -8,6 +8,7 @@ import Script from "nexcore-lib/types/lib/script/script";
 import { rostrumProvider } from "../providers/rostrum.provider";
 import { classifyTransaction } from "./wallet.utils";
 import { VaultInfo } from "../wallet/vault/Vault";
+import { getAddressBuffer } from "./common.utils";
 
 const HODL_FIRST_BLOCK = 274710;
 const HODL_SCRIPT_PREFIX =  "0014461ad25081cb0119d034385ff154c8d3ad6bdd76";
@@ -76,7 +77,7 @@ export async function getHodlArchive() {
 }
 
 export function getVaultBlockAndIndex(vaultAddress: string) {
-  let buf = nexcore.Address.decodeNexaAddress(vaultAddress).getHashBuffer();
+  let buf = getAddressBuffer(vaultAddress);
   let scirptTemplateBuf = nexcore.Script.fromBuffer(buf).getData();
   let data = (nexcore.Script.fromBuffer(scirptTemplateBuf).getData() as any).args;
 

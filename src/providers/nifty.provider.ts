@@ -1,6 +1,7 @@
 import nexcore from 'nexcore-lib';
 import { TokenEntity } from "../models/db.entities";
 import { CapacitorHttp, HttpResponseType } from "@capacitor/core";
+import { getAddressBuffer } from '../utils/common.utils';
 
 export default class NiftyProvider {
 
@@ -24,7 +25,7 @@ export default class NiftyProvider {
 
     public static isNiftySubgroup(group: string) {
         try {
-            let addrBuf = nexcore.Address.decodeNexaAddress(group).getHashBuffer();
+            let addrBuf = getAddressBuffer(group);
             if (!nexcore.GroupToken.isSubgroup(addrBuf)) {
                 return false;
             }
@@ -39,9 +40,7 @@ export default class NiftyProvider {
         try {
             let res = await CapacitorHttp.get({ url: this.endpoint + url, responseType: responseType });
             if (res.status !== 200) {
-                var err = new Error("Failed to perform GET");
-                (err as any).response = res;
-                throw err;
+                throw new Error(`Failed to perform GET. status: ${res.status}`);
             }
             return res.data as T;
         } catch (e) {

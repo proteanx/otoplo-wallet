@@ -2,22 +2,16 @@ import { Clipboard } from '@capacitor/clipboard';
 import { Capacitor, CapacitorHttp } from '@capacitor/core';
 import bigDecimal from 'js-big-decimal';
 import { toast, ToastPosition, ToastTransition } from 'react-toastify';
+import nexcore from 'nexcore-lib';
 
 export const MAX_INT64: bigint = 9223372036854775807n;
 
-export async function getNexaPrice() {
+export async function getNexaPrice(): Promise<string | number> {
     var res = await CapacitorHttp.get({ url: import.meta.env.VITE_PRICE_URL });
-    return handleResponse(res);
-}
-
-function handleResponse(response: any) {
-    if (response.status !== 200) {
-        var err = new Error();
-        (err as any).response = response;
-        throw err;
+    if (res.status !== 200) {
+        throw new Error("Failed to fetch price");
     }
-    
-    return response.data;
+    return res.data
 }
 
 export function isMobilePlatform() {
@@ -74,4 +68,8 @@ export async function copy(value: string, position: ToastPosition = 'top-right',
       theme: "dark",
       transition: transition
     });
+}
+
+export function getAddressBuffer(address: string) {
+    return nexcore.Address.decodeNexaAddress(address).getHashBuffer();
 }

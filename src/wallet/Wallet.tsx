@@ -109,7 +109,7 @@ export default function Wallet({ seed, item }: WalletProps) {
   
       const myInterval = setInterval(() => {
         setTmpVal((prevVal) => prevVal + 1);
-      }, 30 * 1000);
+      }, 60 * 1000);
   
       return () => clearInterval(myInterval);
     }

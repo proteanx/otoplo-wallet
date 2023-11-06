@@ -7,6 +7,7 @@ import { WalletKeys } from '../models/wallet.entities';
 import { MAX_INT64, isNullOrEmpty, parseAmountWithDecimals } from './common.utils';
 import Script from 'nexcore-lib/types/lib/script/script';
 import PublicKey from 'nexcore-lib/types/lib/publickey';
+import { tokenIdToHex } from './token.utils';
 
 const MAX_INPUTS_OUTPUTS = 250;
 
@@ -184,7 +185,7 @@ function prepareTransaction(toAddr: string, amount: string, token?: string) {
 }
 
 async function populateTokenInputsAndChange(tx: Transaction, keys: WalletKeys, token: string, outTokenAmount: bigint) {
-    let tokenHex = nexcore.Address.decodeNexaAddress(token).getHashBuffer().toString('hex');
+    let tokenHex = tokenIdToHex(token);
     let rKeys = keys.receiveKeys.filter(k => Object.keys(k.tokensBalance).includes(tokenHex));
     let cKeys = keys.changeKeys.filter(k => Object.keys(k.tokensBalance).includes(tokenHex));
     let allKeys = rKeys.concat(cKeys);

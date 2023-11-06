@@ -3,13 +3,17 @@ import { NftEntity, TokenEntity } from "../models/db.entities";
 import { dbProvider } from "../providers/db.provider";
 import NiftyProvider from "../providers/nifty.provider";
 import { rostrumProvider } from "../providers/rostrum.provider";
-import { currentTimestamp } from "./common.utils";
+import { currentTimestamp, getAddressBuffer } from "./common.utils";
 import NexCore from 'nexcore-lib';
+
+export function tokenIdToHex(token: string) {
+    return getAddressBuffer(token).toString('hex');
+}
 
 export async function fetchAndSaveNFT(token: string, parent: string) {
     // support only nifty for now
     try {
-        let hexId = NexCore.Address.decodeNexaAddress(token).getHashBuffer().toString('hex');
+        let hexId = tokenIdToHex(token);
         let nft = await NiftyProvider.fetchNFT(hexId);
         let nftEntity: NftEntity = {
             addedTime: currentTimestamp(),
@@ -26,7 +30,7 @@ export async function fetchAndSaveNFT(token: string, parent: string) {
 
 export async function removeLocalNFT(token: string) {
     try {
-        let hexId = NexCore.Address.decodeNexaAddress(token).getHashBuffer().toString('hex');
+        let hexId = tokenIdToHex(token);
         await dbProvider.deleteNft(hexId);
     } catch (e) {
         console.log('failed to remove local NFT');
