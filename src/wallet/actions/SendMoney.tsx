@@ -30,7 +30,6 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
   const [showPw, setShowPw] = useState(false);
   const [pwErr, setPwErr] = useState("");
   const [txErr, setTxErr] = useState<ReactElement | string>("");
-  const [customFeeEnabled, setCustomFeeEnabled] = useState(false);
   const [spinner, setSpinner] = useState<ReactElement | string>("");
   const [finalTx, setFinalTx] = useState<Transaction>(new nexcore.Transaction());
   const [toAddress, setToAddress] = useState("");
@@ -48,7 +47,6 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
   const toAddressRef = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);;
   const feeFromAmount = useRef<HTMLInputElement>(null);
-  const customFeeRef = useRef<HTMLInputElement>(null);
 
   const scanError = (err: any) => {
     setScannedAddress("");
@@ -122,7 +120,7 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
   }
 
   const showPasswordDialog = async () => {
-    if (txErr === "" && toAddressRef.current?.value && amountRef.current?.value && (!customFeeEnabled || customFeeRef.current?.value)) {
+    if (txErr === "" && toAddressRef.current?.value && amountRef.current?.value) {
       var refAmount = new bigDecimal(amountRef.current.value).multiply(new bigDecimal(100));
       if (refAmount.compareTo(new bigDecimal(nexcore.Transaction.DUST_AMOUNT)) < 0) {
         setTxErr("The amount is too small.");
@@ -136,9 +134,8 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
       setSpinner(<Spinner animation="border" size="sm"/>);
       let sendAmount = getRawAmount(amountRef.current.value, 2);
       let subtractFromAmount = feeFromAmount.current?.checked;
-      let manualFee = customFeeEnabled && customFeeRef.current?.value ? getRawAmount(customFeeRef.current.value, 2) : '';
       try {
-        let tx = await buildAndSignTransferTransaction(keys, toAddressRef.current.value, sendAmount, manualFee, subtractFromAmount);
+        let tx = await buildAndSignTransferTransaction(keys, toAddressRef.current.value, sendAmount, subtractFromAmount);
         setFinalTx(tx);
         setTxSize(new bigDecimal(tx._estimateSize()));
         setToAddress(toAddressRef.current.value);
@@ -169,16 +166,11 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
     setTxErr("");
     setScannedAddress("");
     setScannedAmount("");
-    setCustomFeeEnabled(false);
     setTotalFee(new bigDecimal(0));
     setRequiredFee(new bigDecimal(0));
     setFinalTx(new nexcore.Transaction());
     setTxMsg("");
     setShowSendDialog(false);
-  }
-
-  const switchFee = () => {
-    setCustomFeeEnabled(!customFeeEnabled);
   }
 
   const checkAddress = () => {
@@ -195,41 +187,12 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
         amountRef.current.value = amountRef.current.value.substring(1);
       }
 
-      let total = new bigDecimal(0);
-      if (customFeeEnabled && customFeeRef.current?.value) {
-        total = new bigDecimal(amountRef.current.value).add(new bigDecimal(customFeeRef.current.value));
-        total = total.multiply(new bigDecimal(100));
-      } else {
-        total = new bigDecimal(amountRef.current.value).multiply(new bigDecimal(100));
-      }
-
+      let total = new bigDecimal(amountRef.current.value).multiply(new bigDecimal(100));
       if (total.compareTo(new bigDecimal(balance.confirmed)) > 0) {
         setTxErr("Insufficient balance.");
       } else if (txErr !== "") {
         setTxErr("");
       } 
-    }
-  }
-
-  const formatFee = () => {
-    if (customFeeRef.current?.value) {
-      if (customFeeRef.current.value.includes(".") && customFeeRef.current.value.split(".")[1].length > 2) {
-        customFeeRef.current.value = parseFloat(customFeeRef.current.value).toFixed(2);
-      } else if (customFeeRef.current.value.startsWith("-") || (customFeeRef.current.value !== "0" && customFeeRef.current.value.startsWith("0") && !customFeeRef.current.value.startsWith("0."))) {
-        customFeeRef.current.value = customFeeRef.current.value.substring(1);
-      }
-
-      if (amountRef.current?.value && (!feeFromAmount.current || !feeFromAmount.current.checked)) {
-        var total = new bigDecimal(amountRef.current.value).add(new bigDecimal(customFeeRef.current.value));
-        total = total.multiply(new bigDecimal(100));
-        if (total.compareTo(new bigDecimal(balance.confirmed)) > 0) {
-          setTxErr("Insufficient balance.");
-        } else if (txErr !== "") {
-          setTxErr("");
-        }
-      } else {
-        setTxErr("");
-      }
     }
   }
 
@@ -331,12 +294,6 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
           <FloatingLabel  controlId="floatingInput" label="Amount (NEXA)" className="mb-2">
             <Form.Control disabled={spinner !== ""} type="number" step={'0.01'} min='0.00' placeholder='0' defaultValue={scannedAmount} ref={amountRef} onChange={formatAmount}/>
           </FloatingLabel>
-          <Form.Switch label="Use recommended fee rate (3 sats/B)" disabled={spinner !== ""} defaultChecked onChange={switchFee}/>
-          {customFeeEnabled ? (
-            <FloatingLabel controlId="floatingInput" label="Fee (NEXA)" className="mb-2">
-              <Form.Control disabled={spinner !== ""} type="number" step={'0.01'} min='0.00' placeholder='0' ref={customFeeRef} onChange={formatFee}/>
-            </FloatingLabel>
-          ) : '' }
           <Form.Switch label="Subtract fee from amount" disabled={spinner !== ""} ref={feeFromAmount}/>
           <span className='bad'>
             {txErr}

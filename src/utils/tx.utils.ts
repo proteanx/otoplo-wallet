@@ -34,13 +34,11 @@ interface TxOptions {
     isConsolidate?: boolean;
     toChange?: string;
     templateData?: TxTemplateData;
-    manuelFee?: string;
     feeFromAmount?: boolean;
 }
 
-export async function buildAndSignTransferTransaction(keys: WalletKeys, toAddr: string, amount: string, manuelFee?: string, feeFromAmount?: boolean, token?: string) {
+export async function buildAndSignTransferTransaction(keys: WalletKeys, toAddr: string, amount: string, feeFromAmount?: boolean, token?: string) {
     let txOptions: TxOptions = {
-        manuelFee: manuelFee,
         feeFromAmount: feeFromAmount
     }
 
@@ -74,11 +72,6 @@ async function populateNexaInputsAndChange(tx: Transaction, keys: WalletKeys, op
     }
 
     let usedKeys = new Map<string, PrivateKey>();
-
-    if (options.manuelFee) {
-        tx.fee(parseInt(options.manuelFee));
-    }
-
     let origAmount = options.isConsolidate ? 0 : tx.outputs[0].satoshis;
 
     for (let key of allKeys) {
@@ -112,10 +105,10 @@ async function populateNexaInputsAndChange(tx: Transaction, keys: WalletKeys, op
                     throw new Error("Too many inputs. Consider consolidate transactions or reduce the send amount.");
                 }
 
-                let avail = options.feeFromAmount ? tx.inputAmount - tx.outputs[0].satoshis : tx.inputAmount - (tx.outputs[0].satoshis + getRequiredFee(tx, options.manuelFee));
+                let avail = options.feeFromAmount ? tx.inputAmount - tx.outputs[0].satoshis : tx.inputAmount - (tx.outputs[0].satoshis + getRequiredFee(tx));
                 if (avail == 0) {
                     if (options.feeFromAmount) {
-                        let txFee = getRequiredFee(tx, options.manuelFee);
+                        let txFee = getRequiredFee(tx);
                         tx._updateOutput(0, origAmount - txFee);
                     }
                     assertMinimumRequiredFee(tx);
@@ -124,15 +117,15 @@ async function populateNexaInputsAndChange(tx: Transaction, keys: WalletKeys, op
                     tx.change(options.toChange ?? keys.changeKeys.at(-1)!.address);
                     if (options.feeFromAmount) {
                         let hasChange = tx.getChangeOutput();
-                        let txFee = getRequiredFee(tx, options.manuelFee);
+                        let txFee = getRequiredFee(tx);
                         tx._updateOutput(0, origAmount - txFee);
                         if (!hasChange && tx.getChangeOutput()) { // added change after update
-                            txFee = getRequiredFee(tx, options.manuelFee);
+                            txFee = getRequiredFee(tx);
                             tx._updateOutput(0, origAmount - txFee);
                         }
                     }
 
-                    avail = options.feeFromAmount ? tx.inputAmount - tx.outputs[0].satoshis : tx.inputAmount - (tx.outputs[0].satoshis + getRequiredFee(tx, options.manuelFee));
+                    avail = options.feeFromAmount ? tx.inputAmount - tx.outputs[0].satoshis : tx.inputAmount - (tx.outputs[0].satoshis + getRequiredFee(tx));
                     if (avail == 0 || avail >= nexcore.Transaction.DUST_AMOUNT) {
                         assertMinimumRequiredFee(tx);
                         return Array.from(usedKeys.values());
@@ -163,7 +156,10 @@ function prepareTransaction(toAddr: string, amount: string, token?: string) {
         throw new Error('Invalid Address.');
     }
     if ((token && BigInt(amount) < 1n) || (!token && parseInt(amount) < nexcore.Transaction.DUST_AMOUNT)) {
-        throw new Error("The amount is too small.");
+        throw new Error("The amount is too low.");
+    }
+    if ((token && BigInt(amount) > MAX_INT64) || (!token && parseInt(amount) > nexcore.Transaction.MAX_MONEY)) {
+        throw new Error("The amount is too high.");
     }
 
     let outType = nexcore.Address.getOutputType(toAddr);
@@ -252,6 +248,6 @@ function assertMinimumRequiredFee(tx: Transaction) {
     }
 }
 
-function getRequiredFee(tx: Transaction, manual?: string) {
-    return manual ? tx.getFee() : tx._estimateSize() * (nexcore.Transaction.FEE_PER_KB / 1000);
+function getRequiredFee(tx: Transaction) {
+    return tx._estimateSize() * (nexcore.Transaction.FEE_PER_KB / 1000);
 }
