@@ -65,7 +65,7 @@ export default function WalletData() {
         </div>
       }
       <div className='pt-4'>
-        <SendMoney balance={wallet.balance} keys={wallet.keys} isMobile={isMobile}/>
+        <SendMoney balance={wallet.balance} keys={wallet.keys} ticker='NEXA' decimals={2} isMobile={isMobile}/>
         <ReceiveMoney address={mainAddr} isMobile={isMobile}/>
         <Consolidate nexKeys={wallet.keys} balance={wallet.balance} isMobile={isMobile}/>
         { isMobile ? (

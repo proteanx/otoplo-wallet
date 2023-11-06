@@ -8,7 +8,7 @@ import dummy from '../../assets/img/token-icon-placeholder.svg';
 import TxList from "../tx/TxList";
 import ReceiveMoney from "../actions/ReceiveMoney";
 import TokenInfo from "./TokenInfo";
-import TokenSend from "./TokenSend";
+import SendMoney from "../actions/SendMoney";
 
 export default function TokenPage({ tokenEntity, tokenBalance, back }: { tokenEntity: TokenEntity, tokenBalance?: Balance, back: () => void }) {
   let isMobile = isMobileScreen();
@@ -53,7 +53,7 @@ export default function TokenPage({ tokenEntity, tokenBalance, back }: { tokenEn
                 </div>
               }
               <div className='pt-4'>
-                <TokenSend balance={wallet.balance} keys={wallet.keys} ticker={tokenEntity.ticker} decimals={tokenEntity.decimals} tokenEntity={tokenEntity} tokenBalance={tokenBalance} isMobile={isMobile}/>
+                <SendMoney balance={wallet.balance} keys={wallet.keys} ticker={tokenEntity.ticker} decimals={tokenEntity.decimals} tokenEntity={tokenEntity} tokenBalance={tokenBalance} isMobile={isMobile}/>
                 <ReceiveMoney address={mainAddr} isMobile={isMobile}/>
               </div>
             </Col>

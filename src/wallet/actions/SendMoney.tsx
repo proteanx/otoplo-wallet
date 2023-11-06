@@ -1,199 +1,95 @@
-import { ReactElement, useRef, useState } from 'react';
-import Spinner from 'react-bootstrap/Spinner';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Form from 'react-bootstrap/Form';
-import { currentTimestamp, getRawAmount, isMobilePlatform, parseAmountWithDecimals } from '../../utils/common.utils';
-import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
-import bigDecimal from 'js-big-decimal';
-import nexcore from 'nexcore-lib';
-import Alert from 'react-bootstrap/Alert';
-import { BarcodeFormat, BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
-import { Dialog } from '@capacitor/dialog';
-import { Container, Dropdown, Table } from 'react-bootstrap';
-import { Balance, WalletKeys } from '../../models/wallet.entities';
-import { TxTokenType, isValidNexaAddress } from '../../utils/wallet.utils';
-import { isPasswordValid } from '../../utils/seed.utils';
-import { dbProvider } from '../../providers/db.provider';
-import { TransactionEntity } from '../../models/db.entities';
-import Transaction from 'nexcore-lib/types/lib/transaction/transaction';
-import { broadcastTransaction, buildAndSignTransferTransaction } from '../../utils/tx.utils';
-import { QrScanner } from '@yudiel/react-qr-scanner';
+import { Alert, Button, Container, Dropdown, FloatingLabel, Form, InputGroup, Modal, Spinner, Table } from "react-bootstrap";
+import { Balance, WalletKeys } from "../../models/wallet.entities";
+import { ChangeEvent, ReactElement, useState } from "react";
+import Transaction from "nexcore-lib/types/lib/transaction/transaction";
+import nexcore from "nexcore-lib";
+import { currentTimestamp, getRawAmount, isMobilePlatform, isNullOrEmpty, parseAmountWithDecimals } from "../../utils/common.utils";
+import { BarcodeFormat, BarcodeScanner, LensFacing } from "@capacitor-mlkit/barcode-scanning";
+import { Dialog } from "@capacitor/dialog";
+import { TxTokenType, isValidNexaAddress } from "../../utils/wallet.utils";
+import { QrScanner } from "@yudiel/react-qr-scanner";
+import { TokenEntity, TransactionEntity } from "../../models/db.entities";
+import { broadcastTransaction, buildAndSignTransferTransaction } from "../../utils/tx.utils";
+import bigDecimal from "js-big-decimal";
+import { isPasswordValid } from "../../utils/seed.utils";
+import { dbProvider } from "../../providers/db.provider";
 
-export default function SendMoney({ balance, keys, isMobile }: { balance: Balance, keys: WalletKeys, isMobile?: boolean}) {
-  const [scannedAddress, setScannedAddress] = useState("");
-  const [scannedAmount, setScannedAmount] = useState("");
-  const [showScanDialog, setShowScanDialog] = useState(false);
+interface SendProps {
+  balance: Balance;
+  keys: WalletKeys;
+  ticker: string;
+  decimals: number;
+  tokenEntity?: TokenEntity;
+  tokenBalance?: Balance;
+  isMobile?: boolean
+}
+
+export default function SendMoney({ balance, keys, ticker, decimals, tokenEntity, tokenBalance, isMobile }: SendProps) {
   const [showSendDialog, setShowSendDialog] = useState(false);
-  const [showPwSeed, setShowPwSeed] = useState(false);
+  const [showScanDialog, setShowScanDialog] = useState(false);
+  const [showConfirmDialon, setShowConfirmDialog] = useState(false);
   const [showPw, setShowPw] = useState(false);
-  const [pwErr, setPwErr] = useState("");
-  const [txErr, setTxErr] = useState<ReactElement | string>("");
-  const [spinner, setSpinner] = useState<ReactElement | string>("");
-  const [finalTx, setFinalTx] = useState<Transaction>(new nexcore.Transaction());
-  const [toAddress, setToAddress] = useState("");
-  const [txSize, setTxSize] = useState(new bigDecimal(0));
-  const [txAmount, setTxAmount] = useState(new bigDecimal(0));
-  const [requiredFee, setRequiredFee] = useState(new bigDecimal(0));
-  const [totalFee, setTotalFee] = useState(new bigDecimal(0));
-  const [txMsg, setTxMsg] = useState<ReactElement | string>("");
-  const [txSpinner, setTxSpinner] = useState<ReactElement | string>("");
 
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string>('');
 
-  const pwRef = useRef<HTMLInputElement>(null);
-  const toAddressRef = useRef<HTMLInputElement>(null);
-  const amountRef = useRef<HTMLInputElement>(null);;
-  const feeFromAmount = useRef<HTMLInputElement>(null);
+  const [spinner, setSpinner] = useState<ReactElement | string>("");
+  const [txSpinner, setTxSpinner] = useState<ReactElement | string>("");
 
-  const scanError = (err: any) => {
-    setScannedAddress("");
-    setScannedAmount("");
-    setShowScanDialog(false);
-    console.error(err);
-  }
+  const [txMsg, setTxMsg] = useState<ReactElement | string>("");
+  const [txErr, setTxErr] = useState<ReactElement | string>("");
+  const [pwErr, setPwErr] = useState("");
 
-  const handleScan = (data: string) => {
-    if (data) {
-      var uri = new URL(data);
-      var address = uri.protocol + uri.pathname;
-      var amount = uri.searchParams.get('amount');
+  const [toAddress, setToAddress] = useState('');
+  const [amount, setAmount] = useState('');
+  const [sendRawAmount, setSendRawAmount] = useState('');
+  const [feeFromAmount, setFeeFromAmount] = useState(false);
+  const [finalTx, setFinalTx] = useState<Transaction>(new nexcore.Transaction());
+  const [pw, setPw] = useState('');
 
-      if (amount){
-        setScannedAmount(amount);
-      }
-      setShowSendDialog(true);
-      setShowScanDialog(false);
-      setScannedAddress(address);
-      if (!isValidNexaAddress(address)) {
-        setTxErr("Invalid Address");
-      }
-    }
-  }
-
-  const sendNexa = async () => {
-    if (pwRef.current?.value) {
-      let decMn = await isPasswordValid(pwRef.current.value);
-      if (decMn) {
-        try {
-          setTxSpinner(<Spinner animation="border" size="sm"/>);
-          let res = await broadcastTransaction(finalTx.serialize());
-          setTxMsg(<><div>Success. Tx ID:</div><div style={{wordBreak: "break-all"}}>{res}</div></>);
-          let t: TransactionEntity = {
-            txIdem: res,
-            txId: finalTx.id,
-            payTo: toAddress,
-            value: txAmount.getValue(),
-            time: currentTimestamp(),
-            height: 0,
-            extraGroup: "",
-            fee: finalTx.getFee(),
-            group: "",
-            state: 'outgoing',
-            tokenAmount: "0",
-            txGroupType: TxTokenType.NO_GROUP,
-          }
-          dbProvider.addLocalTransaction(t);
-          toAddressRef.current!.value = "";
-          amountRef.current!.value = "";
-          setScannedAddress("");
-          setScannedAmount("");
-          setFinalTx(new nexcore.Transaction());
-          closePasswordDialog();
-        } catch (e: any) {
-          setPwErr("Failed to send transaction. " + (e instanceof Error ? e.message : "Make sure the wallet is online."));
-        } finally {
-          setTxSpinner("");
-        }
-      } else {
-        setPwErr("Incorrect password.");
-      }
-    }
-  }
-
-  const closePasswordDialog = () => {
-    setPwErr("");
-    setTxSpinner("");
-    setShowPwSeed(false);
-  }
-
-  const showPasswordDialog = async () => {
-    if (txErr === "" && toAddressRef.current?.value && amountRef.current?.value) {
-      var refAmount = new bigDecimal(amountRef.current.value).multiply(new bigDecimal(100));
-      if (refAmount.compareTo(new bigDecimal(nexcore.Transaction.DUST_AMOUNT)) < 0) {
-        setTxErr("The amount is too small.");
-        return;
-      }
-      if (refAmount.compareTo(new bigDecimal(nexcore.Transaction.MAX_MONEY)) >= 0) {
-        setTxErr("the amount is too big.");
-        return;
-      }
-
-      setSpinner(<Spinner animation="border" size="sm"/>);
-      let sendAmount = getRawAmount(amountRef.current.value, 2);
-      let subtractFromAmount = feeFromAmount.current?.checked;
-      try {
-        let tx = await buildAndSignTransferTransaction(keys, toAddressRef.current.value, sendAmount, subtractFromAmount);
-        setFinalTx(tx);
-        setTxSize(new bigDecimal(tx._estimateSize()));
-        setToAddress(toAddressRef.current.value);
-        setTxAmount(new bigDecimal(sendAmount));
-        setTotalFee(new bigDecimal(tx._getUnspentValue()));
-        setRequiredFee(new bigDecimal(tx._estimateSize() * 3));
-        setShowPwSeed(true);
-      } catch (e) {
-        if (e instanceof Error) {
-          if (e.message.includes("errorMsg")) {
-            let errMsg = JSON.parse(e.message);
-            let err = <><div>Insufficient balance ({parseAmountWithDecimals(BigInt(balance.confirmed) + BigInt(balance.unconfirmed), 2)} NEXA).</div>
-                      <div>Amount: {errMsg.amount} NEXA, Fee: {errMsg.fee} NEXA.</div></>
-            setTxErr(err);
-          } else {
-            setTxErr(e.message)
-          }
-        } else {
-          setTxErr("Unable to fetch data. Please try again later and make sure the wallet is online.");
-        }
-      } finally {
-        setSpinner("");
-      }
-    }
-  }
+  const amountRegx1 = decimals ? new RegExp(`^0\.[0-9]{1,${decimals}}$`) : /^[1-9][0-9]*$/;
+  const amountRegx2 = decimals ? new RegExp(`^[1-9][0-9]*(\.[0-9]{1,${decimals}})?$`) : /^[1-9][0-9]*$/;
 
   const cancelSendDialog = () => {
     setTxErr("");
-    setScannedAddress("");
-    setScannedAmount("");
-    setTotalFee(new bigDecimal(0));
-    setRequiredFee(new bigDecimal(0));
+    setToAddress("");
+    setAmount("");
+    setSendRawAmount("");
     setFinalTx(new nexcore.Transaction());
     setTxMsg("");
+    setFeeFromAmount(false);
     setShowSendDialog(false);
   }
 
-  const checkAddress = () => {
-    if (toAddressRef.current?.value) {
-      setTxErr(isValidNexaAddress(toAddressRef.current.value) ? "" : "Invalid Address.");
-    }
+  const closeConfirmDialog = () => {
+    setPw("");
+    setPwErr("");
+    setTxSpinner("");
+    setShowConfirmDialog(false);
   }
 
-  const formatAmount = () => {
-    if (amountRef.current?.value) {
-      if (amountRef.current.value.includes(".") && amountRef.current.value.split(".")[1].length > 2) {
-        amountRef.current.value = parseFloat(amountRef.current.value).toFixed(2);
-      } else if (amountRef.current.value.startsWith("-") || (amountRef.current.value !== "0" && amountRef.current.value.startsWith("0") && !amountRef.current.value.startsWith("0."))) {
-        amountRef.current.value = amountRef.current.value.substring(1);
-      }
+  const handleChangePw = (e: ChangeEvent<HTMLInputElement>) => {
+    setPwErr("");
+    setPw(e.target.value);
+  };
 
-      let total = new bigDecimal(amountRef.current.value).multiply(new bigDecimal(100));
-      if (total.compareTo(new bigDecimal(balance.confirmed)) > 0) {
-        setTxErr("Insufficient balance.");
-      } else if (txErr !== "") {
-        setTxErr("");
-      } 
+  const handleChangeAddress = (e: ChangeEvent<HTMLInputElement>) => {
+    setTxErr("");
+    setToAddress(e.target.value);
+  };
+
+  const handleChangeAmount = (e: ChangeEvent<HTMLInputElement>) => {
+    setTxErr("");
+    if (e.target.value === '0' || amountRegx1.test(e.target.value) || amountRegx2.test(e.target.value)) {
+      setAmount(e.target.value)
+    } else if (isNullOrEmpty(e.target.value)) {
+      setAmount('');
     }
+  };
+
+  const handleChangeFeeMode = (e: ChangeEvent<HTMLInputElement>) => {
+    setTxErr("");
+    setFeeFromAmount(e.target.checked);
   }
 
   const scanQR = async () => {
@@ -268,6 +164,117 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
     handleScan(barcode);
   }
 
+  const handleScan = (data: string) => {
+    if (data) {
+      var uri = new URL(data);
+      var address = uri.protocol + uri.pathname;
+      var amount = uri.searchParams.get('amount');
+
+      if (amount && (amountRegx1.test(amount) || amountRegx2.test(amount))){
+        setAmount(amount);
+      }
+      setShowSendDialog(true);
+      setShowScanDialog(false);
+      setToAddress(address);
+      if (!isValidNexaAddress(address)) {
+        setTxErr("Invalid Address");
+      }
+    }
+  }
+
+  const scanError = (err: any) => {
+    setToAddress("");
+    setAmount("");
+    setShowScanDialog(false);
+    console.error(err);
+  }
+
+  const handleSend = async () => {
+    try {
+      if (!amountRegx1.test(amount) && !amountRegx2.test(amount)) {
+        throw new Error("Invalid Amount.");
+      }
+
+      let rawAmount = getRawAmount(amount, decimals);
+      let amt = BigInt(rawAmount);
+      let totalBalance = BigInt(balance.confirmed) + BigInt(balance.unconfirmed);
+      if (tokenEntity) {
+        totalBalance = 0n;
+        if (tokenBalance) {
+          totalBalance = BigInt(tokenBalance.confirmed) + BigInt(tokenBalance.unconfirmed);
+        }
+      }
+
+      if (amt > totalBalance) {
+        throw new Error("Insufficient balance.");
+      }
+
+      setSpinner(<Spinner animation="border" size="sm"/>);
+      let tx = await buildAndSignTransferTransaction(keys, toAddress, amt.toString(), feeFromAmount, tokenEntity?.token);
+      console.log(tx.serialize())
+      setSendRawAmount(tokenEntity ? rawAmount : BigInt(tx.outputs[0].satoshis).toString());
+      setFinalTx(tx);
+      setShowConfirmDialog(true);
+    } catch (e) {
+      if (e instanceof Error) {
+        if (e.message.includes("errorMsg")) {
+          let errMsg = JSON.parse(e.message);
+          if (tokenEntity) {
+            setTxErr(errMsg.errorMsg);
+          } else {
+            let err = <><div>Insufficient balance ({parseAmountWithDecimals(BigInt(balance.confirmed) + BigInt(balance.unconfirmed), 2)} NEXA).</div>
+                      <div>Amount: {errMsg.amount} NEXA, Fee: {errMsg.fee} NEXA.</div></>
+            setTxErr(err);
+          }          
+        } else {
+          setTxErr(e.message)
+        }
+      } else {
+        setTxErr("Unable to fetch data. Please try again later and make sure the wallet is online.");
+      }
+    } finally {
+      setSpinner("");
+    }
+  }
+
+  const confirmSend = async () => {
+    if (pw) {
+      let decMn = await isPasswordValid(pw);
+      if (decMn) {
+        try {
+          setTxSpinner(<Spinner animation="border" size="sm"/>);
+          let res = await broadcastTransaction(finalTx.serialize());
+          setTxMsg(<><div>Success. Tx ID:</div><div style={{wordBreak: "break-all"}}>{res}</div></>);
+          let t: TransactionEntity = {
+            txIdem: res,
+            txId: finalTx.id,
+            payTo: toAddress,
+            value: tokenEntity ? "0" : sendRawAmount,
+            time: currentTimestamp(),
+            height: 0,
+            extraGroup: "",
+            fee: finalTx.getFee(),
+            group: tokenEntity?.token ?? "",
+            state: 'outgoing',
+            tokenAmount: tokenEntity ? sendRawAmount : "0",
+            txGroupType: tokenEntity ? TxTokenType.TRANSFER : TxTokenType.NO_GROUP,
+          }
+          dbProvider.addLocalTransaction(t);
+          setToAddress("");
+          setAmount("");
+          setFinalTx(new nexcore.Transaction());
+          closeConfirmDialog();
+        } catch (e) {
+          setPwErr("Failed to send transaction. " + (e instanceof Error ? e.message : "Make sure the wallet is online."));
+        } finally {
+          setTxSpinner("");
+        }
+      } else {
+        setPwErr("Incorrect password.");
+      }
+    }
+  }
+
   return (
     <>
       { isMobile ? (
@@ -280,21 +287,21 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
         <Button className='ms-2' onClick={() => setShowSendDialog(true)}><i className="fa fa-upload"/> Send</Button>
       )}
 
-      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showSendDialog} onHide={cancelSendDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showSendDialog} onHide={cancelSendDialog} backdrop="static" keyboard={false} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Send Nexa</Modal.Title>
+          <Modal.Title>Send</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <InputGroup className="mb-3">
             <FloatingLabel controlId="floatingInput" label="To Address (must start with 'nexa:...')">
-              <Form.Control disabled={spinner !== ""} type="text" placeholder='nexa:...' defaultValue={scannedAddress} ref={toAddressRef} onChange={checkAddress}/>
+              <Form.Control disabled={spinner !== ""} type="text" placeholder='nexa:...' value={toAddress} onChange={handleChangeAddress}/>
             </FloatingLabel>
             <InputGroup.Text as='button' onClick={scanQR}><i className="fa-solid fa-camera-retro"/></InputGroup.Text>
           </InputGroup>
-          <FloatingLabel  controlId="floatingInput" label="Amount (NEXA)" className="mb-2">
-            <Form.Control disabled={spinner !== ""} type="number" step={'0.01'} min='0.00' placeholder='0' defaultValue={scannedAmount} ref={amountRef} onChange={formatAmount}/>
+          <FloatingLabel  controlId="floatingInput" label="Amount" className="mb-2">
+            <Form.Control disabled={spinner !== ""} type="number" step={'0.01'} min='0.00' placeholder='0' value={amount} onChange={handleChangeAmount}/>
           </FloatingLabel>
-          <Form.Switch label="Subtract fee from amount" disabled={spinner !== ""} ref={feeFromAmount}/>
+          { !tokenEntity && <Form.Switch label="Subtract fee from amount" disabled={spinner !== ""} onChange={handleChangeFeeMode}/> }
           <span className='bad'>
             {txErr}
           </span>
@@ -304,41 +311,46 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={cancelSendDialog}>Close</Button>
-          <Button disabled={spinner !== ""} onClick={showPasswordDialog}>{spinner !== "" ? spinner : "Send"}</Button>
+          <Button disabled={spinner !== ""} onClick={handleSend}>{spinner !== "" ? spinner : "Send"}</Button>
         </Modal.Footer>
       </Modal>
 
-      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showPwSeed} onHide={closePasswordDialog} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showConfirmDialon} onHide={closeConfirmDialog} backdrop="static" keyboard={false} centered>
         <Modal.Header closeButton={true}>
           <Modal.Title>Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Table>
             <tbody>
+              { tokenEntity && 
+                <tr>
+                  <td>Token:</td>
+                  <td style={{wordBreak: "break-all"}}>{tokenEntity.name ?? tokenEntity.token}</td>
+                </tr>
+              }
               <tr>
                 <td>Pay to:</td>
                 <td style={{wordBreak: "break-all"}}>{toAddress}</td>
               </tr>
               <tr>
                 <td>Amount:</td>
-                <td>{parseAmountWithDecimals(txAmount.getValue(), 2)} NEXA</td>
+                <td>{parseAmountWithDecimals(sendRawAmount, decimals)} {ticker}</td>
               </tr>
               <tr>
                 <td>Fee:</td>
-                <td>
-                  <div>{parseAmountWithDecimals(totalFee.getValue(), 2)} NEXA</div>
-                  <div>(Recommended: {parseAmountWithDecimals(requiredFee.getValue(), 2)} NEXA, Size: {parseAmountWithDecimals(txSize.getValue(), 3)} kB)</div>
-                </td>
+                <td>{parseAmountWithDecimals(finalTx.getFee(), 2)} NEXA</td>
               </tr>
-              <tr>
-                <td>Total:</td>
-                <td>{parseAmountWithDecimals(txAmount.add(totalFee).getValue(), 2)} NEXA</td>
-              </tr>
+              { !tokenEntity &&
+                <tr>
+                  <td>Total:</td>
+                  <td>{parseAmountWithDecimals(BigInt(sendRawAmount) + BigInt(finalTx.getFee()), 2)} NEXA</td>
+                </tr>
+              }
             </tbody>
           </Table>
           <p>Enter your password</p>
           <InputGroup>
-            <Form.Control type={!showPw ? "password" : "text"} ref={pwRef} placeholder="Password" autoFocus/>
+            <Form.Control type={!showPw ? "password" : "text"} value={pw} placeholder="Password" autoFocus onChange={handleChangePw}/>
             <InputGroup.Text className='cursor' onClick={() => setShowPw(!showPw)}>{!showPw ? <i className="fa fa-eye" aria-hidden="true"></i> : <i className="fa fa-eye-slash" aria-hidden="true"></i>}</InputGroup.Text>
           </InputGroup>
           <span className='bad'>
@@ -346,8 +358,8 @@ export default function SendMoney({ balance, keys, isMobile }: { balance: Balanc
           </span>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={closePasswordDialog}>Cancel</Button>
-          <Button onClick={sendNexa}>{txSpinner !== "" ? txSpinner : "Confirm"}</Button>
+          <Button variant="secondary" onClick={closeConfirmDialog}>Cancel</Button>
+          <Button onClick={confirmSend}>{txSpinner !== "" ? txSpinner : "Confirm"}</Button>
         </Modal.Footer>
       </Modal>
 
