@@ -6,6 +6,7 @@ import dummy from '../../assets/img/token-icon-placeholder.svg';
 import { dbProvider } from "../../providers/db.provider";
 import { toast } from "react-toastify";
 import { currentTimestamp } from "../../utils/common.utils";
+import NiftyProvider from "../../providers/nifty.provider";
 
 export default function TokenImport() {
   const [showDialog, setShowDialog] = useState(false);
@@ -38,7 +39,7 @@ export default function TokenImport() {
     setLoading(true);
     try {
       let token = await getTokenInfo(searchVal);
-      if (token) {
+      if (token && !NiftyProvider.isNiftySubgroup(token.tokenIdHex)) {
         setTokenData(token);
       } else {
         setErrMsg("Token not found. please validate address or try again later.");

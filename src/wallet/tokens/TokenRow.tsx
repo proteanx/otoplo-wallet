@@ -19,7 +19,7 @@ export default function TokenRow({ hideZero, tokenEntity, tokenBalance, onClick 
 
   return (
     <Card bg="custom-card" className='token-card text-white mb-1'>
-      <Card.Body onClick={onClick}>
+      <Card.Body className="py-1" onClick={onClick}>
         <Table borderless responsive variant='dark' className="mb-0">
           <tbody>
             <tr>

@@ -1,6 +1,6 @@
 import Confirmation from './Confirmation';
 import { TokenEntity, TransactionEntity } from '../../models/db.entities';
-import { copy, isMobileScreen, parseAmountWithDecimals, truncateStringMiddle } from '../../utils/common.utils';
+import { copy, isMobileScreen, isNullOrEmpty, parseAmountWithDecimals, truncateStringMiddle } from '../../utils/common.utils';
 import { ReactElement, useState } from 'react';
 import { Offcanvas } from 'react-bootstrap';
 import { Flip } from 'react-toastify';
@@ -46,6 +46,8 @@ export default function TxRecord({ record, height, token }: { record: Transactio
   } else {
     status = <span className='confirmed'>Confirmed ({height - record.height + 1})</span>;
   }
+
+  let tokenInteraction = ticker === 'NEXA' && !isNullOrEmpty(record.group) && record.group !== 'none';
 
   return (
     <>
@@ -120,6 +122,15 @@ export default function TxRecord({ record, height, token }: { record: Transactio
               <i className="fa-regular fa-copy ms-1 cursor nx" aria-hidden="true" title='copy' onClick={() => copy(record.payTo, 'bottom-right', Flip)}/>
             </span>
           </div>
+          { tokenInteraction && 
+            <div className='mb-4'>
+              <span className='text-white bold'>Interact with Token</span>
+              <span className='float-right smaller'>
+                {truncateStringMiddle(record.group, 30)}
+                <i className="fa-regular fa-copy ms-1 cursor nx" aria-hidden="true" title='copy' onClick={() => copy(record.group, 'bottom-right', Flip)}/>
+              </span>
+            </div>
+          }
         </div>
       </Offcanvas>
     </>
