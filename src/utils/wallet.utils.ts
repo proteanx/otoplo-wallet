@@ -200,10 +200,13 @@ export async function scanForNewAddresses(accountKey: HDPrivateKey) {
 
     let [rRes, cRes] = await Promise.all([rScan, cScan]);
     let minHeight = Math.min(rRes.height, cRes.height);
+    if (minHeight == 0) {
+        minHeight = Math.max(rRes.height, cRes.height);
+    }
 
     let state = await StorageProvider.getTransactionsState();
     if (minHeight > 0) {
-        if (minHeight < state.height) {
+        if (minHeight <= state.height) {
             state.height = minHeight - 1;
             await StorageProvider.setTransactionsState(state);
         }
@@ -230,7 +233,7 @@ async function rescanAddressesHistory(addresses: string[]) {
         }
     }
 
-    return {index: index, height: (minHeight == Number.MAX_SAFE_INTEGER ? 0 : minHeight)};
+    return {index: (index > 0 ? index + 1 : 0), height: (minHeight == Number.MAX_SAFE_INTEGER ? 0 : minHeight)};
 }
 
 export async function classifyTransaction(txHistory: ITXHistory, myAddresses: string[]) {
