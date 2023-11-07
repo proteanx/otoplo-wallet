@@ -105,7 +105,7 @@ export default function WalletData() {
         <Modal.Body>
           <Table borderless responsive striped hover>
             <tbody>
-              {rAddrs?.map((addr, i) => <tr key={i}><td key={i}>{addr}</td></tr>)}
+              {rAddrs?.map((addr, i) => <tr key={i}><td key={i} className='smaller'>{addr}</td></tr>)}
             </tbody>
           </Table>
         </Modal.Body>

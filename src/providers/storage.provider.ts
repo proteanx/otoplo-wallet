@@ -66,9 +66,9 @@ export default class StorageProvider {
   }
 
   public static async getTransactionsState(): Promise<TxStatus> {
-    var state;
+    let state;
     if (isMobilePlatform()) {
-      var t = await Preferences.get({ key: "tx-state" });
+      let t = await Preferences.get({ key: "tx-state" });
       state = t.value;
     } else {
       state = localStorage.getItem("tx-state");
@@ -85,9 +85,9 @@ export default class StorageProvider {
   }
   
   public static async getWalletIndexes(): Promise<WalletIndexes> {
-    var idx;
+    let idx;
     if (isMobilePlatform()) {
-      var t = await Preferences.get({ key: "wallet-idx" });
+      let t = await Preferences.get({ key: "wallet-idx" });
       idx = t.value;
     } else {
       idx = localStorage.getItem("wallet-idx");
@@ -108,7 +108,7 @@ export default class StorageProvider {
   }
 
   public static setLastCheck() {
-    var time = currentTimestamp();
+    let time = currentTimestamp();
     localStorage.setItem("last-check", time.toString());
   }
   
@@ -118,7 +118,7 @@ export default class StorageProvider {
   }
   
   public static setVaultLastCheck() {
-    var time = currentTimestamp();
+    let time = currentTimestamp();
     localStorage.setItem("last-check-vault", time.toString());
   }
   
@@ -135,9 +135,9 @@ export default class StorageProvider {
   }
   
   public static async getHodlState(): Promise<HodlStatus> {
-    var state;
+    let state;
     if (isMobilePlatform()) {
-      var t = await Preferences.get({ key: "hodl-state" });
+      let t = await Preferences.get({ key: "hodl-state" });
       state = t.value;
     } else {
       state = localStorage.getItem("hodl-state");
@@ -146,11 +146,30 @@ export default class StorageProvider {
   }
 
   public static getRostrumParams(): RostrumParams {
-    var params = localStorage.getItem("rostrum-params");
+    let params = localStorage.getItem("rostrum-params");
     return params !== null ? JSON.parse(params) : {scheme: RostrumScheme.WSS, host: 'rostrum.otoplo.com', port: 443};
   }
 
   public static saveRostrumParams(params: RostrumParams) {
     localStorage.setItem("rostrum-params", JSON.stringify(params));
+  }
+
+  public static async setHideZeroTokenConfig(hide: boolean) {
+    if (isMobilePlatform()) {
+      await Preferences.set({key: "zero-tokens", value: JSON.stringify(hide)});
+    } else {
+      localStorage.setItem("zero-tokens", JSON.stringify(hide));
+    }
+  }
+
+  public static async getHideZeroTokenConfig() {
+    let hide;
+    if (isMobilePlatform()) {
+      let h = await Preferences.get({ key: "zero-tokens" });
+      hide = h.value;
+    } else {
+      hide = localStorage.getItem("zero-tokens");
+    }
+    return hide === "true";
   }
 }

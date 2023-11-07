@@ -49,17 +49,21 @@ export async function getTokenInfo(token: string) {
         }
 
         if (genesis.document_url) {
-            let res = await CapacitorHttp.get({ url: genesis.document_url });
-            if (res.status == 200 && res.data && res.data[0]?.icon) {
-                let icon = res.data[0].icon;
-                if (typeof icon === 'string') {
-                    if (icon.startsWith('http')) {
-                        iconUrl = icon;
-                    } else {
-                        var url = new URL(genesis.document_url);
-                        iconUrl = `${url.origin}${icon}`;
+            try {
+                let res = await CapacitorHttp.get({ url: genesis.document_url });
+                if (res.status == 200 && res.data && res.data[0]?.icon) {
+                    let icon = res.data[0].icon;
+                    if (typeof icon === 'string') {
+                        if (icon.startsWith('http')) {
+                            iconUrl = icon;
+                        } else {
+                            let url = new URL(genesis.document_url);
+                            iconUrl = `${url.origin}${icon}`;
+                        }
                     }
                 }
+            } catch (e) {
+                console.error("Failed to load metadata", e)
             }
         }
 

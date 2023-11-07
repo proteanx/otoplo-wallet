@@ -348,6 +348,11 @@ code, .text-monospace {
     font-weight: 700;
 }
 
+.light-txt {
+    font-weight: 100;
+    color: rgb(193, 193, 193);
+}
+
 .larger {
     font-size: larger;
 }
@@ -376,4 +381,12 @@ code, .text-monospace {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#dropdown-option::after {
+    display: none !important; 
+}
+
+.dropdown-item:active {
+    background-color: #323942 !important;
 }
