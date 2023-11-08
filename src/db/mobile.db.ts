@@ -185,6 +185,10 @@ export class MobileDB implements IAppDB {
     return await this.execQuery("SELECT * FROM tokens ORDER BY addedTime DESC;");
   }
 
+  public async deleteToken(id: string) {
+    await this.execRun('DELETE FROM tokens WHERE tokenIdHex = ? OR token = ?;', [id, id]);
+  }
+
   public async upsertNft(nft: NftEntity) {
     var query = 'INSERT OR REPLACE INTO nfts (tokenIdHex,token,zipData,parentGroup,addedTime) VALUES (?,?,?,?,?);';
     var params = [nft.tokenIdHex, nft.token, nft.zipData, nft.parentGroup, nft.addedTime];

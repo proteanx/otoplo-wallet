@@ -84,11 +84,15 @@ export class DesktopDB extends Dexie implements IAppDB {
     return await this.tokens.orderBy('addedTime').reverse().toArray();
   }
 
+  public async deleteToken(id: string) {
+    await this.tokens.delete(id);
+  }
+
   public async upsertNft(nft: NftEntity) {
     await this.nfts.put(nft, nft.tokenIdHex);
   }
 
   public async deleteNft(id: string) {
-    return await this.nfts.delete(id);
+    await this.nfts.delete(id);
   }
 }

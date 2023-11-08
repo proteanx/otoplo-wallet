@@ -1,16 +1,18 @@
-import { Button, Offcanvas } from "react-bootstrap";
+import { Button, Modal, Offcanvas } from "react-bootstrap";
 import { TokenEntity } from "../../models/db.entities";
 import { useState } from "react";
 import dummy from '../../assets/img/token-icon-placeholder.svg';
-import { copy, truncateStringMiddle } from "../../utils/common.utils";
-import { Flip } from "react-toastify";
+import { copy, showToast, truncateStringMiddle } from "../../utils/common.utils";
+import { Flip, toast } from "react-toastify";
 import { rostrumProvider } from "../../providers/rostrum.provider";
 import { ITokenGenesis } from "../../models/rostrum.entities";
+import { dbProvider } from "../../providers/db.provider";
 
-export default function TokenInfo({ tokenEntity }: { tokenEntity: TokenEntity }) {
+export default function TokenInfo({ tokenEntity, goBack }: { tokenEntity: TokenEntity, goBack: () => void }) {
   const [showInfo, setShowInfo] = useState(false);
   const [tokenGenesis, setTokenGenesis] = useState<ITokenGenesis>();
-  
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false);
+
   const showData = () => {
     if (!tokenGenesis) {
       rostrumProvider.getTokenGenesis(tokenEntity.token).then(res => {
@@ -20,9 +22,21 @@ export default function TokenInfo({ tokenEntity }: { tokenEntity: TokenEntity })
     setShowInfo(true);
   }
 
+  const removeToken = async () => {
+    try {
+      await dbProvider.deleteToken(tokenEntity.tokenIdHex);
+      showToast("success", "Token removed successfully");
+      goBack();
+    } catch {
+      showToast("error", "Failed to remove token");
+    } finally {
+      setShowRemoveDialog(false);
+    }
+  }
+
   return (
     <>
-      <Button className="float-end" variant='outline-primary' onClick={showData}><i className="fa-solid fa-circle-info"/></Button>
+      <Button variant='outline-primary' onClick={showData}><i className="fa-solid fa-circle-info"/></Button>
 
       <Offcanvas data-bs-theme='dark' show={showInfo} placement='end' onHide={() => setShowInfo(false)}>
         <Offcanvas.Header closeButton>
@@ -67,7 +81,7 @@ export default function TokenInfo({ tokenEntity }: { tokenEntity: TokenEntity })
               <i className="fa-regular fa-copy ms-1 cursor nx" aria-hidden="true" title='copy' onClick={() => copy(tokenEntity.tokenIdHex, 'bottom-right', Flip)}/>
             </span>
           </div>
-          <div className='mb-4'>
+          <div>
             <span className='text-white bold'>Genesis TX</span>
             <span className='float-right smaller'>
               {truncateStringMiddle(tokenGenesis?.txidem, 40)}
@@ -75,7 +89,25 @@ export default function TokenInfo({ tokenEntity }: { tokenEntity: TokenEntity })
             </span>
           </div>
         </div>
+        <hr/>
+        <div className='mx-4 center'>
+          <Button variant='danger' onClick={() => setShowRemoveDialog(true)}><i className="fa-regular fa-trash-can"/> Remove from Wallet</Button>
+        </div>
       </Offcanvas>
+
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showRemoveDialog} onHide={() => setShowRemoveDialog(false)} keyboard={false} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Remove token</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>Are you sure you want to remove '{tokenEntity.name || tokenEntity.token}' from your wallet?</div>
+          <div className="light-txt smaller">* This will not affect your assets. tokens can always be added again.</div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowRemoveDialog(false)}>Cancel</Button>
+          <Button onClick={removeToken}>Confirm</Button> 
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

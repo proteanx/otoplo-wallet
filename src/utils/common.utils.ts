@@ -1,7 +1,7 @@
 import { Clipboard } from '@capacitor/clipboard';
 import { Capacitor, CapacitorHttp } from '@capacitor/core';
 import bigDecimal from 'js-big-decimal';
-import { toast, ToastPosition, ToastTransition } from 'react-toastify';
+import { toast, ToastContent, ToastOptions, ToastPosition, ToastTransition, TypeOptions } from 'react-toastify';
 import nexcore from 'nexcore-lib';
 
 export const MAX_INT64: bigint = 9223372036854775807n;
@@ -57,19 +57,44 @@ export function truncateStringMiddle(str?: string, maxLength: number = 0) {
 
 export async function copy(value: string, position: ToastPosition = 'top-right', transition?: ToastTransition) {
     await Clipboard.write({ string: value });
-    toast.success("Copied!", {
-      position: position,
-      autoClose: 1500,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: transition
+    showToast('success', "Copied!", {
+        position: position,
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: transition
     });
 }
 
 export function getAddressBuffer(address: string) {
     return nexcore.Address.decodeNexaAddress(address).getHashBuffer();
+}
+
+const defaultToastOpts: ToastOptions = {
+    autoClose: 1500,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark"
+}
+
+export function showToast(type: TypeOptions, msg: ToastContent, opts: ToastOptions = defaultToastOpts) {
+    switch (type) {
+        case 'info':
+            return toast.info(msg, opts);
+        case 'success':
+            return toast.success(msg, opts);
+        case 'error':
+            return toast.error(msg, opts);
+        case 'warning':
+            return toast.warning(msg, opts);
+        default:
+            return toast(msg, opts);
+    }
 }

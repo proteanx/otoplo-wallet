@@ -4,8 +4,7 @@ import { getTokenInfo } from "../../utils/token.utils";
 import { TokenEntity } from "../../models/db.entities";
 import dummy from '../../assets/img/token-icon-placeholder.svg';
 import { dbProvider } from "../../providers/db.provider";
-import { toast } from "react-toastify";
-import { currentTimestamp } from "../../utils/common.utils";
+import { currentTimestamp, showToast } from "../../utils/common.utils";
 import NiftyProvider from "../../providers/nifty.provider";
 
 export default function TokenImport() {
@@ -57,27 +56,10 @@ export default function TokenImport() {
     try {
       tokenData.addedTime = currentTimestamp();
       await dbProvider.saveToken(tokenData);
-      
-      toast.success("Token imported successfully", {
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark"
-      });
+      showToast("success", "Token imported successfully");
     } catch (e) {
       console.error(e);
-      toast.error("Failed to import token", {
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark"
-      });
+      showToast("error", "Failed to import token");
     } finally {
       closeDialog();
     }

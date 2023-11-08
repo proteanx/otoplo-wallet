@@ -26,15 +26,15 @@ export default function TokenPage({ tokenEntity, tokenBalance, back }: { tokenEn
     <>
       <Container className="text-white mt-3">
         <Row>
-          <Col className="left p-0">
-            <Button className="float-start" variant='outline-primary' onClick={back}><i className="fa-solid fa-circle-arrow-left"/></Button>
+          <Col className="p-0">
+            <Button variant='outline-primary' onClick={back}><i className="fa-solid fa-circle-arrow-left"/></Button>
           </Col>
           <Col xs={8} className="flex-center">
             <img className="me-1" width={30} src={tokenEntity.iconUrl || dummy} alt=''/>
             <span className="bold larger">{tokenEntity.name || truncateStringMiddle(tokenEntity.token, isMobile ? 20 : 70)}</span>
           </Col>
           <Col className="right p-0">
-            <TokenInfo tokenEntity={tokenEntity}/>
+            <TokenInfo tokenEntity={tokenEntity} goBack={back}/>
           </Col>
         </Row>
       </Container>

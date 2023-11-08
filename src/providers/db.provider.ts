@@ -73,13 +73,19 @@ class DBProvider {
         return await this.appdb.getTokens();
     }
 
+    public async deleteToken(id: string) {
+        await this.appdb.deleteToken(id);
+        tokenUpdateTrigger.setUpdateTrigger((prev) => prev + 1);
+    }
+
     public async saveNft(nft: NftEntity) {
         await this.appdb.upsertNft(nft);
         nftUpdateTrigger.setUpdateTrigger((prev) => prev + 1);
     }
 
     public async deleteNft(id: string) {
-        return await this.appdb.deleteNft(id);
+        await this.appdb.deleteNft(id);
+        nftUpdateTrigger.setUpdateTrigger((prev) => prev + 1);
     }
 }
 
