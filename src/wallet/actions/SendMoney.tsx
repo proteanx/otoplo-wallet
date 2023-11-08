@@ -211,7 +211,7 @@ export default function SendMoney({ balance, keys, ticker, decimals, tokenEntity
 
       setSpinner(<Spinner animation="border" size="sm"/>);
       let tx = await buildAndSignTransferTransaction(keys, toAddress, amt.toString(), feeFromAmount, tokenEntity?.token);
-      console.log(tx.serialize())
+
       setSendRawAmount(tokenEntity ? rawAmount : BigInt(tx.outputs[0].satoshis).toString());
       setFinalTx(tx);
       setShowConfirmDialog(true);
