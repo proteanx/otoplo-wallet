@@ -14,6 +14,7 @@ import { rostrumProvider } from '../providers/rostrum.provider';
 import { discoverVaults, saveHodlAddress } from '../utils/vault.utils';
 import { Id, toast } from 'react-toastify';
 import Tokens from './tokens/Tokens';
+import Settings from './settings/Settings';
 
 interface WalletProps {
   seed: string;
@@ -139,6 +140,10 @@ export default function Wallet({ seed, item }: WalletProps) {
     return (
       <Vault vaultAccountKey={vaultAccountKey}/>
     )
+  }
+
+  if (item === 'SETTINGS') {
+    return <Settings/>
   }
 
   // NEXA WALLET

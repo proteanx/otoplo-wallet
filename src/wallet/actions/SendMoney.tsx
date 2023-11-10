@@ -227,7 +227,7 @@ export default function SendMoney({ balance, keys, ticker, decimals, tokenEntity
             setTxErr(err);
           }          
         } else {
-          setTxErr(e.message)
+          setTxErr(e.message);
         }
       } else {
         setTxErr("Unable to fetch data. Please try again later and make sure the wallet is online.");

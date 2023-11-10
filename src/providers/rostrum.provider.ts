@@ -7,11 +7,9 @@ type RPCParameter = string | number | boolean | null;
 
 export class RostrumProvider {
 
-    private client: ElectrumClient;
+    private client?: ElectrumClient;
 
-    public constructor(params: RostrumParams) {
-        this.client = new ElectrumClient("com.otoplo.wallet", "1.4.3", params.host, params.port, params.scheme, 30*1000, 5000, true);
-    }
+    public constructor() {}
 
     public async getVersion() {
         return await this.execute<string[]>('server.version');
@@ -65,8 +63,26 @@ export class RostrumProvider {
         return await this.execute<string>('blockchain.transaction.broadcast', txHex);
     }
 
-    public async connect() {
+    public async getLatency() {
         try {
+            let start = Date.now();
+            let res = await this.getBlockTip();
+            if (res) {
+                return Date.now() - start;
+            }
+            return 0;
+        } catch {
+            return 0;
+        }
+    }
+
+    public async connect(params?: RostrumParams) {
+        try {
+            if (!params) {
+                params = await StorageProvider.getRostrumParams();
+            }
+            
+            this.client = new ElectrumClient("com.otoplo.wallet", "1.4.3", params.host, params.port, params.scheme, 30*1000, 10*1000, true);
             await this.client.connect();
         } catch (e) {
             if (e instanceof Error) {
@@ -78,9 +94,9 @@ export class RostrumProvider {
         }
     }
 
-    public async disconnect() {
+    public async disconnect(force?: boolean) {
         try {
-            return await this.client.disconnect();
+            return await this.client!.disconnect(force);
         } catch (e) {
             console.log(e)
             return false;
@@ -88,7 +104,7 @@ export class RostrumProvider {
     }
 
     private async execute<T>(method: string, ...parameters: RPCParameter[]) {
-        var res = await this.client.request(method, ...parameters);
+        var res = await this.client!.request(method, ...parameters);
         if (res instanceof Error) {
             throw res;
         }
@@ -96,4 +112,4 @@ export class RostrumProvider {
     }
 }
 
-export const rostrumProvider = new RostrumProvider(StorageProvider.getRostrumParams());
+export const rostrumProvider = new RostrumProvider();

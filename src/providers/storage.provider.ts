@@ -145,13 +145,31 @@ export default class StorageProvider {
     return state !== null ? JSON.parse(state) : {idx: 0};
   }
 
-  public static getRostrumParams(): RostrumParams {
-    let params = localStorage.getItem("rostrum-params");
+  public static async getRostrumParams(): Promise<RostrumParams> {
+    let params;
+    if (isMobilePlatform()) {
+      let t = await Preferences.get({ key: "rostrum-params" });
+      params = t.value;
+    } else {
+      params = localStorage.getItem("rostrum-params");
+    }
     return params !== null ? JSON.parse(params) : {scheme: RostrumScheme.WSS, host: 'rostrum.otoplo.com', port: 443};
   }
 
-  public static saveRostrumParams(params: RostrumParams) {
-    localStorage.setItem("rostrum-params", JSON.stringify(params));
+  public static async saveRostrumParams(params: RostrumParams) {
+    if (isMobilePlatform()) {
+      await Preferences.set({key: "rostrum-params", value: JSON.stringify(params)});
+    } else {
+      localStorage.setItem("rostrum-params", JSON.stringify(params));
+    }
+  }
+
+  public static async removeRostrumParams() {
+    if (isMobilePlatform()) {
+      await Preferences.remove({ key: "rostrum-params" });
+    } else {
+      localStorage.removeItem("rostrum-params");
+    }
   }
 
   public static async setHideZeroTokenConfig(hide: boolean) {

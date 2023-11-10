@@ -5,9 +5,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
-import { MenuItem } from 'react-pro-sidebar';
-import { isMobileScreen } from '../utils/common.utils';
-import { isPasswordValid } from '../utils/seed.utils';
+import { isMobileScreen } from '../../../utils/common.utils';
+import { isPasswordValid } from '../../../utils/seed.utils';
 
 export default function WalletBackup() {
   let isMobile = isMobileScreen();
@@ -51,7 +50,7 @@ export default function WalletBackup() {
 
   return (
     <>
-      <MenuItem prefix={<i className="fa fa-file-shield"></i>} onClick={() => setShowPwSeed(true)}>Backup Seed</MenuItem>
+      <Button onClick={() => setShowPwSeed(true)}>Show</Button>
 
       <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showPwSeed} onHide={() => setShowPwSeed(false)} backdrop="static" keyboard={false} centered>
         <Modal.Header closeButton={true}>

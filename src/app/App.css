@@ -238,6 +238,10 @@ hr {
     color: red;
 }
 
+.good {
+    color: rgb(47, 255, 95);
+}
+
 code, .text-monospace {
     font-family: "Source Code Pro", monospace !important;
 }
@@ -348,6 +352,10 @@ code, .text-monospace {
     font-weight: 700;
 }
 
+.light-bold {
+    font-weight: 500;
+}
+
 .light-txt {
     font-weight: 100;
     color: rgb(193, 193, 193);
@@ -389,4 +397,30 @@ code, .text-monospace {
 
 .dropdown-item:active {
     background-color: #323942 !important;
+}
+
+.settings > .nav-underline {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.settings .nav-item > .nav-link {
+    margin-left: 10px;
+    color: gray;
+    border-bottom-color: transparent;
+}
+
+.settings .nav-item > .nav-link:hover {
+    color: white;
+    border-bottom-color: transparent;
+}
+
+.settings .nav-item > .nav-link.active {
+    color: white;
+    border-bottom-color: #FF1E6F;
+    font-weight: normal;
+}
+
+.text-bg-dark {
+    --bs-modal-header-border-color: rgb(110, 110, 110);
+    --bs-modal-footer-border-color: rgb(110, 110, 110);
 }
