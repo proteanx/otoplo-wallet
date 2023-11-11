@@ -52,6 +52,10 @@ export class DesktopDB extends Dexie implements IAppDB {
     return await this.transactions.count();
   }
 
+  public async clearTransactions() {
+    await this.transactions.clear();
+  }
+
   public async getVaults(isArchive: number): Promise<ContractEntity[] | undefined> {
     return await this.contracts.where({type: 'vault', archive: isArchive}).toArray();
   }

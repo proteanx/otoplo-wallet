@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -15,6 +15,7 @@ import { VaultInfo } from './Vault';
 import HDPrivateKey from 'nexcore-lib/types/lib/hdprivatekey';
 import { estimateDateByFutureBlock, generateHodlKey, getVaultBlockAndIndex } from '../../utils/vault.utils';
 import { dbProvider } from '../../providers/db.provider';
+import ConfirmDialog from '../misc/ConfirmDialog';
 
 interface VaultEntryProps {
   keys: WalletKeys;
@@ -129,19 +130,12 @@ export default function VaultEntry({ keys, heightVal, price, vault, vaultAccount
           <Button onClick={() => setShowQR(false)}>Close</Button>
         </Modal.Footer>
       </Modal>
-
-      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showArchiveDialog} onHide={() => setShowArchiveDialog(false)} aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Move to Archive</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className='center'>
+      
+      <ConfirmDialog title='Move to Archive' show={showArchiveDialog} onCancel={() => setShowArchiveDialog(false)} onConfirm={moveToArchive}>
+        <div className='center'>
           Are you sure you want to move the Vault: <div style={{wordBreak: 'break-all'}}><b>{vaultAddress}</b></div> to Archive?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant='secondary' onClick={() => setShowArchiveDialog(false)}>Cancel</Button>
-          <Button onClick={moveToArchive}>Confirm</Button>
-        </Modal.Footer>
-      </Modal>
+        </div>
+      </ConfirmDialog>
     </>
   )
 }

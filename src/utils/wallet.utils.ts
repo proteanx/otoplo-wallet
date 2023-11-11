@@ -23,7 +23,7 @@ export enum TxTokenType {
 
 export async function clearLocalWallet() {
     await StorageProvider.clearData();
-    await dbProvider.appdb.clearData();
+    await dbProvider.clearData();
 }
 
 export function isValidNexaAddress(address: string, type = NexCore.Address.PayToScriptTemplate) {

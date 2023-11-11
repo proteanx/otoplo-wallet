@@ -8,6 +8,7 @@ export interface IAppDB {
     upsertTransaction(txEntry: TransactionEntity): Promise<void>;
     getPageTransactions(pageNum: number, pageSize: number, tokenId?: string): Promise<TransactionEntity[] | undefined>;
     countTransactions(tokenId?: string): Promise<number>;
+    clearTransactions(): Promise<void>;
 
     getVaults(isArchive: number): Promise<ContractEntity[] | undefined>;
     getVaultsAddresses(): Promise<ContractEntity[] | undefined>;

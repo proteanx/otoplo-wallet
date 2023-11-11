@@ -5,6 +5,7 @@ import StorageProvider from "../../../providers/storage.provider";
 import { RostrumProvider, rostrumProvider } from "../../../providers/rostrum.provider";
 import { RostrumTransportScheme } from "../../../models/rostrum.entities";
 import { isNullOrEmpty } from "../../../utils/common.utils";
+import ConfirmDialog from "../../misc/ConfirmDialog";
 
 export default function RostrumSettings() {
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -125,11 +126,9 @@ export default function RostrumSettings() {
 
   return (
     <>
-      <SettingsRow
-        title="Rostrum Node"
-        info={info}
-        action={<Button onClick={() => setShowEditDialog(true)}>Edit</Button>}
-      />
+      <SettingsRow hr title="Rostrum Node" info={info}>
+        <Button onClick={() => setShowEditDialog(true)}>Edit</Button>
+      </SettingsRow>
 
       <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showEditDialog} onHide={closeDialogs} centered>
         <Modal.Header closeButton>
@@ -162,19 +161,10 @@ export default function RostrumSettings() {
         </Modal.Footer>
       </Modal>
 
-      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showConfirmDialog} onHide={closeDialogs} backdrop="static" keyboard={false} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div>Rostrum instance will change to: {toMsg}</div>
-          <div className="light-txt smaller">* After confirmation you will be redirected to home page to login again.</div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={closeDialogs}>Cancel</Button>
-          <Button onClick={saveEdit}>Confirm</Button> 
-        </Modal.Footer>
-      </Modal>
+      <ConfirmDialog title="Confirmation" show={showConfirmDialog} onCancel={closeDialogs} onConfirm={saveEdit}>
+        <div>Rostrum instance will change to: {toMsg}</div>
+        <div className="light-txt smaller">* After confirmation you will be redirected to home page to login again.</div>
+      </ConfirmDialog>
     </>
   )
 }

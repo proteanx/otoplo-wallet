@@ -1,12 +1,13 @@
-import { Button, Modal, Offcanvas } from "react-bootstrap";
+import { Button, Offcanvas } from "react-bootstrap";
 import { TokenEntity } from "../../models/db.entities";
 import { useState } from "react";
 import dummy from '../../assets/img/token-icon-placeholder.svg';
 import { copy, showToast, truncateStringMiddle } from "../../utils/common.utils";
-import { Flip, toast } from "react-toastify";
+import { Flip } from "react-toastify";
 import { rostrumProvider } from "../../providers/rostrum.provider";
 import { ITokenGenesis } from "../../models/rostrum.entities";
 import { dbProvider } from "../../providers/db.provider";
+import ConfirmDialog from "../misc/ConfirmDialog";
 
 export default function TokenInfo({ tokenEntity, goBack }: { tokenEntity: TokenEntity, goBack: () => void }) {
   const [showInfo, setShowInfo] = useState(false);
@@ -95,19 +96,10 @@ export default function TokenInfo({ tokenEntity, goBack }: { tokenEntity: TokenE
         </div>
       </Offcanvas>
 
-      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showRemoveDialog} onHide={() => setShowRemoveDialog(false)} keyboard={false} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Remove token</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div>Are you sure you want to remove '{tokenEntity.name || tokenEntity.token}' from your wallet?</div>
-          <div className="light-txt smaller">* This will not affect your assets. tokens can always be added again.</div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowRemoveDialog(false)}>Cancel</Button>
-          <Button onClick={removeToken}>Confirm</Button> 
-        </Modal.Footer>
-      </Modal>
+      <ConfirmDialog title="Remove token" show={showRemoveDialog} onCancel={() => setShowRemoveDialog(false)} onConfirm={removeToken}>
+        <div>Are you sure you want to remove '{tokenEntity.name || tokenEntity.token}' from your wallet?</div>
+        <div className="light-txt smaller">* This will not affect your assets. tokens can always be added again.</div>
+      </ConfirmDialog>
     </>
   )
 }

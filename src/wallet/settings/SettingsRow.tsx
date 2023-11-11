@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Col, Row } from "react-bootstrap";
 
-export default function SettingsRow({ hr, title, info, action }: { hr?: boolean, title: string, info: ReactNode, action: ReactNode }) {
+export default function SettingsRow({ hr, title, info, children }: { hr?: boolean, title: string, info: ReactNode, children?: ReactNode }) {
   return (
     <>
       <Row className={`px-3 ${hr ? '' : 'pb-3'}`}>
@@ -14,7 +14,7 @@ export default function SettingsRow({ hr, title, info, action }: { hr?: boolean,
             </div>
         </Col>
         <Col className="right align-self-center">
-            {action}
+            {children}
         </Col>
       </Row>
       { hr && <hr/>}

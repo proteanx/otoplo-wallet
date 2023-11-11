@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Modal, Table } from 'react-bootstrap';
+import { Button, Card, Table } from 'react-bootstrap';
 import { getHodlArchive } from '../../utils/vault.utils';
 import { dbProvider } from '../../providers/db.provider';
+import ConfirmDialog from '../misc/ConfirmDialog';
 
 export default function Archive({ setArchive, refreshVaults }: { setArchive: React.Dispatch<React.SetStateAction<boolean>>, refreshVaults: () => Promise<void> }) {
   const [showArchiveDialog, setShowArchiveDialog] = useState(false);
@@ -55,18 +56,11 @@ export default function Archive({ setArchive, refreshVaults }: { setArchive: Rea
         </Card.Body>
       </Card>
 
-      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showArchiveDialog} onHide={() => setShowArchiveDialog(false)} aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Move to Vault</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className='center'>
+      <ConfirmDialog title='Move to Vault' show={showArchiveDialog} onCancel={() => setShowArchiveDialog(false)} onConfirm={moveToVault}>
+        <div className='center'>
           Are you sure you want to move the Vault: <div style={{wordBreak: 'break-all'}}><b>{vaultAddress}</b></div> from Archive to Vault?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant='secondary' onClick={() => setShowArchiveDialog(false)}>Cancel</Button>
-          <Button onClick={moveToVault}>Confirm</Button>
-        </Modal.Footer>
-      </Modal>
+        </div>
+      </ConfirmDialog>
     </>
   )
 }

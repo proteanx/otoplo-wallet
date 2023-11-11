@@ -8,7 +8,7 @@ import { isMobilePlatform } from "../utils/common.utils";
 
 class DBProvider {
 
-    appdb: IAppDB;
+    private appdb: IAppDB;
 
     constructor() {
         if (isMobilePlatform()) {
@@ -20,6 +20,10 @@ class DBProvider {
 
     public async initSchema() {
         return this.appdb.initSchema();
+    }
+
+    public async clearData() {
+        await this.appdb.clearData();
     }
 
     public async addLocalTransaction(tx: TransactionEntity) {
@@ -37,6 +41,10 @@ class DBProvider {
 
     public async countLocalTransactions(tokenId?: string) {
         return await this.appdb.countTransactions(tokenId);
+    }
+
+    public async clearLocalTransactions() {
+        await this.appdb.clearTransactions();
     }
 
     public async getLocalVaults(archive: boolean) {

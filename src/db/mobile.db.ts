@@ -148,6 +148,10 @@ export class MobileDB implements IAppDB {
     return vals ? vals[0].c : 0;
   }
 
+  public async clearTransactions() {
+    await this.execRun("DELETE FROM transactions");
+  }
+
   public async getVaults(isArchive: number): Promise<ContractEntity[] | undefined> {
     return await this.execQuery("SELECT * FROM contracts WHERE type = 'vault' AND archive = ?;", [isArchive]);
   }
