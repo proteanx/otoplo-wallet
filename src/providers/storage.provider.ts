@@ -41,57 +41,28 @@ export default class StorageProvider {
   }
 
   public static async getVersionCode(): Promise<string | null> {
-    if (isMobilePlatform()) {
-      let t = await Preferences.get({ key: "version-code" });
-      return t.value;
-    } else {
-      return localStorage.getItem("version-code");
-    }
+    return await this.getValue("version-code");
   }
 
   public static async setVersionCode(code: string) {
-    if (isMobilePlatform()) {
-      await Preferences.set({ key: 'version-code', value: code });
-    } else {
-      localStorage.setItem('version-code', code);
-    }
+    await this.setValue('version-code', code);
   }
 
   public static async setTransactionsState(state: TxStatus) {
-    if (isMobilePlatform()) {
-      await Preferences.set({key: "tx-state", value: JSON.stringify(state)});
-    } else {
-      localStorage.setItem("tx-state", JSON.stringify(state));
-    }
+    await this.setValue("tx-state", JSON.stringify(state));
   }
 
   public static async getTransactionsState(): Promise<TxStatus> {
-    let state;
-    if (isMobilePlatform()) {
-      let t = await Preferences.get({ key: "tx-state" });
-      state = t.value;
-    } else {
-      state = localStorage.getItem("tx-state");
-    }
+    let state = await this.getValue("tx-state");
     return state !== null ? JSON.parse(state) : {height: 0};
   }
 
   public static async saveWalletIndexes(aIndexes: WalletIndexes) {
-    if (isMobilePlatform()) {
-      await Preferences.set({key: "wallet-idx", value: JSON.stringify(aIndexes)});
-    } else {
-      localStorage.setItem("wallet-idx", JSON.stringify(aIndexes));
-    }
+    await this.setValue("wallet-idx", JSON.stringify(aIndexes))
   }
   
   public static async getWalletIndexes(): Promise<WalletIndexes> {
-    let idx;
-    if (isMobilePlatform()) {
-      let t = await Preferences.get({ key: "wallet-idx" });
-      idx = t.value;
-    } else {
-      idx = localStorage.getItem("wallet-idx");
-    }
+    let idx = await this.getValue("wallet-idx");
     return idx !== null ? JSON.parse(idx) : {rIndex: 0, cIndex: 0};
   }
 
@@ -127,67 +98,58 @@ export default class StorageProvider {
   }
 
   public static async setHodlState(state: HodlStatus) {
-    if (isMobilePlatform()) {
-      await Preferences.set({key: "hodl-state", value: JSON.stringify(state)});
-    } else {
-      localStorage.setItem("hodl-state", JSON.stringify(state));
-    }
+    await this.setValue("hodl-state", JSON.stringify(state));
   }
   
   public static async getHodlState(): Promise<HodlStatus> {
-    let state;
-    if (isMobilePlatform()) {
-      let t = await Preferences.get({ key: "hodl-state" });
-      state = t.value;
-    } else {
-      state = localStorage.getItem("hodl-state");
-    }
+    let state = await this.getValue("hodl-state");
     return state !== null ? JSON.parse(state) : {idx: 0};
   }
 
   public static async getRostrumParams(): Promise<RostrumParams> {
-    let params;
-    if (isMobilePlatform()) {
-      let t = await Preferences.get({ key: "rostrum-params" });
-      params = t.value;
-    } else {
-      params = localStorage.getItem("rostrum-params");
-    }
+    let params = await this.getValue("rostrum-params");
     return params !== null ? JSON.parse(params) : {scheme: RostrumScheme.WSS, host: 'rostrum.otoplo.com', port: 443};
   }
 
   public static async saveRostrumParams(params: RostrumParams) {
-    if (isMobilePlatform()) {
-      await Preferences.set({key: "rostrum-params", value: JSON.stringify(params)});
-    } else {
-      localStorage.setItem("rostrum-params", JSON.stringify(params));
-    }
+    await this.setValue("rostrum-params", JSON.stringify(params));
   }
 
   public static async removeRostrumParams() {
-    if (isMobilePlatform()) {
-      await Preferences.remove({ key: "rostrum-params" });
-    } else {
-      localStorage.removeItem("rostrum-params");
-    }
+    await this.removeValue("rostrum-params");
   }
 
   public static async setHideZeroTokenConfig(hide: boolean) {
-    if (isMobilePlatform()) {
-      await Preferences.set({key: "zero-tokens", value: JSON.stringify(hide)});
-    } else {
-      localStorage.setItem("zero-tokens", JSON.stringify(hide));
-    }
+    await this.setValue("zero-tokens", JSON.stringify(hide));
   }
 
   public static async getHideZeroTokenConfig() {
-    let hide;
-    if (isMobilePlatform()) {
-      let h = await Preferences.get({ key: "zero-tokens" });
-      hide = h.value;
-    } else {
-      hide = localStorage.getItem("zero-tokens");
-    }
+    let hide = await this.getValue("zero-tokens");
     return hide === "true";
+  }
+
+  private static async setValue(key: string, value: string) {
+    if (isMobilePlatform()) {
+      await Preferences.set({key: key, value: value});
+    } else {
+      localStorage.setItem(key, value);
+    }
+  }
+
+  private static async getValue(key: string) {
+    if (isMobilePlatform()) {
+      let v = await Preferences.get({ key: key });
+      return v.value;
+    } else {
+      return localStorage.getItem(key);
+    }
+  }
+
+  private static async removeValue(key: string) {
+    if (isMobilePlatform()) {
+      await Preferences.remove({ key: key });
+    } else {
+      localStorage.removeItem(key);
+    }
   }
 }
