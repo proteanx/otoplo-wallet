@@ -10,7 +10,7 @@ export async function checkForUpdates() {
       let option = dialog.showMessageBoxSync({
         type: 'info',
         title: "Wallet Update",
-        message: "A new version of Otoplo Wallet is now available!",
+        message: "A new version is now available!",
         detail: `Otoplo Wallet ${latest} is now available. Would you like to download it now?`,
         buttons: ["Yes", "Remind me later"],
         defaultId: 0,
