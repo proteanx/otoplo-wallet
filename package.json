@@ -45,7 +45,7 @@
     "test": "vitest",
     "build": "del-cli ./dist && tsc && vite build",
     "build:mobile": "env-cmd -f .env.mobile npm run build",
-    "build:desktop": "del-cli ./out && env-cmd -f .env.desktop npm run build && tsc -p tsconfig.electron.json",
+    "build:desktop": "del-cli ./out && env-cmd -f .env.desktop npm run build",
     "electron-dev": "set APP_DEV=true && electron .",
     "make:desktop": "npm run build:desktop && electron-forge package",
     "make:osx": "npm run build:desktop && electron-forge make --arch=universal"
@@ -70,6 +70,7 @@
     "sass": "^1.69.5",
     "typescript": "^5.2.2",
     "vite": "^4.5.0",
+    "vite-plugin-electron": "^0.15.4",
     "vite-plugin-node-polyfills": "^0.16.0",
     "vite-plugin-svgr": "^4.1.0",
     "vite-tsconfig-paths": "^4.2.1"

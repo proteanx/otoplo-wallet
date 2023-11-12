@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import svgr from 'vite-plugin-svgr';
+import electron from 'vite-plugin-electron';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import path from 'path';
 
@@ -15,6 +16,14 @@ export default defineConfig({
         global: true,
         process: true,
         Buffer: true
+      }
+    }),
+    electron({
+      entry: "electron/main.ts",
+      vite: {
+        build: {
+          outDir: 'dist'
+        }
       }
     })
   ],

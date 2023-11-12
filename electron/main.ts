@@ -1,5 +1,6 @@
 import { app, shell, BrowserWindow } from 'electron';
 import { join } from 'path';
+import { checkForUpdates } from './utils';
 
 let mainWindow: BrowserWindow;
 const gotTheLock = app.requestSingleInstanceLock();
@@ -22,12 +23,12 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+    mainWindow.show();
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
-    return { action: 'deny' }
+    shell.openExternal(details.url);
+    return { action: 'deny' };
   })
 
   mainWindow.removeMenu();
@@ -59,7 +60,29 @@ if (!gotTheLock) {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.whenReady().then(() => {
-    createWindow()
+    checkForUpdates().then(res => {
+      if (res) {
+        let url = "";
+        switch (process.platform) {
+          case 'darwin':
+            url = `https://release.otoplo.com/otoplo-wallet/${res}/otoplo-wallet-osx-${res}.dmg`;
+            break;
+          case 'linux':
+            url = `https://release.otoplo.com/otoplo-wallet/${res}/otoplo-wallet-linux-x64-${res}.tar.gz`;
+            break;
+          case 'win32':
+            url = `https://release.otoplo.com/otoplo-wallet/${res}/otoplo-wallet-win-setup-${res}.exe`;
+            break;
+          default:
+            url = `https://release.otoplo.com/otoplo-wallet/${res}/`;
+            break;
+        }
+        shell.openExternal(url);
+        app.quit();
+      } else {
+        createWindow();
+      }
+    });
 
     app.on('activate', function () {
       // On macOS it's common to re-create a window in the app when the
