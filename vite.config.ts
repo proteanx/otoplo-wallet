@@ -18,7 +18,7 @@ export default defineConfig({
         Buffer: true
       }
     }),
-    electron({
+    process.env.VITE_IS_DESKTOP == 'true' && electron({
       entry: "electron/main.ts",
       vite: {
         build: {
