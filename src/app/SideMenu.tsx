@@ -41,9 +41,7 @@ export default function SideMenu({ activeItem, setActiveItem, sidebarToggled, se
       <hr/>
       <Menu className='mb-3'>
         <MenuItem active={activeItem === 'NEXA'} prefix={<img alt="Nexa" src={nex} width={20}/>} onClick={() => setItemAndCollapse("NEXA")}>My Wallet</MenuItem>
-        { import.meta.env.VITE_IS_HODL_ACTIVE === "true" && 
-          <MenuItem active={activeItem === 'VAULT'} prefix={<i className="fa-solid fa-vault"></i>} onClick={() => setItemAndCollapse("VAULT")}>HODL Vault</MenuItem>
-        }
+        <MenuItem active={activeItem === 'VAULT'} prefix={<i className="fa-solid fa-vault"></i>} onClick={() => setItemAndCollapse("VAULT")}>HODL Vault</MenuItem>
         <MenuItem active={activeItem === 'SETTINGS'} prefix={<i className="fa fa-gear"/>} onClick={() => setItemAndCollapse("SETTINGS")}>Settings</MenuItem>
         <MenuItem prefix={<i className="fa fa-house-lock"></i>} onClick={reload}>Lock</MenuItem>
         <hr/>

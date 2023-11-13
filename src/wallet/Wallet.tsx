@@ -48,7 +48,7 @@ export default function Wallet({ seed, item }: WalletProps) {
         theme: "dark",
       });
       dispatch(setSync());
-      recoverVaults = import.meta.env.VITE_IS_HODL_ACTIVE === "true" && (await StorageProvider.getHodlState()).idx === 0;
+      recoverVaults = (await StorageProvider.getHodlState()).idx === 0;
       indexes = await discoverWallet(accountKey);
     }
     let walletKeys = generateKeysAndAddresses(accountKey, 0, indexes.rIndex, 0, indexes.cIndex);
