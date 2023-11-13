@@ -43,7 +43,6 @@
     "serve": "vite preview",
     "test": "vitest",
     "build": "del-cli ./dist && tsc && vite build",
-    "build:mobile": "env-cmd -f .env.mobile npm run build",
     "build:desktop": "del-cli ./out && env-cmd -f .env.desktop npm run build",
     "electron-dev": "set APP_DEV=true && electron .",
     "make:desktop": "npm run build:desktop && electron-forge package",
