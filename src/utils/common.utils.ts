@@ -7,11 +7,11 @@ import nexcore from 'nexcore-lib';
 export const MAX_INT64: bigint = 9223372036854775807n;
 
 export async function getNexaPrice(): Promise<string | number> {
-    var res = await CapacitorHttp.get({ url: import.meta.env.VITE_PRICE_URL });
+    var res = await CapacitorHttp.get({ url: "https://api.coingecko.com/api/v3/simple/price?ids=nexacoin&vs_currencies=usd" });
     if (res.status !== 200) {
         throw new Error("Failed to fetch price");
     }
-    return res.data
+    return res.data.nexacoin?.usd ?? 0;
 }
 
 export function isMobilePlatform() {
