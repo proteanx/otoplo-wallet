@@ -1,6 +1,6 @@
-import { app, shell, BrowserWindow } from 'electron';
+import { app, shell, BrowserWindow, ipcMain } from 'electron';
 import { join } from 'path';
-import { checkForUpdates } from './utils';
+import { checkForUpdates, exportFile } from './utils';
 
 let mainWindow: BrowserWindow;
 const gotTheLock = app.requestSingleInstanceLock();
@@ -17,7 +17,7 @@ function createWindow(): void {
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon: 'dist/favicon.png' } : {}),
     webPreferences: {
-      //preload: join(__dirname, '../preload/index.js'),
+      preload: join(__dirname, 'preload.js'),
       sandbox: false
     },
   })
@@ -90,7 +90,7 @@ if (!gotTheLock) {
       if (BrowserWindow.getAllWindows().length === 0) createWindow()
     });
 
-    //ipcMain.handle('export-file', (event, file: Buffer, title: string) => exportFile(event, file, title, mainWindow));
+    ipcMain.handle('export-file', (event, file: Buffer, title: string) => exportFile(event, file, title, mainWindow));
   });
 
   // Quit when all windows are closed, except on macOS. There, it's common

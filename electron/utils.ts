@@ -1,5 +1,6 @@
 import { CapacitorHttp } from "@capacitor/core";
-import { app, dialog } from "electron";
+import { BrowserWindow, IpcMainInvokeEvent, app, dialog } from "electron";
+import fs from 'fs/promises';
 
 export async function checkForUpdates() {
   let version = app.getVersion();
@@ -23,4 +24,18 @@ export async function checkForUpdates() {
     console.log(e)
   }
   return false;
+}
+
+export async function exportFile(event: IpcMainInvokeEvent, file: Buffer, title: string, mainWindow: BrowserWindow) {
+  let path = dialog.showSaveDialogSync(mainWindow, { defaultPath: `${title}.zip` });
+  if (!path) {
+    return false;
+  }
+
+  try {
+    await fs.writeFile(path, file);
+    return true;
+  } catch (e) {
+    throw new Error('Unable to save file')
+  }
 }
