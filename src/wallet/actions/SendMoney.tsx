@@ -1,18 +1,15 @@
-import { Alert, Button, Container, Dropdown, FloatingLabel, Form, InputGroup, Modal, Spinner, Table } from "react-bootstrap";
+import { Alert, Button, FloatingLabel, Form, InputGroup, Modal, Spinner, Table } from "react-bootstrap";
 import { Balance, WalletKeys } from "../../models/wallet.entities";
 import { ChangeEvent, ReactElement, useState } from "react";
 import Transaction from "nexcore-lib/types/lib/transaction/transaction";
 import nexcore from "nexcore-lib";
 import { currentTimestamp, getRawAmount, isMobilePlatform, isNullOrEmpty, parseAmountWithDecimals } from "../../utils/common.utils";
-import { BarcodeFormat, BarcodeScanner, LensFacing } from "@capacitor-mlkit/barcode-scanning";
-import { Dialog } from "@capacitor/dialog";
 import { TxTokenType, isValidNexaAddress } from "../../utils/wallet.utils";
-import { QrScanner } from "@yudiel/react-qr-scanner";
 import { TokenEntity, TransactionEntity } from "../../models/db.entities";
 import { broadcastTransaction, buildAndSignTransferTransaction } from "../../utils/tx.utils";
-import bigDecimal from "js-big-decimal";
 import { isPasswordValid } from "../../utils/seed.utils";
 import { dbProvider } from "../../providers/db.provider";
+import QRScanner, { mobileQrScan } from "../misc/QRScanner";
 
 interface SendProps {
   balance: Balance;
@@ -27,11 +24,10 @@ interface SendProps {
 export default function SendMoney({ balance, keys, ticker, decimals, tokenEntity, tokenBalance, isMobile }: SendProps) {
   const [showSendDialog, setShowSendDialog] = useState(false);
   const [showScanDialog, setShowScanDialog] = useState(false);
-  const [showConfirmDialon, setShowConfirmDialog] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [showPw, setShowPw] = useState(false);
 
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
-  const [selectedDevice, setSelectedDevice] = useState<string>('');
 
   const [spinner, setSpinner] = useState<ReactElement | string>("");
   const [txSpinner, setTxSpinner] = useState<ReactElement | string>("");
@@ -93,75 +89,13 @@ export default function SendMoney({ balance, keys, ticker, decimals, tokenEntity
   }
 
   const scanQR = async () => {
-    if (!isMobilePlatform()) {
-      let devices = await navigator.mediaDevices.enumerateDevices();
-      setDevices(devices.filter(d => d.kind == 'videoinput'));
-      setShowScanDialog(true);
-      return;
+    if (isMobilePlatform()) {
+      return await mobileQrScan(handleScan);
     }
 
-    const { camera } = await BarcodeScanner.requestPermissions();
-    if (camera !== 'granted' && camera !== 'limited') {
-      await Dialog.alert({ title: 'Permission denied', message: 'Please grant camera permission to use the barcode scanner.' });
-      return;
-    }
-
-    document.querySelector('body')!.classList.add('barcode-scanning-active');
-    document.getElementById('barcode-scanning-modal')!.classList.remove('barcode-scanning-modal-hidden');
-    document.getElementById('barcode-scanning-modal')!.classList.add('barcode-scanning-modal');
-
-    const squareElementBoundingClientRect = document.getElementById('barcode-square')!.getBoundingClientRect();
-    const scaledRect = squareElementBoundingClientRect
-      ? {
-          left: squareElementBoundingClientRect.left * window.devicePixelRatio,
-          right: squareElementBoundingClientRect.right * window.devicePixelRatio,
-          top: squareElementBoundingClientRect.top * window.devicePixelRatio,
-          bottom: squareElementBoundingClientRect.bottom * window.devicePixelRatio,
-          width: squareElementBoundingClientRect.width * window.devicePixelRatio,
-          height: squareElementBoundingClientRect.height * window.devicePixelRatio,
-        }
-      : undefined;
-    const detectionCornerPoints = scaledRect
-      ? [
-          [scaledRect.left, scaledRect.top],
-          [scaledRect.left + scaledRect.width, scaledRect.top],
-          [scaledRect.left + scaledRect.width, scaledRect.top + scaledRect.height],
-          [scaledRect.left, scaledRect.top + scaledRect.height],
-        ]
-      : undefined;
-
-    const listener = await BarcodeScanner.addListener('barcodeScanned',
-      async (result) => {
-        const cornerPoints = result.barcode.cornerPoints;
-        if (detectionCornerPoints && cornerPoints) {
-          if (
-            detectionCornerPoints[0][0] > cornerPoints[0][0] ||
-            detectionCornerPoints[0][1] > cornerPoints[0][1] ||
-            detectionCornerPoints[1][0] < cornerPoints[1][0] ||
-            detectionCornerPoints[1][1] > cornerPoints[1][1] ||
-            detectionCornerPoints[2][0] < cornerPoints[2][0] ||
-            detectionCornerPoints[2][1] < cornerPoints[2][1] ||
-            detectionCornerPoints[3][0] > cornerPoints[3][0] ||
-            detectionCornerPoints[3][1] < cornerPoints[3][1]
-          ) {
-            return;
-          }
-        }
-
-        closeScanner(result.barcode.rawValue);
-      }
-    );
-
-    await BarcodeScanner.startScan({ formats: [BarcodeFormat.QrCode], lensFacing: LensFacing.Back });
-  }
-
-  const closeScanner = async (barcode: string) => {
-    await BarcodeScanner.removeAllListeners();
-    document.getElementById('barcode-scanning-modal')!.classList.remove('barcode-scanning-modal');
-    document.getElementById('barcode-scanning-modal')!.classList.add('barcode-scanning-modal-hidden');
-    document.querySelector('body')!.classList.remove('barcode-scanning-active');
-    await BarcodeScanner.stopScan();
-    handleScan(barcode);
+    let devices = await navigator.mediaDevices.enumerateDevices();
+    setDevices(devices.filter(d => d.kind == 'videoinput'));
+    setShowScanDialog(true);
   }
 
   const handleScan = (data: string) => {
@@ -315,7 +249,7 @@ export default function SendMoney({ balance, keys, ticker, decimals, tokenEntity
         </Modal.Footer>
       </Modal>
 
-      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showConfirmDialon} onHide={closeConfirmDialog} backdrop="static" keyboard={false} centered>
+      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showConfirmDialog} onHide={closeConfirmDialog} backdrop="static" keyboard={false} centered>
         <Modal.Header closeButton={true}>
           <Modal.Title>Confirmation</Modal.Title>
         </Modal.Header>
@@ -363,32 +297,13 @@ export default function SendMoney({ balance, keys, ticker, decimals, tokenEntity
         </Modal.Footer>
       </Modal>
 
-      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' size='sm' show={showScanDialog} onHide={() => setShowScanDialog(false)} aria-labelledby="contained-modal-title-vcenter" centered>
-        <Modal.Header closeButton={true}>
-          <Modal.Title>Scan QR</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className='center'>
-          <QrScanner containerStyle={{ width: 250, marginBottom: "5px" }} constraints={{ deviceId: selectedDevice, facingMode: 'environment' }} onError={scanError} onDecode={handleScan}/>
-          <Dropdown className="d-inline mx-2" onSelect={eventKey => setSelectedDevice(eventKey ?? '')}>
-            <Dropdown.Toggle id="dropdown-autoclose-true">
-              Select Camera Device
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              { devices.map((d, i) => <Dropdown.Item key={i} eventKey={d.deviceId}>{d.label}</Dropdown.Item>) }
-            </Dropdown.Menu>
-          </Dropdown>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowScanDialog(false)}>Close</Button>
-        </Modal.Footer>
-      </Modal>
-
-      <div id="barcode-scanning-modal" className="barcode-scanning-modal-hidden">
-        <Button className='barcode-close' variant='secondary' onClick={() => closeScanner('')}><i className="fa-solid fa-xmark"/></Button>
-        <Container>
-          <div id="barcode-square"></div>
-        </Container>
-      </div>
+      <QRScanner 
+        devices={devices} 
+        showScanDialog={showScanDialog} 
+        closeScanDialog={() => setShowScanDialog(false)} 
+        handleScan={handleScan}
+        scanError={scanError}
+      />
     </>
   )
 }
