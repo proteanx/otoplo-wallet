@@ -42,10 +42,12 @@
   "scripts": {
     "start": "vite",
     "serve": "vite preview",
+    "start-electron": "set APP_DEV=true && electron .",
     "test": "vitest",
     "build": "del-cli ./dist && tsc && vite build",
+    "build:android": "npm run build && npx cap sync android",
+    "build:ios": "npm run build && npx cap sync ios",
     "build:desktop": "del-cli ./out && env-cmd -f .env.desktop npm run build",
-    "electron-dev": "set APP_DEV=true && electron .",
     "make:desktop": "npm run build:desktop && electron-forge package",
     "make:osx": "npm run build:desktop && electron-forge make --arch=universal"
   },
