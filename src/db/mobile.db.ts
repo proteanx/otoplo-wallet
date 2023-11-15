@@ -38,13 +38,13 @@ const upgradeSchemaV2 =  [
     state TEXT NOT NULL,
     value TEXT NOT NULL,
     fee INTEGER NOT NULL,
-    group TEXT,
+    token TEXT,
     extraGroup TEXT,
     txGroupType INTEGER,
     tokenAmount TEXT
   );`,
   `CREATE INDEX IF NOT EXISTS tx_time_idx ON transactions (time);`,
-  `CREATE INDEX IF NOT EXISTS tx_group ON transactions (group);`,
+  `CREATE INDEX IF NOT EXISTS tx_token ON transactions (token);`,
   `CREATE INDEX IF NOT EXISTS tx_ex_group ON transactions (extraGroup);`,
 
   `CREATE TABLE IF NOT EXISTS tokens (
@@ -126,14 +126,14 @@ export class MobileDB implements IAppDB {
   }
 
   public async upsertTransaction(tx: TransactionEntity) {
-    var query = 'INSERT OR REPLACE INTO transactions (txIdem,txId,time,height,payTo,state,value,fee,group,extraGroup,txGroupType,tokenAmount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);';
-    var params = [tx.txIdem, tx.txId, tx.time, tx.height, tx.payTo, tx.state, tx.value, tx.fee, tx.group, tx.extraGroup, tx.txGroupType, tx.tokenAmount];
+    var query = 'INSERT OR REPLACE INTO transactions (txIdem,txId,time,height,payTo,state,value,fee,token,extraGroup,txGroupType,tokenAmount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);';
+    var params = [tx.txIdem, tx.txId, tx.time, tx.height, tx.payTo, tx.state, tx.value, tx.fee, tx.token, tx.extraGroup, tx.txGroupType, tx.tokenAmount];
     await this.execRun(query, params);
   }
 
   public async getPageTransactions(pageNum: number, pageSize: number, tokenId?: string): Promise<TransactionEntity[] | undefined> {
     if (tokenId) {
-      return await this.execQuery("SELECT * FROM transactions WHERE group = ? ORDER BY time DESC LIMIT ? OFFSET ?;", [tokenId, pageSize, (pageNum-1)*pageSize]);
+      return await this.execQuery("SELECT * FROM transactions WHERE token = ? ORDER BY time DESC LIMIT ? OFFSET ?;", [tokenId, pageSize, (pageNum-1)*pageSize]);
     }
     return await this.execQuery("SELECT * FROM transactions ORDER BY time DESC LIMIT ? OFFSET ?;", [pageSize, (pageNum-1)*pageSize]);
   }
@@ -141,7 +141,7 @@ export class MobileDB implements IAppDB {
   public async countTransactions(tokenId?: string): Promise<number> {
     let vals;
     if (tokenId) {
-      vals = await this.execQuery("SELECT COUNT(*) AS c FROM transactions WHERE group = ?;", [tokenId]);
+      vals = await this.execQuery("SELECT COUNT(*) AS c FROM transactions WHERE token = ?;", [tokenId]);
     } else {
       vals = await this.execQuery("SELECT COUNT(*) AS c FROM transactions;");
     }

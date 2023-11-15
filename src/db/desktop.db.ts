@@ -14,7 +14,7 @@ export class DesktopDB extends Dexie implements IAppDB {
     super('nexa');
     
     this.version(3).stores({
-      transactions: 'txIdem, time, group, extraGroup',
+      transactions: 'txIdem, time, token, extraGroup',
       contracts: 'address, [type+archive]',
       tokens: 'tokenIdHex, &token, parentGroup, addedTime',
       nfts: 'tokenIdHex, &token, parentGroup, addedTime'
@@ -40,14 +40,14 @@ export class DesktopDB extends Dexie implements IAppDB {
 
   public async getPageTransactions(pageNum: number, pageSize: number, tokenId?: string): Promise<TransactionEntity[]> {
     if (tokenId) {
-      return await this.transactions.where("group").equals(tokenId).reverse().offset((pageNum-1)*pageSize).limit(pageSize).sortBy("time");
+      return await this.transactions.where("token").equals(tokenId).reverse().offset((pageNum-1)*pageSize).limit(pageSize).sortBy("time");
     }
     return await this.transactions.orderBy('time').reverse().offset((pageNum-1)*pageSize).limit(pageSize).toArray();
   }
 
   public async countTransactions(tokenId?: string): Promise<number> {
     if (tokenId) {
-      return await this.transactions.where("group").equals(tokenId).count();
+      return await this.transactions.where("token").equals(tokenId).count();
     }
     return await this.transactions.count();
   }

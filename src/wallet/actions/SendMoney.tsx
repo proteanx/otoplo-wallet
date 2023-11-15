@@ -188,7 +188,7 @@ export default function SendMoney({ balance, keys, ticker, decimals, tokenEntity
             height: 0,
             extraGroup: "",
             fee: finalTx.getFee(),
-            group: tokenEntity?.token ?? "",
+            token: tokenEntity?.token ?? "",
             state: 'outgoing',
             tokenAmount: tokenEntity ? sendRawAmount : "0",
             txGroupType: tokenEntity ? TxTokenType.TRANSFER : TxTokenType.NO_GROUP,

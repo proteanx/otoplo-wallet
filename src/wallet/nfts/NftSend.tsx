@@ -124,7 +124,7 @@ export default function NftSend({ nftEntity, keys }: { nftEntity: NftEntity, key
             height: 0,
             extraGroup: "",
             fee: finalTx.getFee(),
-            group: nftEntity.token,
+            token: nftEntity.token,
             state: 'outgoing',
             tokenAmount: "1",
             txGroupType: TxTokenType.TRANSFER,

@@ -278,7 +278,7 @@ export async function classifyTransaction(txHistory: ITXHistory, myAddresses: st
 
     let [txType, txGroup, tokenAmount, extraGroup] = classifyTokenTransaction(t.vin, outputs, txEntry.state, myAddresses);
     txEntry.txGroupType = txType;
-    txEntry.group = txGroup;
+    txEntry.token = txGroup;
     txEntry.tokenAmount = tokenAmount;
     txEntry.extraGroup = extraGroup;
 
@@ -288,11 +288,11 @@ export async function classifyTransaction(txHistory: ITXHistory, myAddresses: st
 export async function classifyAndSaveTransaction(txHistory: ITXHistory, myAddresses: string[]) {
     let txEntry = await classifyTransaction(txHistory, myAddresses);
 
-    if (txEntry.group !== 'none' && NiftyProvider.isNiftySubgroup(txEntry.group)) {
+    if (txEntry.token !== 'none' && NiftyProvider.isNiftySubgroup(txEntry.token)) {
         if (txEntry.state === 'incoming') {
-            await fetchAndSaveNFT(txEntry.group, NiftyProvider.NIFTY_TOKEN.token);
+            await fetchAndSaveNFT(txEntry.token, NiftyProvider.NIFTY_TOKEN.token);
         } else if (txEntry.state === 'outgoing') {
-            await removeLocalNFT(txEntry.group);
+            await removeLocalNFT(txEntry.token);
         }
         txEntry.extraGroup = NiftyProvider.NIFTY_TOKEN.token;
     }

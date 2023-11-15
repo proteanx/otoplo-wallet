@@ -47,7 +47,7 @@ export default function TxRecord({ record, height, token }: { record: Transactio
     status = <span className='confirmed'>Confirmed ({height - record.height + 1})</span>;
   }
 
-  let tokenInteraction = ticker === 'NEXA' && !isNullOrEmpty(record.group) && record.group !== 'none';
+  let tokenInteraction = ticker === 'NEXA' && !isNullOrEmpty(record.token) && record.token !== 'none';
 
   return (
     <>
@@ -126,8 +126,8 @@ export default function TxRecord({ record, height, token }: { record: Transactio
             <div className='mb-4'>
               <span className='text-white bold'>Interact with Token</span>
               <span className='float-right smaller'>
-                {truncateStringMiddle(record.group, 30)}
-                <i className="fa-regular fa-copy ms-1 cursor nx" aria-hidden="true" title='copy' onClick={() => copy(record.group, 'bottom-right', Flip)}/>
+                {truncateStringMiddle(record.token, 30)}
+                <i className="fa-regular fa-copy ms-1 cursor nx" aria-hidden="true" title='copy' onClick={() => copy(record.token, 'bottom-right', Flip)}/>
               </span>
             </div>
           }

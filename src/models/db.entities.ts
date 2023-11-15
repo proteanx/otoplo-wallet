@@ -9,7 +9,7 @@ export interface TransactionEntity {
   state: TxEntityState;
   value: string;
   fee: number;
-  group: string;
+  token: string;
   extraGroup: string;
   txGroupType: number;
   tokenAmount: string;

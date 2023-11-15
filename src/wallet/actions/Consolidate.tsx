@@ -77,7 +77,7 @@ export default function Consolidate({ nexKeys, balance, isMobile }: { nexKeys: W
             height: 0,
             extraGroup: "",
             fee: finalTx.getFee(),
-            group: "",
+            token: "",
             state: 'both',
             tokenAmount: "0",
             txGroupType: TxTokenType.NO_GROUP,
