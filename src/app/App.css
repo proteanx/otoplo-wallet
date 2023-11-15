@@ -45,7 +45,7 @@ body.barcode-scanning-active {
     width: 200px;
     height: 200px;
     border: 6px solid white;
-    box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.4);
     margin: 15px;
 }
 
@@ -377,11 +377,13 @@ code, .text-monospace {
     float: right;
 }
 
-.token-card {
+.token-card,
+.nft-card {
     cursor: pointer;
 }
 
-.token-card:hover {
+.token-card:hover,
+.nft-card:hover {
     border: 1px solid rgba(100, 100, 100, 0.7)  !important;
 }
 

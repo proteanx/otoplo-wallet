@@ -15,6 +15,7 @@ import { discoverVaults, saveHodlAddress } from '../utils/vault.utils';
 import { Id, toast } from 'react-toastify';
 import Tokens from './tokens/Tokens';
 import Settings from './settings/Settings';
+import Nfts from './nfts/Nfts';
 
 interface WalletProps {
   seed: string;
@@ -132,7 +133,7 @@ export default function Wallet({ seed, item }: WalletProps) {
   }
 
   if (item === 'NFT') {
-    return;
+    return <Nfts/>;
   }
 
   if (item === 'VAULT') {
