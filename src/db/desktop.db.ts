@@ -96,6 +96,10 @@ export class DesktopDB extends Dexie implements IAppDB {
     await this.nfts.put(nft, nft.tokenIdHex);
   }
 
+  public async getNfts() {
+    return await this.nfts.orderBy('addedTime').reverse().toArray();
+  }
+
   public async deleteNft(id: string) {
     await this.nfts.delete(id);
   }

@@ -199,6 +199,10 @@ export class MobileDB implements IAppDB {
     await this.execRun(query, params);
   }
 
+  public async getNfts(): Promise<NftEntity[] | undefined> {
+    return await this.execQuery("SELECT * FROM nfts ORDER BY addedTime DESC;");
+  }
+
   public async deleteNft(id: string) {
     await this.execRun('DELETE FROM nfts WHERE tokenIdHex = ? OR token = ?;', [id, id]);
   }

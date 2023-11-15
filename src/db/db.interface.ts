@@ -22,5 +22,6 @@ export interface IAppDB {
     deleteToken(id: string): Promise<void>;
 
     upsertNft(nft: NftEntity): Promise<void>;
+    getNfts(): Promise<NftEntity[] | undefined>;
     deleteNft(id: string): Promise<void>;
 }

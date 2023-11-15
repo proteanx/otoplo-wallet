@@ -91,6 +91,10 @@ class DBProvider {
         nftUpdateTrigger.setUpdateTrigger((prev) => prev + 1);
     }
 
+    public async getLocalNfts() {
+        return await this.appdb.getNfts();
+    }
+
     public async deleteNft(id: string) {
         await this.appdb.deleteNft(id);
         nftUpdateTrigger.setUpdateTrigger((prev) => prev + 1);
