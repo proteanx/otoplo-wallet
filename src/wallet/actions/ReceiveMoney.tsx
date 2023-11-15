@@ -4,7 +4,7 @@ import nex from '../../assets/img/nex.svg';
 import { copy } from "../../utils/common.utils";
 import { useState } from "react";
 
-export default function ReceiveMoney({ address, isMobile }: { address: string, isMobile: boolean }) {
+export default function ReceiveMoney({ address, isMobile }: { address: string, isMobile?: boolean }) {
   const [showQR, setShowQR] = useState(false);
 
   return (
