@@ -15,7 +15,7 @@ function createWindow(): void {
     show: false,
     maximizable: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon: 'dist/favicon.png' } : {}),
+    ...(process.platform === 'linux' ? { icon: join(__dirname, 'favicon.png') } : {}),
     webPreferences: {
       preload: join(__dirname, 'preload.js'),
       sandbox: false
