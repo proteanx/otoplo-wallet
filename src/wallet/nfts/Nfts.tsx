@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAppSelector } from '../../store/hooks';
 import { walletState } from '../../store/slices/wallet.slice';
 import { nftUpdateTrigger } from '../../app/App';
-import { dbProvider } from '../../providers/db.provider';
+import { dbProvider } from "../../app/App";
 import NftFigure from './NftFigure';
 import NftPage from './NftPage';
 import ReceiveMoney from '../actions/ReceiveMoney';

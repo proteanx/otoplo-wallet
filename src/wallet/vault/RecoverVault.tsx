@@ -2,7 +2,7 @@ import { ReactElement, useState } from 'react';
 import { Alert, Button, Modal, Spinner } from 'react-bootstrap';
 import HDPrivateKey from 'nexcore-lib/types/lib/hdprivatekey';
 import { WalletKeys } from '../../models/wallet.entities';
-import { dbProvider } from '../../providers/db.provider';
+import { dbProvider } from '../../app/App';
 import { discoverVaults, saveHodlAddress } from '../../utils/vault.utils';
 import StorageProvider from '../../providers/storage.provider';
 

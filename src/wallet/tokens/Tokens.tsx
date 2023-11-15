@@ -1,12 +1,11 @@
-import { Button, Col, Container, Dropdown, Form, Row } from "react-bootstrap";
+import {  Col, Container, Row } from "react-bootstrap";
 import TokenRow from "./TokenRow";
 import { useAppSelector } from "../../store/hooks";
 import { walletState } from "../../store/slices/wallet.slice";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TokenEntity } from "../../models/db.entities";
-import { dbProvider } from "../../providers/db.provider";
 import TokenImport from "./TokenImport";
-import { tokenUpdateTrigger } from "../../app/App";
+import { dbProvider, tokenUpdateTrigger } from "../../app/App";
 import TokenPage from "./TokenPage";
 import StorageProvider from "../../providers/storage.provider";
 import TokensOptions from "./TokensOptions";

@@ -12,7 +12,7 @@ import HDPrivateKey from 'nexcore-lib/types/lib/hdprivatekey';
 import { generateHodlConstraint, generateVisibleArgs, getHodlTemplate } from '../../utils/vault.utils';
 import { isPasswordValid } from '../../utils/seed.utils';
 import { TxTokenType } from '../../utils/wallet.utils';
-import { dbProvider } from '../../providers/db.provider';
+import { dbProvider } from '../../app/App';
 import { TransactionEntity } from '../../models/db.entities';
 import nexcore from 'nexcore-lib';
 import { TxTemplateData, broadcastTransaction, buildAndSignConsolidateTransaction } from '../../utils/tx.utils';

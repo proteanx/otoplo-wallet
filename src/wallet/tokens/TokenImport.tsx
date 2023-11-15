@@ -3,7 +3,7 @@ import { Button, Form, InputGroup, Modal, Spinner } from "react-bootstrap";
 import { getTokenInfo } from "../../utils/token.utils";
 import { TokenEntity } from "../../models/db.entities";
 import dummy from '../../assets/img/token-icon-placeholder.svg';
-import { dbProvider } from "../../providers/db.provider";
+import { dbProvider } from "../../app/App";
 import { currentTimestamp, showToast } from "../../utils/common.utils";
 import NiftyProvider from "../../providers/nifty.provider";
 

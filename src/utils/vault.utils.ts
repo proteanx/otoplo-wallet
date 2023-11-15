@@ -3,7 +3,7 @@ import HDPrivateKey from "nexcore-lib/types/lib/hdprivatekey";
 import PublicKey from "nexcore-lib/types/lib/publickey";
 import StorageProvider from "../providers/storage.provider";
 import { ContractEntity, TransactionEntity } from "../models/db.entities";
-import { dbProvider } from "../providers/db.provider";
+import { dbProvider } from "../app/App";
 import Script from "nexcore-lib/types/lib/script/script";
 import { rostrumProvider } from "../providers/rostrum.provider";
 import { classifyTransaction } from "./wallet.utils";

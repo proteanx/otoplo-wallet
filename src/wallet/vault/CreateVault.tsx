@@ -13,7 +13,7 @@ import nexcore from 'nexcore-lib';
 import { generateHodlAddress, generateHodlKey, getHodlNextIndex, getVaultBlockAndIndex, saveHodlAddress } from '../../utils/vault.utils';
 import { TxTokenType } from '../../utils/wallet.utils';
 import { isPasswordValid } from '../../utils/seed.utils';
-import { dbProvider } from '../../providers/db.provider';
+import { dbProvider } from '../../app/App';
 import { TransactionEntity } from '../../models/db.entities';
 import { broadcastTransaction, buildAndSignTransferTransaction } from '../../utils/tx.utils';
 import { Table } from 'react-bootstrap';

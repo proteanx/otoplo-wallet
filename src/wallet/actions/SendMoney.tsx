@@ -8,7 +8,7 @@ import { TxTokenType, isValidNexaAddress } from "../../utils/wallet.utils";
 import { TokenEntity, TransactionEntity } from "../../models/db.entities";
 import { broadcastTransaction, buildAndSignTransferTransaction } from "../../utils/tx.utils";
 import { isPasswordValid } from "../../utils/seed.utils";
-import { dbProvider } from "../../providers/db.provider";
+import { dbProvider } from "../../app/App";
 import QRScanner, { mobileQrScan } from "../misc/QRScanner";
 
 interface SendProps {

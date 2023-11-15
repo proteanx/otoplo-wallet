@@ -1,6 +1,6 @@
 import { CapacitorHttp } from "@capacitor/core";
 import { NftEntity, TokenEntity } from "../models/db.entities";
-import { dbProvider } from "../providers/db.provider";
+import { dbProvider } from "../app/App";
 import NiftyProvider from "../providers/nifty.provider";
 import { rostrumProvider } from "../providers/rostrum.provider";
 import { currentTimestamp, getAddressBuffer } from "./common.utils";

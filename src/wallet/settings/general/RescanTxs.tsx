@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "react-bootstrap";
 import ConfirmDialog from "../../misc/ConfirmDialog";
 import StorageProvider from "../../../providers/storage.provider";
-import { dbProvider } from "../../../providers/db.provider";
+import { dbProvider } from "../../../app/App";
 import { showToast } from "../../../utils/common.utils";
 import { useAppDispatch } from "../../../store/hooks";
 import { setSync } from "../../../store/slices/wallet.slice";

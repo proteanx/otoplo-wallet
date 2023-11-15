@@ -1,5 +1,5 @@
 import { SQLiteDBConnection, SQLiteHook } from "react-sqlite-hook";
-import { existingConn, sqlite } from "../app/App";
+import { existingConn } from "../app/App";
 import { IAppDB } from "./db.interface";
 import { capSQLiteSet } from "@capacitor-community/sqlite";
 import { ContractEntity, NftEntity, TokenEntity, TransactionEntity } from "../models/db.entities";
@@ -82,7 +82,7 @@ export class MobileDB implements IAppDB {
 
   sqldb: SQLiteHook;
 
-  constructor() {
+  constructor(sqlite: SQLiteHook) {
     this.sqldb = sqlite;
   }
 

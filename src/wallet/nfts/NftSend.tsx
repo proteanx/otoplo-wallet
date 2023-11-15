@@ -9,7 +9,7 @@ import QRScanner, { mobileQrScan } from "../misc/QRScanner";
 import { TxTokenType, isValidNexaAddress } from "../../utils/wallet.utils";
 import { isPasswordValid } from "../../utils/seed.utils";
 import { broadcastTransaction, buildAndSignTransferTransaction } from "../../utils/tx.utils";
-import { dbProvider } from "../../providers/db.provider";
+import { dbProvider } from "../../app/App";
 
 export default function NftSend({ nftEntity, keys }: { nftEntity: NftEntity, keys: WalletKeys }) {
   const [txMsg, setTxMsg] = useState<ReactNode>("");

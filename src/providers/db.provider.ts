@@ -1,3 +1,4 @@
+import { SQLiteHook } from "react-sqlite-hook";
 import { nftUpdateTrigger, tokenUpdateTrigger, txUpdateTrigger } from "../app/App";
 import { IAppDB } from "../db/db.interface";
 import { DesktopDB } from "../db/desktop.db";
@@ -6,13 +7,13 @@ import { ContractEntity, NftEntity, TokenEntity, TransactionEntity } from "../mo
 import { Balance } from "../models/wallet.entities";
 import { isMobilePlatform } from "../utils/common.utils";
 
-class DBProvider {
+export class DBProvider {
 
     private appdb: IAppDB;
 
-    constructor() {
+    constructor(sqlite: SQLiteHook) {
         if (isMobilePlatform()) {
-            this.appdb = new MobileDB();
+            this.appdb = new MobileDB(sqlite);
         } else {
             this.appdb = new DesktopDB();
         }
@@ -100,5 +101,3 @@ class DBProvider {
         nftUpdateTrigger.setUpdateTrigger((prev) => prev + 1);
     }
 }
-
-export const dbProvider = new DBProvider();

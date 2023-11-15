@@ -11,17 +11,17 @@ import OpenWallet from '../wallet/OpenWallet';
 import RecoverWallet from '../wallet/RecoverWallet';
 import { currentTimestamp, isMobilePlatform, isMobileScreen } from '../utils/common.utils';
 import otoplo from '../assets/img/otoplo-logo-white.svg';
-import { SQLiteHook, useSQLite } from 'react-sqlite-hook';
+import { useSQLite } from 'react-sqlite-hook';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { App as MApp } from '@capacitor/app';
 import SideMenu from './SideMenu';
 import StorageProvider from '../providers/storage.provider';
-import { dbProvider } from '../providers/db.provider';
+import { DBProvider } from '../providers/db.provider';
 import { clearLocalWallet } from '../utils/wallet.utils';
 import { Spinner } from 'react-bootstrap';
 
-// Singleton SQLite Hook
-export let sqlite: SQLiteHook;
+// Singleton DBProvider
+export let dbProvider: DBProvider;
 // Existing Connections Store
 export let existingConn: { setExistConn: Dispatch<SetStateAction<boolean>>; existConn: boolean; };
 
@@ -44,7 +44,9 @@ function App() {
   const [nftsUpdateTrigger, setNftsUpdateTrigger] = useState(0);
   nftUpdateTrigger = {updateTrigger: nftsUpdateTrigger, setUpdateTrigger: setNftsUpdateTrigger};
 
-  sqlite = useSQLite();
+  const sqlite = useSQLite();
+  const [dbProviderInstance] = useState(new DBProvider(sqlite));
+  dbProvider = dbProviderInstance;
   
   const [activeItem, setActiveItem] = useState('NEXA');
 

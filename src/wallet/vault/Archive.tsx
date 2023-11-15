@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Table } from 'react-bootstrap';
 import { getHodlArchive } from '../../utils/vault.utils';
-import { dbProvider } from '../../providers/db.provider';
+import { dbProvider } from '../../app/App';
 import ConfirmDialog from '../misc/ConfirmDialog';
 
 export default function Archive({ setArchive, refreshVaults }: { setArchive: React.Dispatch<React.SetStateAction<boolean>>, refreshVaults: () => Promise<void> }) {

@@ -14,7 +14,7 @@ import { WalletKeys } from '../../models/wallet.entities';
 import { VaultInfo } from './Vault';
 import HDPrivateKey from 'nexcore-lib/types/lib/hdprivatekey';
 import { estimateDateByFutureBlock, generateHodlKey, getVaultBlockAndIndex } from '../../utils/vault.utils';
-import { dbProvider } from '../../providers/db.provider';
+import { dbProvider } from '../../app/App';
 import ConfirmDialog from '../misc/ConfirmDialog';
 
 interface VaultEntryProps {

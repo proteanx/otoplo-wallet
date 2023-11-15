@@ -13,7 +13,7 @@ import { Balance } from '../../models/wallet.entities';
 import HDPrivateKey from 'nexcore-lib/types/lib/hdprivatekey';
 import { fetchAllVaultsBalances, getHodlVaults, getVaultBlockAndIndex } from '../../utils/vault.utils';
 import StorageProvider from '../../providers/storage.provider';
-import { dbProvider } from '../../providers/db.provider';
+import { dbProvider } from '../../app/App';
 import { useAppSelector } from '../../store/hooks';
 import { walletState } from '../../store/slices/wallet.slice';
 

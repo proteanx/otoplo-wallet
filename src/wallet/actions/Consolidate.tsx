@@ -1,11 +1,11 @@
-import React, { ReactElement, useRef, useState } from 'react';
+import { ReactElement, useRef, useState } from 'react';
 import { Alert, Button, Form, InputGroup, Modal, Spinner, Table } from 'react-bootstrap';
 import bigDecimal from 'js-big-decimal';
 import { currentTimestamp, parseAmountWithDecimals } from '../../utils/common.utils';
 import { Balance, WalletKeys } from '../../models/wallet.entities';
 import nexcore from 'nexcore-lib';
 import { isPasswordValid } from '../../utils/seed.utils';
-import { dbProvider } from '../../providers/db.provider';
+import { dbProvider } from "../../app/App";
 import { TxTokenType } from '../../utils/wallet.utils';
 import { TransactionEntity } from '../../models/db.entities';
 import { broadcastTransaction, buildAndSignConsolidateTransaction } from '../../utils/tx.utils';

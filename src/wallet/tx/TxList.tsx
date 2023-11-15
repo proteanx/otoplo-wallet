@@ -4,7 +4,7 @@ import Table from 'react-bootstrap/Table';
 import Card from 'react-bootstrap/Card';
 import Pagination from 'react-bootstrap/Pagination';
 import { txUpdateTrigger } from '../../app/App';
-import { dbProvider } from '../../providers/db.provider';
+import { dbProvider } from '../../app/App';
 import { TokenEntity, TransactionEntity } from '../../models/db.entities';
 import { useAppSelector } from '../../store/hooks';
 import { walletState } from '../../store/slices/wallet.slice';

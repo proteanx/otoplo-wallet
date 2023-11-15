@@ -1,5 +1,5 @@
 import HDPrivateKey from "nexcore-lib/types/lib/hdprivatekey";
-import { dbProvider } from "../providers/db.provider";
+import { dbProvider } from "../app/App";
 import { rostrumProvider } from "../providers/rostrum.provider";
 import StorageProvider from "../providers/storage.provider";
 import { AddressKey, Balance, WalletIndexes, WalletKeys } from "../models/wallet.entities";

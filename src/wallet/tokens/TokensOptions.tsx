@@ -2,7 +2,7 @@ import { Alert, Button, Dropdown, Form, Modal, Spinner } from "react-bootstrap";
 import { Balance } from "../../models/wallet.entities";
 import StorageProvider from "../../providers/storage.provider";
 import { ChangeEvent, ReactElement, useState } from "react";
-import { dbProvider } from "../../providers/db.provider";
+import { dbProvider } from "../../app/App";
 import { getTokenInfo } from "../../utils/token.utils";
 import NiftyProvider from "../../providers/nifty.provider";
 import { currentTimestamp, isNullOrEmpty } from "../../utils/common.utils";

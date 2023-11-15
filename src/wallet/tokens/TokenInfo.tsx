@@ -6,7 +6,7 @@ import { copy, showToast, truncateStringMiddle } from "../../utils/common.utils"
 import { Flip } from "react-toastify";
 import { rostrumProvider } from "../../providers/rostrum.provider";
 import { ITokenGenesis } from "../../models/rostrum.entities";
-import { dbProvider } from "../../providers/db.provider";
+import { dbProvider } from "../../app/App";
 import ConfirmDialog from "../misc/ConfirmDialog";
 
 export default function TokenInfo({ tokenEntity, goBack }: { tokenEntity: TokenEntity, goBack: () => void }) {
