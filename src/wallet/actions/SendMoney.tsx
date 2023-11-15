@@ -209,6 +209,19 @@ export default function SendMoney({ balance, keys, ticker, decimals, tokenEntity
     }
   }
 
+  const setMaxAmount = () => {
+    let totalBalance = BigInt(balance.confirmed) + BigInt(balance.unconfirmed);
+    if (tokenEntity) {
+      totalBalance = 0n;
+      if (tokenBalance) {
+        totalBalance = BigInt(tokenBalance.confirmed) + BigInt(tokenBalance.unconfirmed);
+      }
+    } else {
+      setFeeFromAmount(true);
+    }
+    setAmount(parseAmountWithDecimals(totalBalance, decimals).replaceAll(",", ""));
+  }
+
   return (
     <>
       { isMobile ? (
@@ -232,10 +245,13 @@ export default function SendMoney({ balance, keys, ticker, decimals, tokenEntity
             </FloatingLabel>
             <InputGroup.Text as='button' onClick={scanQR}><i className="fa-solid fa-camera-retro"/></InputGroup.Text>
           </InputGroup>
-          <FloatingLabel  controlId="floatingInput" label="Amount" className="mb-2">
-            <Form.Control disabled={spinner !== ""} type="number" step={'0.01'} min='0.00' placeholder='0' value={amount} onChange={handleChangeAmount}/>
-          </FloatingLabel>
-          { !tokenEntity && <Form.Switch label="Subtract fee from amount" disabled={spinner !== ""} onChange={handleChangeFeeMode}/> }
+          <InputGroup className="mb-2">
+            <FloatingLabel  controlId="floatingInput" label="Amount">
+              <Form.Control disabled={spinner !== ""} type="number" step={'0.01'} min='0.00' placeholder='0' value={amount} onChange={handleChangeAmount}/>
+            </FloatingLabel>
+            <InputGroup.Text as='button' onClick={setMaxAmount}>Max</InputGroup.Text>
+          </InputGroup>
+          { !tokenEntity && <Form.Switch label="Subtract fee from amount" disabled={spinner !== ""} checked={feeFromAmount} onChange={handleChangeFeeMode}/> }
           <span className='bad'>
             {txErr}
           </span>
