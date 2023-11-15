@@ -19,7 +19,7 @@ export default defineConfig({
       }
     }),
     process.env.VITE_IS_DESKTOP == 'true' && electron({
-      entry: "electron/main.ts",
+      entry: ["electron/main.ts", "electron/preload.ts"],
       vite: {
         build: {
           outDir: 'dist'
