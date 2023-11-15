@@ -82,6 +82,15 @@ export default function TokenInfo({ tokenEntity, goBack }: { tokenEntity: TokenE
               <i className="fa-regular fa-copy ms-1 cursor nx" aria-hidden="true" title='copy' onClick={() => copy(tokenEntity.tokenIdHex, 'bottom-right', Flip)}/>
             </span>
           </div>
+          { tokenEntity.parentGroup && 
+            <div className='mb-4'>
+              <span className='text-white bold'>Parent Group</span>
+              <span className='float-right smaller'>
+                {truncateStringMiddle(tokenEntity.parentGroup, 40)}
+                <i className="fa-regular fa-copy ms-1 cursor nx" aria-hidden="true" title='copy' onClick={() => copy(tokenEntity.parentGroup, 'bottom-right', Flip)}/>
+              </span>
+            </div>
+          }
           <div>
             <span className='text-white bold'>Genesis TX</span>
             <span className='float-right smaller'>
