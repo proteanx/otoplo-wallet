@@ -289,10 +289,8 @@ export async function classifyAndSaveTransaction(txHistory: ITXHistory, myAddres
     let txEntry = await classifyTransaction(txHistory, myAddresses);
 
     if (txEntry.token !== 'none' && NiftyProvider.isNiftySubgroup(txEntry.token)) {
-        if (txEntry.state === 'incoming') {
+        if (txEntry.state !== 'outgoing') {
             await fetchAndSaveNFT(txEntry.token, NiftyProvider.NIFTY_TOKEN.token);
-        } else if (txEntry.state === 'outgoing') {
-            await removeLocalNFT(txEntry.token);
         }
         txEntry.extraGroup = NiftyProvider.NIFTY_TOKEN.token;
     }

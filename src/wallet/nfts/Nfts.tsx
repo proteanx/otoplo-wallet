@@ -44,7 +44,7 @@ export default function Nfts() {
       </Container>
       <div className="pt-2">
         { !isNullOrEmpty(nfts) ? (
-          nfts!.map((nft, i) => <NftFigure key={i} nftEntity={nft} onClick={() => selectNft(nft)}/>)
+          nfts!.map((nft, i) => <NftFigure key={i} nftEntity={nft} tokenBalance={wallet.tokensBalance[nft.tokenIdHex]} onClick={() => selectNft(nft)}/>)
         ) : (
           <Card bg="custom-card" className='text-white'>
             <Card.Body className="center">
