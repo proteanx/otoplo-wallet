@@ -1,4 +1,4 @@
-import {  Col, Container, Row } from "react-bootstrap";
+import {  Card, Col, Container, Row } from "react-bootstrap";
 import TokenRow from "./TokenRow";
 import { useAppSelector } from "../../store/hooks";
 import { walletState } from "../../store/slices/wallet.slice";
@@ -9,6 +9,7 @@ import { dbProvider, tokenUpdateTrigger } from "../../app/App";
 import TokenPage from "./TokenPage";
 import StorageProvider from "../../providers/storage.provider";
 import TokensOptions from "./TokensOptions";
+import { isNullOrEmpty } from "../../utils/common.utils";
 
 export default function Tokens() {
   const [tokens, setTokens] = useState<TokenEntity[]>();
@@ -49,7 +50,15 @@ export default function Tokens() {
         </Row>
       </Container>
       <div className="pt-2">
-        { tokens?.map((t, i) => <TokenRow key={i} hideZero={hideZero} tokenEntity={t} tokenBalance={wallet.tokensBalance[t.tokenIdHex]} onClick={() => selectToken(t)}/>) }
+        { !isNullOrEmpty(tokens) ? (
+          tokens!.map((t, i) => <TokenRow key={i} hideZero={hideZero} tokenEntity={t} tokenBalance={wallet.tokensBalance[t.tokenIdHex]} onClick={() => selectToken(t)}/>) 
+        ) : (
+          <Card bg="custom-card" className='text-white'>
+            <Card.Body className="center">
+              Nothing here...
+            </Card.Body>
+          </Card>
+        )}
       </div>
     </>
   )

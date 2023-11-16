@@ -1,4 +1,4 @@
-import { Col, Container, Row } from 'react-bootstrap'
+import { Card, Col, Container, Row } from 'react-bootstrap'
 import { NftEntity } from '../../models/db.entities';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '../../store/hooks';
@@ -8,6 +8,7 @@ import { dbProvider } from "../../app/App";
 import NftFigure from './NftFigure';
 import NftPage from './NftPage';
 import ReceiveMoney from '../actions/ReceiveMoney';
+import { isNullOrEmpty } from '../../utils/common.utils';
 
 export default function Nfts() {
   const [nfts, setNfts] = useState<NftEntity[]>();
@@ -42,7 +43,15 @@ export default function Nfts() {
         </Row>
       </Container>
       <div className="pt-2">
-        { nfts?.map((nft, i) => <NftFigure key={i} nftEntity={nft} onClick={() => selectNft(nft)}/>) }
+        { !isNullOrEmpty(nfts) ? (
+          nfts!.map((nft, i) => <NftFigure key={i} nftEntity={nft} onClick={() => selectNft(nft)}/>)
+        ) : (
+          <Card bg="custom-card" className='text-white'>
+            <Card.Body className="center">
+              Nothing here...
+            </Card.Body>
+          </Card>
+        )}
       </div>
     </>
   )
