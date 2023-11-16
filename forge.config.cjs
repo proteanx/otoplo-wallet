@@ -120,7 +120,7 @@ module.exports = {
         console.log('Directory renamed successfully.');
 
         if (options.platform.includes('win')) {
-          await createZip(newDirName);
+          // await createZip(newDirName);
         } else {
           await createTarGz(newDirName);
         }
