@@ -5,6 +5,8 @@ import electron from 'vite-plugin-electron';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import path from 'path';
 
+const shouldRunElectron = process.env.VITE_IS_DESKTOP == 'true' || process.env.APP_DEV?.includes('true');
+
 export default defineConfig({
   base: './',
   plugins: [
@@ -18,14 +20,24 @@ export default defineConfig({
         Buffer: true
       }
     }),
-    process.env.VITE_IS_DESKTOP == 'true' && electron({
-      entry: ["electron/main.ts", "electron/preload.ts"],
-      vite: {
-        build: {
-          outDir: 'dist'
-        }
+    shouldRunElectron && electron([
+      {
+        entry: "electron/main.ts",
+        vite: {
+          build: {
+            outDir: 'dist'
+          }
+        },
+      },
+      {
+        entry: "electron/preload.ts",
+        vite: {
+          build: {
+            outDir: 'dist'
+          }
+        },
       }
-    })
+    ])
   ],
   resolve: {
     alias: {
@@ -41,6 +53,6 @@ export default defineConfig({
         changeOrigin: true,
       }
     },
-    open: true
+    open: !shouldRunElectron
   }
 })

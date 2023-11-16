@@ -34,9 +34,8 @@ function createWindow(): void {
   mainWindow.removeMenu();
 
   // Load the remote URL for development or the local html file for production.
-  var isDev = process.env.APP_DEV ? (process.env.APP_DEV.trim() == "true") : false;
-  if (isDev) {
-    mainWindow.loadURL('http://localhost:3000')
+  if (process.env.VITE_DEV_SERVER_URL) {
+    mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL)
     mainWindow.webContents.openDevTools({ mode: 'detach' })
   } else {
     mainWindow.loadFile(join(__dirname, 'index.html')).then(() => {
