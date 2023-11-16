@@ -1,10 +1,10 @@
 @font-face {
     font-family: "Source Code Pro";
-    src: url('../fonts/SourceCodePro-Regular.woff2');
+    src: url('../assets/fonts/SourceCodePro-Regular.woff2');
 }
 @font-face {
     font-family: "Ubuntu";
-    src: url('../fonts/Ubuntu-Regular.woff2');
+    src: url('../assets/fonts/Ubuntu-Regular.woff2');
 }
 
 body {
@@ -45,7 +45,7 @@ body.barcode-scanning-active {
     width: 200px;
     height: 200px;
     border: 6px solid white;
-    box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.4);
     margin: 15px;
 }
 
@@ -125,6 +125,21 @@ body.barcode-scanning-active {
     --bs-btn-disabled-border-color: #FF1E6F;
 }
 
+.act-btn { 
+   display: inline-block;
+   min-width: 25%;
+}
+
+.act-btn span { 
+    color: #FF1E6F;
+    font-size: smaller;
+ }
+
+.table-dark {
+    --bs-table-bg: #282d33;
+    --bs-table-striped-bg: #232b35;
+}
+
 .form-check-input {
     cursor: pointer;
 }
@@ -174,6 +189,11 @@ a.ps-menu-button {
     margin: 0 auto;
 }
 
+.right {
+    text-align: right;
+    margin: 0 auto;
+}
+
 .nav-txt {
     color: #FF1E6F!important;
 }
@@ -189,8 +209,7 @@ footer {
 }
 
 .bg-custom-card {
-    background-color: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: #282d33;
 }
 
 .tr-border td {
@@ -217,6 +236,10 @@ hr {
 
 .bad {
     color: red;
+}
+
+.good {
+    color: rgb(47, 255, 95);
 }
 
 code, .text-monospace {
@@ -263,6 +286,10 @@ code, .text-monospace {
     vertical-align: middle;
 }
 
+.confirmed {
+    color: rgb(19, 195, 19) !important;
+}
+
 .outgoing {
     color: red !important;
 }
@@ -303,4 +330,99 @@ code, .text-monospace {
     border: 1px solid #FF1E6F;
     color: #FF1E6F;
     margin-right: 20px;
+}
+
+.tx-row {
+    cursor: pointer;
+}
+
+.tx-row:active > td {
+    background-color: var(--bs-table-striped-bg);
+}
+
+.tx-row:hover > td {
+    background-color: var(--bs-table-striped-bg);
+}
+
+.smaller {
+    font-size: smaller;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.light-bold {
+    font-weight: 500;
+}
+
+.light-txt {
+    font-weight: 100;
+    color: rgb(193, 193, 193);
+}
+
+.larger {
+    font-size: larger;
+}
+
+.xlarge {
+    font-size: x-large;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.token-card,
+.nft-card {
+    cursor: pointer;
+}
+
+.token-card:hover,
+.nft-card:hover {
+    border: 1px solid rgba(100, 100, 100, 0.7)  !important;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#dropdown-option::after {
+    display: none !important; 
+}
+
+.dropdown-item:active {
+    background-color: #323942 !important;
+}
+
+.settings > .nav-underline {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.settings .nav-item > .nav-link {
+    margin-left: 10px;
+    color: gray;
+    border-bottom-color: transparent;
+}
+
+.settings .nav-item > .nav-link:hover {
+    color: white;
+    border-bottom-color: transparent;
+}
+
+.settings .nav-item > .nav-link.active {
+    color: white;
+    border-bottom-color: #FF1E6F;
+    font-weight: normal;
+}
+
+.text-bg-dark {
+    --bs-modal-header-border-color: rgb(110, 110, 110);
+    --bs-modal-footer-border-color: rgb(110, 110, 110);
 }

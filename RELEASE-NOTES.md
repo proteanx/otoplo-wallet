@@ -1,5 +1,18 @@
 # Release notes
 
+## 2.0.0 (17 Nov 2023)
+
+* Add Tokens and NFTs support
+* Add transaction details page
+* Add toast notifications
+* Add option to select custom Rostrum instance
+* Add option to rescan transactions and erase wallet data
+* Refresh UI layout with better UX
+* Improve blockchain scan performance
+* Optimize UTXO selection operation
+* Fix rare case of incorrect balance after login
+* Fix 'tx-conflict' issue when sending multiple transactions
+
 ## 1.4.0 (17 May 2023)
 
 * Add HODL Vault
