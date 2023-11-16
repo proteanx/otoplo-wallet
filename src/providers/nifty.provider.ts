@@ -25,7 +25,7 @@ export default class NiftyProvider {
 
     public static isNiftySubgroup(group: string) {
         try {
-            let addrBuf = nexcore.util.js.isHexa(group) ? Buffer.from(group, 'hex') : getAddressBuffer(group);
+            let addrBuf = getAddressBuffer(group);
             if (!nexcore.GroupToken.isSubgroup(addrBuf)) {
                 return false;
             }

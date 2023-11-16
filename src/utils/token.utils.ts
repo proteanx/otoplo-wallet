@@ -7,6 +7,9 @@ import { currentTimestamp, getAddressBuffer } from "./common.utils";
 import NexCore from 'nexcore-lib';
 
 export function tokenIdToHex(token: string) {
+    if (NexCore.util.js.isHexa(token)) {
+        return token;
+    }
     return getAddressBuffer(token).toString('hex');
 }
 

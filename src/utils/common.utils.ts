@@ -71,6 +71,9 @@ export async function copy(value: string, position: ToastPosition = 'top-right',
 }
 
 export function getAddressBuffer(address: string) {
+    if (nexcore.util.js.isHexa(address)) {
+        return Buffer.from(address, 'hex') ;
+    }
     return nexcore.Address.decodeNexaAddress(address).getHashBuffer();
 }
 

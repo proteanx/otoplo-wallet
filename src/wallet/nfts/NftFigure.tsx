@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { isMobileScreen, isNullOrEmpty } from "../../utils/common.utils";
 import JSZip from "jszip";
 import { Balance } from "../../models/wallet.entities";
-import { dbProvider } from "../../app/App";
+import { removeLocalNFT } from "../../utils/token.utils";
 
 export default function NftFigure({ nftEntity, tokenBalance, onClick }: { nftEntity: NftEntity, tokenBalance?: Balance, onClick: () => void }) {
   let isMobile = isMobileScreen();
@@ -17,7 +17,7 @@ export default function NftFigure({ nftEntity, tokenBalance, onClick }: { nftEnt
     async function loadData() {
       if (!tokenBalance) {
         // workaround for concurrent tx classification
-        await dbProvider.deleteNft(nftEntity.tokenIdHex);
+        await removeLocalNFT(nftEntity.tokenIdHex);
         setRemoved(true);
         return;
       }

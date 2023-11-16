@@ -10,7 +10,7 @@ import { ITXHistory, ITXInput, ITXOutput } from "../models/rostrum.entities";
 import { currentTimestamp, isNullOrEmpty } from "./common.utils";
 import { TransactionEntity, TxEntityState } from "../models/db.entities";
 import NiftyProvider from "../providers/nifty.provider";
-import { fetchAndSaveNFT, removeLocalNFT } from "./token.utils";
+import { fetchAndSaveNFT } from "./token.utils";
 
 export enum TxTokenType {
     NO_GROUP,
