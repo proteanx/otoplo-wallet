@@ -14,8 +14,6 @@ export default function NftExport({ nftEntity, title }: { nftEntity: NftEntity, 
       let success = await window.electronAPI.exportFile(nftEntity.zipData, title || nftEntity.tokenIdHex);
       if (success) {
         showToast('success', 'NFT Saved!');
-      } else {
-        throw new Error("failed to save nft");
       }
     } catch (e) {
       console.log(e);
