@@ -17,6 +17,8 @@ import { dbProvider } from '../../app/App';
 import { TransactionEntity } from '../../models/db.entities';
 import { broadcastTransaction, buildAndSignTransferTransaction } from '../../utils/tx.utils';
 import { Table } from 'react-bootstrap';
+import { fetchBalance } from '../../store/slices/wallet.slice';
+import { useAppDispatch } from '../../store/hooks';
 
 interface CreateVaultProps {
   keys: WalletKeys;
@@ -48,6 +50,8 @@ export default function CreateVault({ keys, balance, vaultAccountKey, heightVal,
   const blockHeightRef = useRef<HTMLInputElement>(null);
   const dateRef = useRef<HTMLInputElement>(null);
   const pwRef = useRef<HTMLInputElement>(null);
+
+  const dispatch = useAppDispatch();
 
   let nexBalance = new bigDecimal(balance.confirmed).add(new bigDecimal(balance.unconfirmed)).divide(new bigDecimal(100), 2);
   let nexAmount = 20;
@@ -160,6 +164,7 @@ export default function CreateVault({ keys, balance, vaultAccountKey, heightVal,
             txGroupType: TxTokenType.NO_GROUP,
           }
           dbProvider.addLocalTransaction(t);
+          dispatch(fetchBalance(true));
           var idx = getVaultBlockAndIndex(toAddress).index;
           await saveHodlAddress(idx, toAddress);
 

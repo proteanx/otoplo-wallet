@@ -71,7 +71,7 @@ export default function Wallet({ seed, item }: WalletProps) {
     }
     
     dispatch(setKeys(walletKeys));
-    dispatch(fetchBalance());
+    dispatch(fetchBalance(false));
     if (toastId !== 0) {
       toast.update(toastId, { autoClose: 1, type: 'default', isLoading: false });
     }

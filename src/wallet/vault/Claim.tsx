@@ -17,6 +17,8 @@ import { TransactionEntity } from '../../models/db.entities';
 import nexcore from 'nexcore-lib';
 import { TxTemplateData, broadcastTransaction, buildAndSignConsolidateTransaction } from '../../utils/tx.utils';
 import { Table } from 'react-bootstrap';
+import { fetchBalance } from '../../store/slices/wallet.slice';
+import { useAppDispatch } from '../../store/hooks';
 
 interface ClaimProps {
   eta: string;
@@ -44,6 +46,8 @@ export default function Claim({ eta, balance, vaultKey, vaultAddress, vaultInfo,
   const [totalFee, setTotalFee] = useState(new bigDecimal(0));
 
   const pwRef = useRef<HTMLInputElement>(null);
+
+  const dispatch = useAppDispatch();
 
   let vaultBalance = BigInt(balance.confirmed) + BigInt(balance.unconfirmed);
 
@@ -112,6 +116,7 @@ export default function Claim({ eta, balance, vaultKey, vaultAddress, vaultInfo,
               txGroupType: TxTokenType.NO_GROUP,
             }
             dbProvider.addLocalTransaction(t);
+            dispatch(fetchBalance(true));
             setFinalTx(new nexcore.Transaction());
             refreshVaults();
         } catch (e) {

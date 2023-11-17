@@ -10,6 +10,8 @@ import { TxTokenType, isValidNexaAddress } from "../../utils/wallet.utils";
 import { isPasswordValid } from "../../utils/seed.utils";
 import { broadcastTransaction, buildAndSignTransferTransaction } from "../../utils/tx.utils";
 import { dbProvider } from "../../app/App";
+import { fetchBalance } from "../../store/slices/wallet.slice";
+import { useAppDispatch } from "../../store/hooks";
 
 export default function NftSend({ nftEntity, keys }: { nftEntity: NftEntity, keys: WalletKeys }) {
   const [txMsg, setTxMsg] = useState<ReactNode>("");
@@ -29,6 +31,8 @@ export default function NftSend({ nftEntity, keys }: { nftEntity: NftEntity, key
   const [txSpinner, setTxSpinner] = useState<ReactNode>("");
 
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+
+  const dispatch = useAppDispatch();
 
   const handleChangePw = (e: ChangeEvent<HTMLInputElement>) => {
     setPwErr("");
@@ -130,6 +134,7 @@ export default function NftSend({ nftEntity, keys }: { nftEntity: NftEntity, key
             txGroupType: TxTokenType.TRANSFER,
           }
           dbProvider.addLocalTransaction(t);
+          dispatch(fetchBalance(true));
           setToAddress("");
           setFinalTx(new nexcore.Transaction());
           closeConfirmDialog();

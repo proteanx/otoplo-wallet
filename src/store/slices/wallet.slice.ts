@@ -7,7 +7,7 @@ import StorageProvider from "../../providers/storage.provider";
 import { TransactionEntity } from "../../models/db.entities";
 import bigDecimal from "js-big-decimal";
 import { rostrumProvider } from "../../providers/rostrum.provider";
-import { getNexaPrice } from "../../utils/common.utils";
+import { getNexaPrice, sleep } from "../../utils/common.utils";
 
 export interface WalletState {
     accountKey?: HDPrivateKey;
@@ -47,7 +47,10 @@ export const fetchHeightAndPrice = createAsyncThunk('wallet/fetchHeightAndPrice'
     return { height: tip, price: price };
 });
 
-export const fetchBalance = createAsyncThunk('wallet/fetchBalance', async (_, thunkAPI) => {
+export const fetchBalance = createAsyncThunk('wallet/fetchBalance', async (withDelay: boolean, thunkAPI) => {
+    if (withDelay) {
+        await sleep(3000);
+    }
     let rootState = thunkAPI.getState() as RootState;
     let state = rootState.wallet;
 

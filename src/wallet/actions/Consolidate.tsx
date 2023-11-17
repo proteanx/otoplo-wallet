@@ -9,6 +9,8 @@ import { dbProvider } from "../../app/App";
 import { TxTokenType } from '../../utils/wallet.utils';
 import { TransactionEntity } from '../../models/db.entities';
 import { broadcastTransaction, buildAndSignConsolidateTransaction } from '../../utils/tx.utils';
+import { useAppDispatch } from '../../store/hooks';
+import { fetchBalance } from '../../store/slices/wallet.slice';
 
 export default function Consolidate({ nexKeys, balance, isMobile }: { nexKeys: WalletKeys, balance: Balance, isMobile?: boolean }) {
   const [showError, setShowError] = useState(false);
@@ -26,6 +28,8 @@ export default function Consolidate({ nexKeys, balance, isMobile }: { nexKeys: W
   const [totalFee, setTotalFee] = useState(new bigDecimal(0));
 
   const pwRef = useRef<HTMLInputElement>(null);
+
+  const dispatch = useAppDispatch();
 
   const closePasswordDialog = () => {
     setPwErr("");
@@ -83,6 +87,7 @@ export default function Consolidate({ nexKeys, balance, isMobile }: { nexKeys: W
             txGroupType: TxTokenType.NO_GROUP,
           }
           dbProvider.addLocalTransaction(t);
+          dispatch(fetchBalance(true));
           setToAddress("");
           setFinalTx(new nexcore.Transaction());
         } catch (e) {

@@ -101,3 +101,7 @@ export function showToast(type: TypeOptions, msg: ToastContent, opts: ToastOptio
             return toast(msg, opts);
     }
 }
+
+export function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

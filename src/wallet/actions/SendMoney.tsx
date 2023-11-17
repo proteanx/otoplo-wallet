@@ -10,6 +10,8 @@ import { broadcastTransaction, buildAndSignTransferTransaction } from "../../uti
 import { isPasswordValid } from "../../utils/seed.utils";
 import { dbProvider } from "../../app/App";
 import QRScanner, { mobileQrScan } from "../misc/QRScanner";
+import { useAppDispatch } from "../../store/hooks";
+import { fetchBalance } from "../../store/slices/wallet.slice";
 
 interface SendProps {
   balance: Balance;
@@ -42,6 +44,8 @@ export default function SendMoney({ balance, keys, ticker, decimals, tokenEntity
   const [feeFromAmount, setFeeFromAmount] = useState(false);
   const [finalTx, setFinalTx] = useState<Transaction>(new nexcore.Transaction());
   const [pw, setPw] = useState('');
+
+  const dispatch = useAppDispatch();
 
   const amountRegx1 = decimals ? new RegExp(`^0\.[0-9]{1,${decimals}}$`) : /^[1-9][0-9]*$/;
   const amountRegx2 = decimals ? new RegExp(`^[1-9][0-9]*(\.[0-9]{1,${decimals}})?$`) : /^[1-9][0-9]*$/;
@@ -194,6 +198,7 @@ export default function SendMoney({ balance, keys, ticker, decimals, tokenEntity
             txGroupType: tokenEntity ? TxTokenType.TRANSFER : TxTokenType.NO_GROUP,
           }
           dbProvider.addLocalTransaction(t);
+          dispatch(fetchBalance(true));
           setToAddress("");
           setAmount("");
           setFinalTx(new nexcore.Transaction());
