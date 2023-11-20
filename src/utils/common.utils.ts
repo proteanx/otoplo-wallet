@@ -43,6 +43,10 @@ export function getRawAmount(amount: string | number | bigint, decimals: number)
 }
 
 export function truncateStringMiddle(str?: string, maxLength: number = 0) {
+    if (isMobilePlatform() && maxLength > 33) {
+        maxLength = 33;
+    }
+
     if (!str || str.length <= maxLength) {
         return str;
     }
@@ -58,7 +62,7 @@ export function truncateStringMiddle(str?: string, maxLength: number = 0) {
 export async function copy(value: string, position: ToastPosition = 'top-right', transition?: ToastTransition) {
     await Clipboard.write({ string: value });
     showToast('success', "Copied!", {
-        position: position,
+        position: isMobilePlatform() ? 'bottom-center' : position,
         autoClose: 1500,
         hideProgressBar: true,
         closeOnClick: true,
@@ -78,6 +82,7 @@ export function getAddressBuffer(address: string) {
 }
 
 const defaultToastOpts: ToastOptions = {
+    position: isMobilePlatform() ? 'bottom-center' : undefined,
     autoClose: 1500,
     hideProgressBar: false,
     closeOnClick: true,

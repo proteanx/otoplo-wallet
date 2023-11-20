@@ -7,6 +7,8 @@
     src: url('../assets/fonts/Ubuntu-Regular.woff2');
 }
 
+.ps-sidebar-container,
+.offcanvas-end,
 body {
     padding: 
         env(safe-area-inset-top)
@@ -52,8 +54,8 @@ body.barcode-scanning-active {
 .barcode-close {
     border-radius: 40px;
     position: absolute;
-    right: 10%;
-    top: 10%;
+    right: 7%;
+    top: 7%;
 }
 
 ::-webkit-scrollbar {

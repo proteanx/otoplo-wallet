@@ -16,6 +16,7 @@ import { Id, toast } from 'react-toastify';
 import Tokens from './tokens/Tokens';
 import Settings from './settings/Settings';
 import Nfts from './nfts/Nfts';
+import { isMobilePlatform } from '../utils/common.utils';
 
 interface WalletProps {
   seed: string;
@@ -39,7 +40,7 @@ export default function Wallet({ seed, item }: WalletProps) {
     let toastId: Id = 0;
     if (indexes.rIndex === 0) {
       toastId = toast.loading("Discovering Wallet...", {
-        position: 'top-center',
+        position: isMobilePlatform() ? 'bottom-center' : 'top-center',
         autoClose: false,
         hideProgressBar: true,
         closeOnClick: false,

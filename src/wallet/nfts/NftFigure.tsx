@@ -11,14 +11,12 @@ export default function NftFigure({ nftEntity, tokenBalance, onClick }: { nftEnt
 
   const [nftName, setNftName] = useState('');
   const [nftImage, setNftImage] = useState('');
-  const [removed, setRemoved] = useState(false);
 
   useEffect(() => {
     async function loadData() {
       if (!tokenBalance) {
         // workaround for concurrent tx classification
         await removeLocalNFT(nftEntity.tokenIdHex);
-        setRemoved(true);
         return;
       }
 
@@ -51,10 +49,16 @@ export default function NftFigure({ nftEntity, tokenBalance, onClick }: { nftEnt
     }
   }, [nftEntity]);
 
-  if (removed) {
-    return;
+  let amtStr = "0";
+  if (tokenBalance) {
+    let amount = BigInt(tokenBalance.confirmed) + BigInt(tokenBalance.unconfirmed);
+    amtStr = amount.toString();
   }
 
+  if (amtStr == "0") {
+    return;
+  }
+  
   return (
     <Figure className="mx-3 nft-card" style={{ width: isMobile ? '40%' : '15%' }} onClick={onClick}>
       <Figure.Image src={nftImage} />
