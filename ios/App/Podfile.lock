@@ -1,23 +1,23 @@
 PODS:
-  - Capacitor (5.1.0):
+  - Capacitor (5.5.1):
     - CapacitorCordova
-  - CapacitorApp (5.0.5):
+  - CapacitorApp (5.0.6):
     - Capacitor
-  - CapacitorClipboard (5.0.5):
+  - CapacitorClipboard (5.0.6):
     - Capacitor
-  - CapacitorCommunitySqlite (5.0.4):
+  - CapacitorCommunitySqlite (5.4.1):
     - Capacitor
     - SQLCipher
     - ZIPFoundation
-  - CapacitorCordova (5.1.0)
-  - CapacitorDialog (5.0.5):
+  - CapacitorCordova (5.5.1)
+  - CapacitorDialog (5.0.6):
     - Capacitor
-  - CapacitorMlkitBarcodeScanning (5.0.2):
+  - CapacitorMlkitBarcodeScanning (5.3.0):
     - Capacitor
     - GoogleMLKit/BarcodeScanning (= 4.0.0)
-  - CapacitorPreferences (5.0.5):
+  - CapacitorPreferences (5.0.6):
     - Capacitor
-  - CapacitorSplashScreen (5.0.5):
+  - CapacitorSplashScreen (5.0.6):
     - Capacitor
   - GoogleDataTransport (9.2.3):
     - GoogleUtilities/Environment (~> 7.7)
@@ -129,15 +129,15 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/splash-screen"
 
 SPEC CHECKSUMS:
-  Capacitor: 8dc4a61c44f6644fe4e0b61ad01ff175f9b538e5
-  CapacitorApp: 9d91a5a400e4ad8cafe66a02cc9d8073c864d7bb
-  CapacitorClipboard: 17f9418206e9de5673fac29c815f11c8d618e81c
-  CapacitorCommunitySqlite: e233665bd5f282483dd7fda96868002d003bdf58
-  CapacitorCordova: 5984fa700842461518ecd320905c7f19ecdd590b
-  CapacitorDialog: bea25662cdd38bc87476cefbab875198495657b8
-  CapacitorMlkitBarcodeScanning: 318b32e33b3fb25453961090dcb62ed1062a92e9
-  CapacitorPreferences: c4764b0b3beae28c625c87b1a80504d9b24947ec
-  CapacitorSplashScreen: e563abf6d590bfe0269515ccc9d8bc03c41f32e9
+  Capacitor: 9da0a2415e3b6098511f8b5ffdb578d91ee79f8f
+  CapacitorApp: 024e1b1bea5f883d79f6330d309bc441c88ad04a
+  CapacitorClipboard: 77edf49827ea21da2a9c05c690a4a6a4d07199c4
+  CapacitorCommunitySqlite: 1f3fd8af86941bcb56ee1e1c7c05d721fc5dc0e4
+  CapacitorCordova: e128cc7688c070ca0bfa439898a5f609da8dbcfe
+  CapacitorDialog: 0f3c15dfe9414b83bc64aef4078f1b92bcfead26
+  CapacitorMlkitBarcodeScanning: ea08ef246e5d3511d5a231a59fae36b16ad9acb3
+  CapacitorPreferences: f03954bcb0ff09c792909e46bff88e3183c16b10
+  CapacitorSplashScreen: 5fa2ab5e46cf5cc530cf16a51c80c7a986579ccd
   GoogleDataTransport: f0308f5905a745f94fb91fea9c6cbaf3831cb1bd
   GoogleMLKit: 2bd0dc6253c4d4f227aad460f69215a504b2980e
   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
