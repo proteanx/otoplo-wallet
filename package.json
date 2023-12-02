@@ -56,7 +56,6 @@
     }
   },
   "devDependencies": {
-    "@capacitor/assets": "^3.0.1",
     "@capacitor/cli": "^5.5.1",
     "@electron-forge/cli": "^6.4.2",
     "@electron-forge/maker-dmg": "^6.4.2",
