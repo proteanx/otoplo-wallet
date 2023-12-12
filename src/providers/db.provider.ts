@@ -36,6 +36,10 @@ export class DBProvider {
         }
     }
 
+    public async getLocalTransactions(tokenId?: string) {
+        return await this.appdb.getTransactions(tokenId);
+    }
+
     public async getPageLocalTransactions(pageNum: number, pageSize: number, tokenId?: string) {
         return await this.appdb.getPageTransactions(pageNum, pageSize, tokenId);
     }

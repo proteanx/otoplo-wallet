@@ -12,6 +12,7 @@ import { walletState } from '../store/slices/wallet.slice';
 import SendMoney from './actions/SendMoney';
 import { scanForNewAddresses } from '../utils/wallet.utils';
 import ReceiveMoney from './actions/ReceiveMoney';
+import TxExport from './tx/TxExport';
 
 export default function WalletData() {
   let isMobile = isMobileScreen();
@@ -79,7 +80,7 @@ export default function WalletData() {
         )}
 
         <Offcanvas data-bs-theme='dark' show={showOffCanvas} onHide={() => setShowOffCanvas(false)} placement='bottom'>
-          <Offcanvas.Header>
+          <Offcanvas.Header className='pb-0 pt-2'>
             <Offcanvas.Title className='center' style={{fontSize: "1.7rem"}}>Wallet Options</Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body className='center' style={{fontSize: "1.2rem"}}>
@@ -90,6 +91,7 @@ export default function WalletData() {
               <ListGroup.Item action onClick={scanMoreAddresses} disabled={scanMsg !== ''}>
                 Scan More Addresses
               </ListGroup.Item>
+              <TxExport/>
             </ListGroup>
           </Offcanvas.Body>
         </Offcanvas>

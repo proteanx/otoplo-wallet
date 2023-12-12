@@ -27,7 +27,7 @@ export async function checkForUpdates() {
 }
 
 export async function exportFile(event: IpcMainInvokeEvent, file: Buffer, title: string, mainWindow: BrowserWindow) {
-  let path = dialog.showSaveDialogSync(mainWindow, { defaultPath: `${title}.zip` });
+  let path = dialog.showSaveDialogSync(mainWindow, { defaultPath: `${title}` });
   if (!path) {
     return false;
   }

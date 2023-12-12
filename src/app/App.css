@@ -17,6 +17,10 @@ body {
         env(safe-area-inset-left);
 }
 
+.offcanvas-bottom {
+    --bs-offcanvas-height: 40vh;
+}
+
 body.barcode-scanning-active {
     visibility: hidden;
     background: transparent!important;

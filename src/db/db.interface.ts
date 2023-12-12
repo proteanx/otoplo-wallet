@@ -6,6 +6,7 @@ export interface IAppDB {
     initSchema(): Promise<boolean>;
 
     upsertTransaction(txEntry: TransactionEntity): Promise<void>;
+    getTransactions(tokenId?: string): Promise<TransactionEntity[] | undefined>;
     getPageTransactions(pageNum: number, pageSize: number, tokenId?: string): Promise<TransactionEntity[] | undefined>;
     countTransactions(tokenId?: string): Promise<number>;
     clearTransactions(): Promise<void>;

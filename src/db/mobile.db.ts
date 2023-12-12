@@ -131,6 +131,13 @@ export class MobileDB implements IAppDB {
     await this.execRun(query, params);
   }
 
+  public async getTransactions(tokenId?: string): Promise<TransactionEntity[] | undefined> {
+    if (tokenId) {
+      return await this.execQuery("SELECT * FROM transactions WHERE token = ? ORDER BY time DESC;", [tokenId]);
+    }
+    return await this.execQuery("SELECT * FROM transactions ORDER BY time DESC;");
+  }
+
   public async getPageTransactions(pageNum: number, pageSize: number, tokenId?: string): Promise<TransactionEntity[] | undefined> {
     if (tokenId) {
       return await this.execQuery("SELECT * FROM transactions WHERE token = ? ORDER BY time DESC LIMIT ? OFFSET ?;", [tokenId, pageSize, (pageNum-1)*pageSize]);

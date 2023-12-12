@@ -38,6 +38,13 @@ export class DesktopDB extends Dexie implements IAppDB {
     await this.transactions.put(tx, tx.txIdem);
   }
 
+  public async getTransactions(tokenId?: string): Promise<TransactionEntity[]> {
+    if (tokenId) {
+      return await this.transactions.where("token").equals(tokenId).reverse().sortBy("time");
+    }
+    return await this.transactions.orderBy('time').reverse().toArray();
+  }
+
   public async getPageTransactions(pageNum: number, pageSize: number, tokenId?: string): Promise<TransactionEntity[]> {
     if (tokenId) {
       return await this.transactions.where("token").equals(tokenId).reverse().offset((pageNum-1)*pageSize).limit(pageSize).sortBy("time");
