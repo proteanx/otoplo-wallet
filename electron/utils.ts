@@ -7,7 +7,7 @@ export async function checkForUpdates() {
   try {
     let res = await CapacitorHttp.get({ url: "https://release.otoplo.com/otoplo-wallet/info.json", connectTimeout: 3000, readTimeout: 3000 });
     let latest: string = res.data.version;
-    if (res.status == 200 && latest !== version) {
+    if (res.status == 200 && latest && latest !== version) {
       let option = dialog.showMessageBoxSync({
         type: 'info',
         title: "Wallet Update",
