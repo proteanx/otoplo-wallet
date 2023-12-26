@@ -7,6 +7,10 @@
     src: url('../assets/fonts/Ubuntu-Regular.woff2');
 }
 
+.modal-max-height {
+    max-height: 80vh!important;
+}
+
 .ps-sidebar-container,
 .offcanvas-end,
 body {

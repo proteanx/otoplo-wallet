@@ -14,7 +14,7 @@ export default function TokenPage({ tokenEntity, tokenBalance, back }: { tokenEn
   let isMobile = isMobileScreen();
 
   const wallet = useAppSelector(walletState);
-  const mainAddr = wallet.keys.receiveKeys.at(-1)?.address ?? '';
+  const mainAddr = wallet.keys.receiveKeys[wallet.keys.receiveKeys.length - 1]?.address ?? '';
 
   let amtStr = "0", pending = "0";
   if (tokenBalance) {

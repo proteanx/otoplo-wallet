@@ -22,7 +22,7 @@ export default function WalletData() {
   const [scanMsg, setScanMsg] = useState("");
 
   const wallet = useAppSelector(walletState);
-  const mainAddr = wallet.keys.receiveKeys.at(-1)?.address ?? '';
+  const mainAddr = wallet.keys.receiveKeys[wallet.keys.receiveKeys.length - 1]?.address ?? '';
 
   const scanMoreAddresses = () => {
     setShowOffCanvas(false)
@@ -100,7 +100,7 @@ export default function WalletData() {
         {scanMsg}
       </div>
 
-      <Modal data-bs-theme='dark' contentClassName='text-bg-dark' show={showAddrs} onHide={() => setShowAddrs(false)} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal data-bs-theme='dark' scrollable contentClassName='modal-max-height text-bg-dark' show={showAddrs} onHide={() => setShowAddrs(false)} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton>
           <Modal.Title>Receive Addresses</Modal.Title>
         </Modal.Header>

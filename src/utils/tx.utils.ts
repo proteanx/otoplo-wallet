@@ -96,7 +96,7 @@ async function populateNexaInputsAndChange(tx: Transaction, keys: WalletKeys, op
             }
             
             if (options.isConsolidate) {
-                tx.change(options.toChange ?? keys.receiveKeys.at(-1)!.address);
+                tx.change(options.toChange ?? keys.receiveKeys[keys.receiveKeys.length - 1].address);
                 if (tx.inputs.length > MAX_INPUTS_OUTPUTS) {
                     return Array.from(usedKeys.values());
                 }
@@ -114,7 +114,7 @@ async function populateNexaInputsAndChange(tx: Transaction, keys: WalletKeys, op
                     assertMinimumRequiredFee(tx);
                     return Array.from(usedKeys.values());
                 } else if (avail > 0) {
-                    tx.change(options.toChange ?? keys.changeKeys.at(-1)!.address);
+                    tx.change(options.toChange ?? keys.changeKeys[keys.changeKeys.length - 1].address);
                     if (options.feeFromAmount) {
                         let hasChange = tx.getChangeOutput();
                         let txFee = getRequiredFee(tx);
@@ -222,7 +222,7 @@ async function populateTokenInputsAndChange(tx: Transaction, keys: WalletKeys, t
                 return Array.from(usedKeys.values());
             }
             if (inTokenAmount > outTokenAmount) {
-                tx.toGrouped(keys.changeKeys.at(-1)!.address, token, inTokenAmount - outTokenAmount);
+                tx.toGrouped(keys.changeKeys[keys.changeKeys.length - 1].address, token, inTokenAmount - outTokenAmount);
                 return Array.from(usedKeys.values());
             }
         }

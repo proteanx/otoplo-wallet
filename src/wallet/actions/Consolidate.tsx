@@ -44,7 +44,7 @@ export default function Consolidate({ nexKeys, balance, isMobile }: { nexKeys: W
 
   const consolidate = async () => {
     setSpinner(<Spinner animation="border" size="sm"/>);
-    let toAddress = nexKeys.receiveKeys.at(-1)!.address;
+    let toAddress = nexKeys.receiveKeys[nexKeys.receiveKeys.length - 1].address;
 
     try {
       let tx = await buildAndSignConsolidateTransaction(nexKeys);

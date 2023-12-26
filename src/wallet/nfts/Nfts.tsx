@@ -15,7 +15,7 @@ export default function Nfts() {
   const [selectedNft, setSelectedNft] = useState<NftEntity | false>(false);
 
   const wallet = useAppSelector(walletState);
-  const mainAddr = wallet.keys.receiveKeys.at(-1)?.address ?? '';
+  const mainAddr = wallet.keys.receiveKeys[wallet.keys.receiveKeys.length - 1]?.address ?? '';
 
   useEffect(() => {
     async function init() {
