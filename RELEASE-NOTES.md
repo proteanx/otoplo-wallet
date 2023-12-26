@@ -1,5 +1,9 @@
 # Release notes
 
+## 2.0.1 (26 Dec 2023)
+
+* Fix crashing issue on old devices
+
 ## 2.0.0 (17 Nov 2023)
 
 * Add Tokens and NFTs support
