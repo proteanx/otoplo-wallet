@@ -23,7 +23,7 @@ export default function ReleaseNotes() {
             <div className='light-txt'>- Fixed crashing issue on old devices</div>
           </div>
           <div className='mb-1 smaller url'>
-            <a href='' target='_blank'>Full Release notes <i className="va fa-solid fa-arrow-up-right-from-square fa-xs"/></a>
+            <a href='https://gitlab.com/otoplo/otoplo-wallet/otoplo-wallet/-/blob/main/RELEASE-NOTES.md' target='_blank'>Full Release notes <i className="va fa-solid fa-arrow-up-right-from-square fa-xs"/></a>
           </div>
         </Modal.Body>
         <Modal.Footer>
