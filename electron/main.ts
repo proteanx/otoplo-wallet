@@ -79,8 +79,9 @@ if (!gotTheLock) {
             url = `https://release.otoplo.com/otoplo-wallet/${res}/`;
             break;
         }
-        shell.openExternal(url);
-        app.quit();
+        shell.openExternal(url).finally(() => {
+          app.quit();
+        });
       } else {
         createWindow();
       }
