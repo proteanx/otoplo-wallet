@@ -134,7 +134,7 @@ export const walletSlice = createSlice({
             state.sync = true;
         }
     },
-    extraReducers(builder) {
+    extraReducers: (builder) => {
         builder
             .addCase(fetchBalance.fulfilled, (state, action) => {
                 state.balance = action.payload.balance;
@@ -156,14 +156,10 @@ export const walletSlice = createSlice({
                 if (payload.updateKeys) {
                     state.keys = payload.walletKeys;
                 }
-                state.sync = false;
                 StorageProvider.setLastCheck();
-                StorageProvider.removeLock(StorageProvider.SYNC_LOCK);
             })
-            .addCase(syncWallet.rejected, (state, action) => {
+            .addCase(syncWallet.rejected, (_state, action) => {
                 console.log(action.error.message);
-                state.sync = false;
-                StorageProvider.removeLock(StorageProvider.SYNC_LOCK);
             })
             .addCase(fetchHeightAndPrice.fulfilled, (state, action) => {
                 state.height = action.payload.height;
@@ -171,7 +167,12 @@ export const walletSlice = createSlice({
             })
             .addCase(fetchHeightAndPrice.rejected, (_state, action) => {
                 console.log(action.error.message);
-            })
+            });
+        
+        builder.addMatcher(syncWallet.settled, (state) => {
+            state.sync = false;
+            StorageProvider.removeLock(StorageProvider.SYNC_LOCK);
+        });
     },
 });
 

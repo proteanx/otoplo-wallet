@@ -1,9 +1,12 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { checkForUpdates, exportFile } from './utils';
 
 let mainWindow: BrowserWindow;
 const gotTheLock = app.requestSingleInstanceLock();
+
+const _dirname = dirname(fileURLToPath(import.meta.url));
 
 function createWindow(): void {
   // Create the browser window.
@@ -15,9 +18,9 @@ function createWindow(): void {
     show: false,
     maximizable: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon: join(__dirname, 'favicon.png') } : {}),
+    ...(process.platform === 'linux' ? { icon: join(_dirname, 'favicon.png') } : {}),
     webPreferences: {
-      preload: join(__dirname, 'preload.js'),
+      preload: join(_dirname, 'preload.mjs'),
       sandbox: false
     },
   })
@@ -38,7 +41,7 @@ function createWindow(): void {
     mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL)
     mainWindow.webContents.openDevTools({ mode: 'detach' })
   } else {
-    mainWindow.loadFile(join(__dirname, 'index.html')).then(() => {
+    mainWindow.loadFile(join(_dirname, 'index.html')).then(() => {
       mainWindow.setTitle("Otoplo Wallet " + app.getVersion());
     });
   }

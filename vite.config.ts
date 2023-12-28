@@ -22,18 +22,26 @@ export default defineConfig({
     }),
     shouldRunElectron && electron([
       {
-        entry: "electron/main.ts",
         vite: {
           build: {
-            outDir: 'dist'
+            outDir: 'dist',
+            lib: {
+              entry: "electron/main.ts",
+              formats: ['es'],
+              fileName: () => '[name].js'
+            }
           }
         },
       },
       {
-        entry: "electron/preload.ts",
         vite: {
           build: {
-            outDir: 'dist'
+            outDir: 'dist',
+            lib: {
+              entry: "electron/preload.ts",
+              formats: ['es'],
+              fileName: () => '[name].mjs'
+            }
           }
         },
       }
