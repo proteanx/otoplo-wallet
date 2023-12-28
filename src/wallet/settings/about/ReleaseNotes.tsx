@@ -14,15 +14,15 @@ export default function ReleaseNotes() {
         </Modal.Header>
         <Modal.Body>
           <div className="larger mb-3">Otoplo Wallet {import.meta.env.VITE_VERSION}</div>
-          {/* <div className="mb-3 smaller">
-            <div className="bold mb-1">NEWS</div>
-            {notes.feats.map((f, i) => <div className='light-txt' key={i}>- {f}</div>)}
-          </div> */}
           <div className="mb-3 smaller">
+            <div className="bold mb-1">NEWS</div>
+            <div className='light-txt'>- Add option to export transactions to CSV file</div>
+          </div>
+          {/* <div className="mb-3 smaller">
             <div className="bold mb-1">FIXES</div>
             <div className='light-txt'>- Fixed crashing issue on old devices</div>
-          </div>
-          <div className='mb-1 smaller url'>
+          </div> */}
+          <div className='mb-1 url'>
             <a href='https://gitlab.com/otoplo/otoplo-wallet/otoplo-wallet/-/blob/main/RELEASE-NOTES.md' target='_blank'>Full Release notes <i className="va fa-solid fa-arrow-up-right-from-square fa-xs"/></a>
           </div>
         </Modal.Body>

@@ -1,6 +1,6 @@
 {
   "name": "otoplo-wallet",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Cross-platform light wallet for Nexa",
   "author": "Otoplo",
   "private": true,
