@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { checkForUpdates, exportFile } from './utils';
+import { checkForUpdates, exportFile } from './utils.js';
 
 let mainWindow: BrowserWindow;
 const gotTheLock = app.requestSingleInstanceLock();
