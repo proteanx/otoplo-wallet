@@ -17,4 +17,3 @@ linux:
   icon: resources/icons/icon.png
 win:
   icon: resources/icons/icon.ico
-afterPack: ./after-pack.cjs
