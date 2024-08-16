@@ -49,7 +49,8 @@
     "build:ios": "npm run build && npx cap sync ios",
     "build:desktop": "del-cli ./out && env-cmd -f .env.desktop npm run build",
     "make:desktop": "npm run build:desktop && electron-forge package",
-    "make:osx": "npm run build:desktop && electron-forge make --arch=universal"
+    "make:osx": "npm run build:desktop && electron-forge make --arch=universal",
+    "make:appimage": "npm run build:desktop && electron-builder --linux appimage"
   },
   "eslintConfig": {
     "globals": {
@@ -67,6 +68,7 @@
     "archiver": "^6.0.1",
     "del-cli": "^5.1.0",
     "electron": "^28.1.0",
+    "electron-builder": "^24.13.3",
     "env-cmd": "^10.1.0",
     "sass": "^1.69.5",
     "typescript": "^5.3.3",
