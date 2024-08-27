@@ -64,15 +64,6 @@ async function createTarGz(dirPath) {
   await createArchive(dirPath, archive, output);
 }
 
-async function createZip(dirPath) {
-  const output = fs.createWriteStream(`${dirPath}.zip`);
-  const archive = archiver('zip', {
-    zlib: { level: 9 }
-  });
-
-  await createArchive(dirPath, archive, output);
-}
-
 module.exports = {
   packagerConfig: {
     name: "Otoplo-Wallet",
@@ -141,12 +132,8 @@ module.exports = {
       try {
         fs.renameSync(oldDirName, newDirName);
         console.log('Directory renamed successfully.');
+        await createTarGz(newDirName);
 
-        if (options.platform.includes('win')) {
-          // await createZip(newDirName);
-        } else {
-          await createTarGz(newDirName);
-        }
       } catch (err) {
         console.log(err)
       }
