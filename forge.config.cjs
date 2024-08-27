@@ -132,7 +132,9 @@ module.exports = {
       try {
         fs.renameSync(oldDirName, newDirName);
         console.log('Directory renamed successfully.');
-        await createTarGz(newDirName);
+        if (options.platform !== 'win') {
+          await createTarGz(newDirName);
+        }
 
       } catch (err) {
         console.log(err)
