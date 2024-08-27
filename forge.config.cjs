@@ -137,7 +137,7 @@ module.exports = {
         newVersion = `${version}-${commitHash}`;
       }
 
-      const newDirName = oldDirName.replace("Otoplo Wallet", "otoplo-wallet") + `-${newVersion}`;
+      const newDirName = oldDirName.replace("Otoplo-Wallet", "otoplo-wallet") + `-${newVersion}`;
       try {
         fs.renameSync(oldDirName, newDirName);
         console.log('Directory renamed successfully.');
