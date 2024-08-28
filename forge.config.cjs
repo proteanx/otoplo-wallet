@@ -1,6 +1,16 @@
 const { version } = require('./package.json');
 const archiver = require('archiver');
 const fs = require('fs');
+const { execSync } = require('child_process');
+
+function getGitCommitHash() {
+  try {
+    return execSync('git rev-parse --short HEAD').toString().trim();
+  } catch (error) {
+    console.error('Failed to get Git commit hash:', error);
+    return '';
+  }
+}
 
 async function createArchive(dirPath, archive, output) {
   // listen for all archive data to be written
@@ -54,18 +64,9 @@ async function createTarGz(dirPath) {
   await createArchive(dirPath, archive, output);
 }
 
-async function createZip(dirPath) {
-  const output = fs.createWriteStream(`${dirPath}.zip`);
-  const archive = archiver('zip', {
-    zlib: { level: 9 }
-  });
-
-  await createArchive(dirPath, archive, output);
-}
-
 module.exports = {
   packagerConfig: {
-    name: "Otoplo Wallet",
+    name: "Otoplo-Wallet",
     icon: './resources/icons/icon',
     appBundleId: 'com.otoplo.dwallet',
     ignore: [
@@ -113,17 +114,29 @@ module.exports = {
       }
 
       const oldDirName = options.outputPaths[0];
-      const newDirName = oldDirName.replace("Otoplo Wallet", "otoplo-wallet")  + `-${version}`;
+      let newVersion = version;
+      
+      // Check if the current commit is tagged as a release
+      try {
+        const taggedVersion = execSync('git describe --exact-match --tags HEAD').toString().trim();
+        if (taggedVersion !== `v${version}`) {
+          throw new Error('Not a tagged release');
+        }
+      } catch (error) {
+        // Not a tagged release, add commit hash to binary package
+        const commitHash = getGitCommitHash();
+        newVersion = `${version}-${commitHash}`;
+      }
 
+      const newDirName = oldDirName.replace("Otoplo-Wallet", "otoplo-wallet") + `-${newVersion}`;
       try {
         fs.renameSync(oldDirName, newDirName);
         console.log('Directory renamed successfully.');
-
-        if (options.platform.includes('win')) {
-          // await createZip(newDirName);
-        } else {
+        
+        if (options.platform.includes('linux')) {
           await createTarGz(newDirName);
         }
+
       } catch (err) {
         console.log(err)
       }
