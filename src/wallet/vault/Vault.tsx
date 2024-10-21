@@ -28,6 +28,7 @@ export default function Vault({ vaultAccountKey }: { vaultAccountKey: HDPrivateK
   const [archive, setArchive] = useState(false);
   const [showTx, setShowTx] = useState(false);
   const [vaultTx, setVaultTx] = useState("");
+  const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
   const wallet = useAppSelector(walletState);
 
@@ -56,6 +57,12 @@ export default function Vault({ vaultAccountKey }: { vaultAccountKey: HDPrivateK
       refreshVaults();
     }
   }, [tmpVal]);
+
+  useEffect(() => {
+    StorageProvider.getSelectedCurrency().then(currency => {
+      setSelectedCurrency(currency);
+    });
+  }, []);
 
   const refreshVaults = async () => {
     let hodls = await getHodlVaults();
@@ -135,7 +142,7 @@ export default function Vault({ vaultAccountKey }: { vaultAccountKey: HDPrivateK
       <div className="my-1 pt-3 center text-white">
         <Card.Title>My Vaults</Card.Title>
       </div>
-      { vaults?.map((hv, i) => <VaultEntry key={i} keys={wallet.keys} heightVal={wallet.height} price={wallet.price} vault={hv} vaultAccountKey={vaultAccountKey} refreshVaults={refreshVaults} openTx={openTx}/>) }
+      { vaults?.map((hv, i) => <VaultEntry key={i} keys={wallet.keys} heightVal={wallet.height} price={wallet.price} vault={hv} vaultAccountKey={vaultAccountKey} refreshVaults={refreshVaults} openTx={openTx} selectedCurrency={selectedCurrency}/>) }
     </>
   )
 }

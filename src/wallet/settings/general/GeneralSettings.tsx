@@ -1,3 +1,4 @@
+import CurrencySettings from "./CurrencySettings";
 import WalletBackup from "./WalletBackup";
 import SettingsRow from "../SettingsRow";
 import RostrumSettings from "./RostrumSettings";
@@ -7,8 +8,11 @@ import WalletReset from "./WalletReset";
 export default function GeneralSettings() {
   return (
     <>
+      <SettingsRow hr title="Fiat Currency" info="Select the currency for price display.">
+        <CurrencySettings />
+      </SettingsRow>
       <SettingsRow hr title="Backup Seed" info="Reveal the 12-words seed phrase.">
-        <WalletBackup/>
+        <WalletBackup />
       </SettingsRow>
       <RostrumSettings/>
       <SettingsRow hr title="Rescan Transactions" info="Clear transactions data to force rescan the blockchain.">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -13,9 +13,12 @@ import SendMoney from './actions/SendMoney';
 import { scanForNewAddresses } from '../utils/wallet.utils';
 import ReceiveMoney from './actions/ReceiveMoney';
 import TxExport from './tx/TxExport';
+import StorageProvider from '../providers/storage.provider';
+import { getSelectedCurrency, getCurrencySymbol } from '../utils/price.utils';
 
 export default function WalletData() {
   let isMobile = isMobileScreen();
+  const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
   const [showOffCanvas, setShowOffCanvas] = useState(false);
   const [showAddrs, setShowAddrs] = useState(false);
@@ -23,6 +26,10 @@ export default function WalletData() {
 
   const wallet = useAppSelector(walletState);
   const mainAddr = wallet.keys.receiveKeys[wallet.keys.receiveKeys.length - 1]?.address ?? '';
+
+  useEffect(() => {
+    getSelectedCurrency().then(setSelectedCurrency);
+  }, []);
 
   const scanMoreAddresses = () => {
     setShowOffCanvas(false)
@@ -47,6 +54,9 @@ export default function WalletData() {
     val.confirmed = val.confirmed.add(val.unconfirmed);
     val.unconfirmed = new bigDecimal(0);
   }
+
+  const currencySymbol = getCurrencySymbol(selectedCurrency);
+
   let rAddrs = wallet.keys.receiveKeys?.map(key => key.address).reverse();
 
   return (
@@ -57,7 +67,7 @@ export default function WalletData() {
           {val.confirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA
         </div>
         <div className='smaller' style={{fontWeight: "400"}}>
-          {wallet.price.compareTo(new bigDecimal(0)) > 0 && "($"+wallet.price.multiply(val.confirmed).round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()+")"}
+          {wallet.price[selectedCurrency.toLowerCase()]?.compareTo(new bigDecimal(0)) > 0 && `(${currencySymbol}${wallet.price[selectedCurrency.toLowerCase()].multiply(val.confirmed).round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()})`}
         </div>
       </Card.Title>
       { val.unconfirmed.compareTo(new bigDecimal(0)) > 0 && 

@@ -16,18 +16,20 @@ import HDPrivateKey from 'nexcore-lib/types/lib/hdprivatekey';
 import { estimateDateByFutureBlock, generateHodlKey, getVaultBlockAndIndex } from '../../utils/vault.utils';
 import { dbProvider } from '../../app/App';
 import ConfirmDialog from '../misc/ConfirmDialog';
+import { getCurrencySymbol } from '../../utils/price.utils';
 
 interface VaultEntryProps {
   keys: WalletKeys;
   heightVal: number;
-  price: bigDecimal;
+  price: Record<string, bigDecimal>;
   vault: VaultInfo;
   vaultAccountKey: HDPrivateKey;
   refreshVaults: () => Promise<void>;
-  openTx: (address: string) => void
+  openTx: (address: string) => void;
+  selectedCurrency: string;
 }
 
-export default function VaultEntry({ keys, heightVal, price, vault, vaultAccountKey, refreshVaults, openTx }: VaultEntryProps) {
+export default function VaultEntry({ keys, heightVal, price, vault, vaultAccountKey, refreshVaults, openTx, selectedCurrency }: VaultEntryProps) {
   let isMobile = isMobileScreen();
 
   const [showQR, setShowQR] = useState(false);
@@ -77,7 +79,7 @@ export default function VaultEntry({ keys, heightVal, price, vault, vaultAccount
               <div className='mt-2'>
                 Balance
                 <div>
-                  <b>{val.confirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA @ {"$"+price.multiply(val.confirmed).round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()}</b>
+                  <b>{val.confirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA @ {getCurrencySymbol(selectedCurrency)}{price[selectedCurrency.toLowerCase()].multiply(val.confirmed).round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()}</b>
                 </div>
               </div>
               { val.unconfirmed.compareTo(new bigDecimal(0)) > 0 && 
@@ -90,7 +92,7 @@ export default function VaultEntry({ keys, heightVal, price, vault, vaultAccount
               </div>
               <div className='mt-3'>
                 { isMobile ? (<>
-                    <Claim eta={eta} balance={vault.balance} vaultKey={vaultKey} vaultAddress={vaultAddress} vaultInfo={vaultInfo} nexKeys={keys} refreshVaults={refreshVaults}/>
+                    <Claim eta={eta} balance={vault.balance} vaultKey={vaultKey} vaultAddress={vaultAddress} vaultInfo={vaultInfo} nexKeys={keys} refreshVaults={refreshVaults} selectedCurrency={selectedCurrency} price={price}/>
                     <Button onClick={() => setShowOffCanvas(true)}><i className="fa-solid fa-ellipsis"></i></Button>
                     
                       <Offcanvas data-bs-theme='dark' show={showOffCanvas} onHide={() => setShowOffCanvas(false)} placement='bottom'>
@@ -110,7 +112,7 @@ export default function VaultEntry({ keys, heightVal, price, vault, vaultAccount
                       </Offcanvas>
                   </>) : (<>
                     { (!eta && val.confirmed.add(val.unconfirmed).compareTo(new bigDecimal(0)) === 0) && <Button variant="outline-primary" onClick={() => setShowArchiveDialog(true)}>Move to Archive</Button> }
-                    <Claim eta={eta} balance={vault.balance} vaultKey={vaultKey} vaultAddress={vaultAddress} vaultInfo={vaultInfo} nexKeys={keys} refreshVaults={refreshVaults}/>
+                    <Claim eta={eta} balance={vault.balance} vaultKey={vaultKey} vaultAddress={vaultAddress} vaultInfo={vaultInfo} nexKeys={keys} refreshVaults={refreshVaults} selectedCurrency={selectedCurrency} price={price}/>
                     <Button onClick={() => openTx(vaultAddress)}>Show Transactions</Button>
                   </>) }
               </div>
