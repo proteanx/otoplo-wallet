@@ -128,6 +128,15 @@ export default class StorageProvider {
     return hide === "true";
   }
 
+  public static async getSelectedCurrency(): Promise<string> {
+    const value = await this.getValue('selectedCurrency');
+    return value || 'USD';
+  }
+
+  public static async setSelectedCurrency(currency: string): Promise<void> {
+    await this.setValue('selectedCurrency', currency);
+  }
+
   private static async setValue(key: string, value: string) {
     if (isMobilePlatform()) {
       await Preferences.set({key: key, value: value});

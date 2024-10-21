@@ -7,7 +7,8 @@ import StorageProvider from "../../providers/storage.provider";
 import { TransactionEntity } from "../../models/db.entities";
 import bigDecimal from "js-big-decimal";
 import { rostrumProvider } from "../../providers/rostrum.provider";
-import { getNexaPrice, sleep } from "../../utils/common.utils";
+import { sleep } from "../../utils/common.utils";
+import { initializePrices, getNexaPrice } from "../../utils/price.utils";
 
 export interface WalletState {
     accountKey?: HDPrivateKey;
@@ -15,7 +16,7 @@ export interface WalletState {
     balance: Balance;
     tokensBalance: Record<string, Balance>;
     height: number;
-    price: bigDecimal;
+    price: Record<string, bigDecimal>;
     sync: boolean;
 }
   
@@ -24,27 +25,29 @@ const initialState: WalletState = {
     balance: {confirmed: "0", unconfirmed: "0"},
     tokensBalance: {},
     height: 0,
-    price: new bigDecimal(0),
+    price: initializePrices(),
     sync: false
 }
 
 export const fetchHeightAndPrice = createAsyncThunk('wallet/fetchHeightAndPrice', async (_, thunkAPI) => {
-    let tip: number;
-    try {
-        let bTip = await rostrumProvider.getBlockTip();
-        tip = bTip.height;
-    } catch {
-        tip = 0;
-    }
-    
-    let price: bigDecimal;
-    try {
-        let p = await getNexaPrice();
-        price = new bigDecimal(p);
-    } catch {
-        price = new bigDecimal(0);
-    }
-    return { height: tip, price: price };
+  let tip: number;
+  try {
+    let bTip = await rostrumProvider.getBlockTip();
+    tip = bTip.height;
+  } catch {
+    tip = 0;
+  }
+  
+  let prices = initializePrices();
+  try {
+    let p = await getNexaPrice();
+    Object.keys(p).forEach(currency => {
+      prices[currency] = new bigDecimal(p[currency]);
+    });
+  } catch {
+    // prices remain at 0
+  }
+  return { height: tip, price: prices };
 });
 
 export const fetchBalance = createAsyncThunk('wallet/fetchBalance', async (withDelay: boolean, thunkAPI) => {

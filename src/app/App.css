@@ -407,8 +407,16 @@ code, .text-monospace {
     display: none !important; 
 }
 
-.dropdown-item:active {
-    background-color: #323942 !important;
+.dropdown-menu {
+    background-color: #343a40;
+}
+   
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: #23272b;
+}
+   
+.dropdown-item.active {
+    background-color: #1d2124;
 }
 
 .settings > .nav-underline {
