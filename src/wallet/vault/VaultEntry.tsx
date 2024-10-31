@@ -92,7 +92,7 @@ export default function VaultEntry({ keys, heightVal, price, vault, vaultAccount
               </div>
               <div className='mt-3'>
                 { isMobile ? (<>
-                    <Claim eta={eta} balance={vault.balance} vaultKey={vaultKey} vaultAddress={vaultAddress} vaultInfo={vaultInfo} nexKeys={keys} refreshVaults={refreshVaults} selectedCurrency={selectedCurrency} price={price}/>
+                    <Claim eta={eta} balance={vault.balance} vaultKey={vaultKey} vaultAddress={vaultAddress} vaultInfo={vaultInfo} nexKeys={keys} refreshVaults={refreshVaults}/>
                     <Button onClick={() => setShowOffCanvas(true)}><i className="fa-solid fa-ellipsis"></i></Button>
                     
                       <Offcanvas data-bs-theme='dark' show={showOffCanvas} onHide={() => setShowOffCanvas(false)} placement='bottom'>
@@ -112,7 +112,7 @@ export default function VaultEntry({ keys, heightVal, price, vault, vaultAccount
                       </Offcanvas>
                   </>) : (<>
                     { (!eta && val.confirmed.add(val.unconfirmed).compareTo(new bigDecimal(0)) === 0) && <Button variant="outline-primary" onClick={() => setShowArchiveDialog(true)}>Move to Archive</Button> }
-                    <Claim eta={eta} balance={vault.balance} vaultKey={vaultKey} vaultAddress={vaultAddress} vaultInfo={vaultInfo} nexKeys={keys} refreshVaults={refreshVaults} selectedCurrency={selectedCurrency} price={price}/>
+                    <Claim eta={eta} balance={vault.balance} vaultKey={vaultKey} vaultAddress={vaultAddress} vaultInfo={vaultInfo} nexKeys={keys} refreshVaults={refreshVaults}/>
                     <Button onClick={() => openTx(vaultAddress)}>Show Transactions</Button>
                   </>) }
               </div>

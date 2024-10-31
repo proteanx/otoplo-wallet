@@ -130,7 +130,7 @@ export default class StorageProvider {
 
   public static async getSelectedCurrency(): Promise<string> {
     const value = await this.getValue('selectedCurrency');
-    return value || 'USD';
+    return value || 'usd';
   }
 
   public static async setSelectedCurrency(currency: string): Promise<void> {
