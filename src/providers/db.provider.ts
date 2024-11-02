@@ -1,4 +1,3 @@
-import { SQLiteHook } from "react-sqlite-hook";
 import { nftUpdateTrigger, tokenUpdateTrigger, txUpdateTrigger } from "../app/App";
 import { IAppDB } from "../db/db.interface";
 import { DesktopDB } from "../db/desktop.db";
@@ -11,9 +10,9 @@ export class DBProvider {
 
     private appdb: IAppDB;
 
-    constructor(sqlite: SQLiteHook) {
+    constructor() {
         if (isMobilePlatform()) {
-            this.appdb = new MobileDB(sqlite);
+            this.appdb = new MobileDB();
         } else {
             this.appdb = new DesktopDB();
         }

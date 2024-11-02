@@ -19,8 +19,8 @@ export interface ContractEntity {
   address: string;
   type: string;
   archive: number;
-  confirmed: number;
-  unconfirmed: number;
+  confirmed: number | string;
+  unconfirmed: number | string;
 }
 
 export interface TokenEntity {

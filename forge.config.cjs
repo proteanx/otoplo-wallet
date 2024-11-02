@@ -66,7 +66,7 @@ async function createTarGz(dirPath) {
 
 module.exports = {
   packagerConfig: {
-    name: "Otoplo-Wallet",
+    name: "Otoplo Wallet",
     icon: './resources/icons/icon',
     appBundleId: 'com.otoplo.dwallet',
     ignore: [
@@ -80,7 +80,7 @@ module.exports = {
       "^\\/resources$",
       "^\\/[.].+",
       "^\\/.+\.md$",
-      "^\\/config-overrides\.js$",
+      "^\\/electron-builder\.yml$",
       "^\\/forge\.config\.cjs$",
       "^\\/capacitor\.config\.ts$",
       "^\\/tsconfig.*\.json$",
@@ -91,7 +91,6 @@ module.exports = {
       platform: "darwin",
     },
     osxNotarize: {
-      tool: "notarytool",
       keychain: "~/Library/Keychains/login.keychain-db",
       keychainProfile: "otoplo-electron"
     }
@@ -128,7 +127,7 @@ module.exports = {
         newVersion = `${version}-${commitHash}`;
       }
 
-      const newDirName = oldDirName.replace("Otoplo-Wallet", "otoplo-wallet") + `-${newVersion}`;
+      const newDirName = oldDirName.replace("Otoplo Wallet", "otoplo-wallet") + `-${newVersion}`;
       try {
         fs.renameSync(oldDirName, newDirName);
         console.log('Directory renamed successfully.');

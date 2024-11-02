@@ -79,7 +79,7 @@ const defaultToastOpts: ToastOptions = {
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
-    draggable: true,
+    draggable: 'touch',
     progress: undefined,
     theme: "dark"
 }
