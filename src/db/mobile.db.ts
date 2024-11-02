@@ -1,7 +1,6 @@
-import { SQLiteDBConnection, SQLiteHook } from "react-sqlite-hook";
 import { existingConn } from "../app/App";
 import { IAppDB } from "./db.interface";
-import { capSQLiteSet } from "@capacitor-community/sqlite";
+import { CapacitorSQLite, CapacitorSQLitePlugin, capSQLiteSet, SQLiteConnection, SQLiteDBConnection } from "@capacitor-community/sqlite";
 import { ContractEntity, NftEntity, TokenEntity, TransactionEntity } from "../models/db.entities";
 import { Balance } from "../models/wallet.entities";
 
@@ -67,8 +66,8 @@ const upgradeSchemaV2 =  [
     parentGroup TEXT,
     addedTime INTEGER
   );`,
-  `CREATE INDEX IF NOT EXISTS nfts_time_idx ON tokens (addedTime);`,
-  `CREATE INDEX IF NOT EXISTS nfts_group ON tokens (parentGroup);`,
+  `CREATE INDEX IF NOT EXISTS nfts_time_idx ON nfts (addedTime);`,
+  `CREATE INDEX IF NOT EXISTS nfts_group ON nfts (parentGroup);`,
 ];
   
 const upgradeStatements = [
@@ -77,13 +76,16 @@ const upgradeStatements = [
   // for future
   //{ toVersion: 3, statements: upgradeSchemaV3 },
 ];
+const dbVersion = 2;
 
 export class MobileDB implements IAppDB {
 
-  sqldb: SQLiteHook;
+  private sqlitePlugin: CapacitorSQLitePlugin;
+  private sqliteConnection: SQLiteConnection;
 
-  constructor(sqlite: SQLiteHook) {
-    this.sqldb = sqlite;
+  constructor() {
+    this.sqlitePlugin = CapacitorSQLite;
+    this.sqliteConnection = new SQLiteConnection(CapacitorSQLite);
   }
 
   public async initSchema() {
@@ -215,18 +217,14 @@ export class MobileDB implements IAppDB {
   }
 
   private async getDBConnection() {
-    let consistency = await this.sqldb.checkConnectionsConsistency();
-    let isConn = await this.sqldb.isConnection("nexa-db", false);
+    let consistency = await this.sqliteConnection.checkConnectionsConsistency();
+    let isConn = await this.sqliteConnection.isConnection("nexa-db", false);
     let db;
     if (consistency?.result && isConn.result) {
-      db = await this.sqldb.retrieveConnection("nexa-db", false);
+      db = await this.sqliteConnection.retrieveConnection("nexa-db", false);
     } else {
-      var version = 1;
-      for (const upg of upgradeStatements) {
-        await this.sqldb.addUpgradeStatement("nexa-db", upg);
-        version = upg.toVersion;
-      }
-      db = await this.sqldb.createConnection("nexa-db", false, "no-encryption", version);
+      await this.sqlitePlugin.addUpgradeStatement({ database: "nexa-db", upgrade: upgradeStatements })
+      db = await this.sqliteConnection.createConnection("nexa-db", false, "no-encryption", dbVersion, false);
     }
     return db;
   }

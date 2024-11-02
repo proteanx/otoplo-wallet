@@ -11,7 +11,6 @@ import OpenWallet from '../wallet/OpenWallet';
 import RecoverWallet from '../wallet/RecoverWallet';
 import { currentTimestamp, isMobilePlatform, isMobileScreen } from '../utils/common.utils';
 import otoplo from '../assets/img/otoplo-logo-white.svg';
-import { useSQLite } from 'react-sqlite-hook';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { App as MApp } from '@capacitor/app';
 import SideMenu from './SideMenu';
@@ -44,8 +43,7 @@ function App() {
   const [nftsUpdateTrigger, setNftsUpdateTrigger] = useState(0);
   nftUpdateTrigger = {updateTrigger: nftsUpdateTrigger, setUpdateTrigger: setNftsUpdateTrigger};
 
-  const sqlite = useSQLite();
-  const [dbProviderInstance] = useState(new DBProvider(sqlite));
+  const [dbProviderInstance] = useState(new DBProvider());
   dbProvider = dbProviderInstance;
   
   const [activeItem, setActiveItem] = useState('NEXA');

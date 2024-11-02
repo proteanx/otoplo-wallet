@@ -70,7 +70,7 @@ if (!gotTheLock) {
             url = `https://release.otoplo.com/otoplo-wallet/${res}/otoplo-wallet-osx-${res}.dmg`;
             break;
           case 'linux':
-            url = `https://release.otoplo.com/otoplo-wallet/${res}/otoplo-wallet-linux-x64-${res}.tar.gz`;
+            url = `https://release.otoplo.com/otoplo-wallet/${res}/otoplo-wallet-linux-x86_64-${res}.AppImage`;
             break;
           case 'win32':
             url = `https://release.otoplo.com/otoplo-wallet/${res}/otoplo-wallet-win-setup-${res}.exe`;

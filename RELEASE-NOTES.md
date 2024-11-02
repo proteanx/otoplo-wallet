@@ -1,5 +1,11 @@
 # Release notes
 
+## 2.2.0 (03 Nov 2024)
+
+* Add fiat currency options for balance value display
+* Desktop: Make updater more strict when identify new version
+* chore: Add AppImage support for Linux
+
 ## 2.1.0 (28 Dec 2023)
 
 * Desktop: Add option to export transactions to CSV file

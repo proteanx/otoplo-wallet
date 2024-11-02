@@ -1,13 +1,13 @@
 appId: com.otoplo.dwallet
-productName: Otoplo-Wallet
+productName: OtoploWallet
+executableName: otoplo-wallet
 directories:
   output: out
   buildResources: resources
 files:
   - dist/**/*
   - package.json
-  - "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}"
-  - "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}"
+  - "!node_modules"
 mac:
   category: public.app-category.finance
   icon: resources/icons/icon.icns
@@ -15,5 +15,6 @@ linux:
   target:
     - AppImage
   icon: resources/icons/icon.png
+  artifactName: "${name}-${os}-${arch}-${version}.${ext}"
 win:
   icon: resources/icons/icon.ico

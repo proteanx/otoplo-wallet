@@ -1,6 +1,6 @@
 import { BarcodeFormat, BarcodeScanner, LensFacing } from "@capacitor-mlkit/barcode-scanning";
 import { Dialog } from "@capacitor/dialog";
-import { QrScanner } from "@yudiel/react-qr-scanner";
+import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import { useState } from "react";
 import { Button, Container, Dropdown, Modal } from "react-bootstrap";
 
@@ -15,6 +15,12 @@ interface ScannerProps {
 export default function QRScanner({ devices, showScanDialog, closeScanDialog, handleScan, scanError }: ScannerProps) {
   const [selectedDevice, setSelectedDevice] = useState<string>('');
 
+  const handleOnScan = (data: IDetectedBarcode[]) => {
+    if (data.length > 0) {
+      handleScan(data[0].rawValue);
+    }
+  }
+
   return (
     <>
       <Modal data-bs-theme='dark' contentClassName='text-bg-dark' size='sm' show={showScanDialog} onHide={closeScanDialog} centered>
@@ -22,7 +28,7 @@ export default function QRScanner({ devices, showScanDialog, closeScanDialog, ha
           <Modal.Title>Scan QR</Modal.Title>
         </Modal.Header>
         <Modal.Body className='center'>
-          <QrScanner containerStyle={{ width: 250, marginBottom: "5px" }} constraints={{ deviceId: selectedDevice, facingMode: 'environment' }} onError={scanError} onDecode={handleScan}/>
+          <Scanner styles={{ container: { width: 250, marginBottom: "5px" }}} constraints={{ deviceId: selectedDevice, facingMode: 'environment' }} onError={scanError} onScan={handleOnScan}/>
           <Dropdown className="d-inline mx-2" onSelect={eventKey => setSelectedDevice(eventKey ?? '')}>
             <Dropdown.Toggle id="dropdown-autoclose-true">
               Select Camera Device

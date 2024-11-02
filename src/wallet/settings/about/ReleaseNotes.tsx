@@ -16,7 +16,7 @@ export default function ReleaseNotes() {
           <div className="larger mb-3">Otoplo Wallet {import.meta.env.VITE_VERSION}</div>
           <div className="mb-3 smaller">
             <div className="bold mb-1">NEWS</div>
-            <div className='light-txt'>- Add option to export transactions to CSV file</div>
+            <div className='light-txt'>- Add fiat currency options for balance value display</div>
           </div>
           {/* <div className="mb-3 smaller">
             <div className="bold mb-1">FIXES</div>
