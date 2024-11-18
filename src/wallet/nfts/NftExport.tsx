@@ -11,7 +11,7 @@ export default function NftExport({ nftEntity, title }: { nftEntity: NftEntity, 
 
   const exportNft = async () => {
     try {
-      let success = await window.electronAPI.exportFile(nftEntity.zipData, `${title || nftEntity.tokenIdHex}.zip`);
+      let success = await window.electronAPI.exportFile(Buffer.from(nftEntity.zipData, 'base64'), `${title || nftEntity.tokenIdHex}.zip`);
       if (success) {
         showToast('success', 'NFT Saved!');
       }

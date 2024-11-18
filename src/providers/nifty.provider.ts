@@ -19,8 +19,7 @@ export default class NiftyProvider {
     private static readonly endpoint = import.meta.env.PROD ? "https://niftyart.cash/_public/" : "/_public/";
 
     public static async fetchNFT(id: string) {
-        let data = await this.performGet<string>(id, "arraybuffer");
-        return Buffer.from(data, 'base64');
+        return await this.performGet<string>(id, "arraybuffer");
     }
 
     public static isNiftySubgroup(group: string) {

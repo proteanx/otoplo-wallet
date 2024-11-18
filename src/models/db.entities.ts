@@ -38,6 +38,6 @@ export interface NftEntity {
   token: string;
   tokenIdHex: string;
   parentGroup: string;
-  zipData: Buffer;
+  zipData: string;
   addedTime: number;
 }

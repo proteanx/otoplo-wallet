@@ -28,10 +28,10 @@ export default function NftPage({ nftEntity, keys, back }: { nftEntity: NftEntit
   const [files, setFiles] = useState<NftFileDetails[]>();
 
   useEffect(() => {
-    async function loadData(zipData: Buffer) {
+    async function loadData(zipData: string) {
       let files: NftFileDetails[] = [];
 
-      let zip = await JSZip.loadAsync(zipData);
+      let zip = await JSZip.loadAsync(zipData, { base64: true });
       let info = zip.file('info.json');
       if (info) {
         let infoJson = await info.async('string');

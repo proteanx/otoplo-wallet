@@ -20,7 +20,7 @@ export default function NftFigure({ nftEntity, tokenBalance, onClick }: { nftEnt
         return;
       }
 
-      let zip = await JSZip.loadAsync(nftEntity.zipData);
+      let zip = await JSZip.loadAsync(nftEntity.zipData, { base64: true });
       let info = zip.file('info.json');
       if (info) {
         let infoJson = await info.async('string');
