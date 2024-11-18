@@ -208,12 +208,22 @@ export class MobileDB implements IAppDB {
     await this.execRun(query, params);
   }
 
-  public async getNfts(): Promise<NftEntity[] | undefined> {
-    return await this.execQuery("SELECT * FROM nfts ORDER BY addedTime DESC;");
+  public async getNfts(pageNum: number, pageSize: number): Promise<NftEntity[] | undefined> {
+    return await this.execQuery("SELECT * FROM nfts ORDER BY addedTime DESC LIMIT ? OFFSET ?;", [pageSize, (pageNum-1)*pageSize]);
   }
 
   public async deleteNft(id: string) {
     await this.execRun('DELETE FROM nfts WHERE tokenIdHex = ? OR token = ?;', [id, id]);
+  }
+
+  public async countNfts(): Promise<number> {
+    let count = await this.execQuery("SELECT COUNT(*) AS c FROM nfts;");
+    return count ? count[0].c : 0;
+  }
+
+  public async isNftExist(id: string): Promise<boolean> {
+    let count = await this.execQuery("SELECT COUNT(*) AS c FROM nfts WHERE tokenIdHex = ? OR token = ?;", [id, id]);
+    return count ? count[0].c > 0 : false;
   }
 
   private async getDBConnection() {

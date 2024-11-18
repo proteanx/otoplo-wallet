@@ -18,7 +18,7 @@ export function currentTimestamp() {
     return Math.floor(Date.now() / 1000);
 }
 
-export function isNullOrEmpty(arg?: string | any[]) {
+export function isNullOrEmpty(arg?: string | any[]): arg is undefined | [] | '' {
     return !arg || arg.length === 0;
 }
 

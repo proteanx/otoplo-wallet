@@ -296,8 +296,6 @@ export async function classifyAndSaveTransaction(txHistory: ITXHistory, myAddres
     }
 
     await dbProvider.addLocalTransaction(txEntry);
-
-    return txEntry;
 }
 
 function classifyTokenTransaction(vin: ITXInput[], vout: ITXOutput[], txState: TxEntityState, myAddresses: string[]): [TxTokenType, string, string, string] {

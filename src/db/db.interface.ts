@@ -22,7 +22,9 @@ export interface IAppDB {
     getTokens(): Promise<TokenEntity[] | undefined>;
     deleteToken(id: string): Promise<void>;
 
+    countNfts(): Promise<number>;
     upsertNft(nft: NftEntity): Promise<void>;
-    getNfts(): Promise<NftEntity[] | undefined>;
+    getNfts(pageNum: number, pageSize: number): Promise<NftEntity[] | undefined>;
     deleteNft(id: string): Promise<void>;
+    isNftExist(id: string): Promise<boolean>;
 }

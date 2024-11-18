@@ -20,6 +20,11 @@ export function tokenIdToHex(token: string) {
 export async function fetchAndSaveNFT(token: string, parent: string) {
     // support only nifty for now
     try {
+        let exist = await dbProvider.isNftExist(token);
+        if (exist) {
+            return;
+        }
+
         let hexId = tokenIdToHex(token);
         let nft = await NiftyProvider.fetchNFT(hexId);
         let nftEntity: NftEntity = {

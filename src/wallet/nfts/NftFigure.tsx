@@ -17,7 +17,6 @@ export default function NftFigure({ nftEntity, tokenBalance, onClick }: { nftEnt
     async function loadData() {
       if (!tokenBalance) {
         // workaround for concurrent tx classification
-        await removeLocalNFT(nftEntity.tokenIdHex);
         return;
       }
 
