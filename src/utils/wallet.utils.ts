@@ -81,7 +81,7 @@ async function discoverWalletIndex(deriveKey: HDPrivateKey) {
             let rAddr = deriveKey.deriveChild(i, false).getPublicKey().toAddress().toString();
             let isUsed = await isAddressUsed(rAddr);
             if (isUsed) {
-                index++;
+                index = i;
                 stop = false;
             }
         }
