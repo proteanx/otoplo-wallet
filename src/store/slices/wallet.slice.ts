@@ -102,6 +102,8 @@ export const syncNfts = createAsyncThunk('wallet/syncNfts', async (_, thunkAPI) 
                     nftsToDelete.push(n.tokenIdHex);
                     count--;
                 } else {
+                    let buf = Buffer.from(n.zipData as any, 'base64');
+                    n.zipData = buf;
                     nftsToAdd.push(n)
                 }
             }
