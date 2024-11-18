@@ -7,10 +7,12 @@ import JSZip from "jszip";
 import NftExport from "./NftExport";
 import NftSend from "./NftSend";
 import { WalletKeys } from "../../models/wallet.entities";
+import { classifyNftType } from "../../utils/token.utils";
 
 interface NftFileDetails {
   title: string;
   image: string;
+  type?: string;
 }
 
 export interface NftData {
@@ -33,37 +35,41 @@ export default function NftPage({ nftEntity, keys, back }: { nftEntity: NftEntit
       let info = zip.file('info.json');
       if (info) {
         let infoJson = await info.async('string');
-        let infoObj = JSON.parse(infoJson);
-        let data: NftData = { title: infoObj?.title ?? '', series: infoObj?.series ?? '' };
-        setInfoJson(data);
+        try {
+          let infoObj = JSON.parse(infoJson);
+          let data: NftData = { title: infoObj?.title ?? '', series: infoObj?.series ?? '' };
+          setInfoJson(data);
+        } catch {
+          // ignore
+        }
       }
 
       let pubImg = zip.file(/^public\./);
       if (!isNullOrEmpty(pubImg)) {
         let img = await pubImg[0].async('blob');
         let url = URL.createObjectURL(img);
-        files.push({ title: 'Public', image: url });
+        files.push({ title: 'Public', image: url, type: classifyNftType(pubImg[0].name) });
       }
 
       let frontImg = zip.file(/^cardf\./);
       if (!isNullOrEmpty(frontImg)) {
         let img = await frontImg[0].async('blob');
         let url = URL.createObjectURL(img);
-        files.push({ title: 'Front', image: url });
+        files.push({ title: 'Front', image: url, type: classifyNftType(frontImg[0].name) });
       }
 
       let backImg = zip.file(/^cardb\./);
       if (!isNullOrEmpty(backImg)) {
         let img = await backImg[0].async('blob');
         let url = URL.createObjectURL(img);
-        files.push({ title: 'Back', image: url });
+        files.push({ title: 'Back', image: url, type: classifyNftType(backImg[0].name) });
       }
 
       let ownImg = zip.file(/^owner\./);
       if (!isNullOrEmpty(ownImg)) {
         let img = await ownImg[0].async('blob');
         let url = URL.createObjectURL(img);
-        files.push({ title: 'Owner', image: url });
+        files.push({ title: 'Owner', image: url, type: classifyNftType(ownImg[0].name) });
       }
 
       setFiles(files);
@@ -102,8 +108,11 @@ export default function NftPage({ nftEntity, keys, back }: { nftEntity: NftEntit
             <Col className='center'>
               { files?.map((f, i) => {
                 return (
-                  <Figure key={i} className="mx-3" style={{ width: isMobile ? '40%' : '20%' }}>
-                    <Figure.Image src={f.image} />
+                  <Figure key={i} className="mx-3" style={{ width: isMobile ? '40%' : '30%' }}>
+                    { f.type == 'video' && <video controls src={f.image} width={"100%"} style={{objectFit: 'cover'}}/>
+                      || f.type == 'audio' && <audio controls src={f.image} style={{width: '100%', objectFit: 'cover'}}/>
+                      || <Figure.Image src={f.image} />
+                    }
                     <Figure.Caption className="text-white">{f.title}</Figure.Caption>
                   </Figure>
                 )

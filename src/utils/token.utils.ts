@@ -6,6 +6,10 @@ import { rostrumProvider } from "../providers/rostrum.provider";
 import { currentTimestamp, getAddressBuffer } from "./common.utils";
 import NexCore from 'nexcore-lib';
 
+const audioExtensions = ['.ogg', '.mp3']
+const videoExtensions = ['.avif', '.webp', '.mp4', '.mpeg', '.mpg', '.webm'];
+const imageExtensions = ['.svg', '.gif', '.png', '.apng', '.jpg', '.jpeg'];
+
 export function tokenIdToHex(token: string) {
     if (NexCore.util.js.isHexa(token)) {
         return token;
@@ -28,6 +32,20 @@ export async function fetchAndSaveNFT(token: string, parent: string) {
         await dbProvider.saveNft(nftEntity);
     } catch (e) {
         console.log('failed to fetch NFT from nifty');
+    }
+}
+
+export function classifyNftType(filename: string) {
+    let extension = filename.slice(filename.lastIndexOf('.')).toLowerCase();
+
+    if (videoExtensions.includes(extension)) {
+        return 'video';
+    } else if (audioExtensions.includes(extension)) {
+        return 'audio';
+    } else if (imageExtensions.includes(extension)) {
+        return 'image';
+    } else {
+        return 'unknown';
     }
 }
 

@@ -42,7 +42,7 @@ export default function Nfts() {
           <Col className="px-0 right"><ReceiveMoney address={mainAddr}/></Col>
         </Row>
       </Container>
-      <div className="pt-2">
+      <div className="pt-3">
         { !isNullOrEmpty(nfts) ? (
           nfts!.map((nft, i) => <NftFigure key={i} nftEntity={nft} tokenBalance={wallet.tokensBalance[nft.tokenIdHex]} onClick={() => selectNft(nft)}/>)
         ) : (
