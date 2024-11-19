@@ -1,5 +1,5 @@
 import { Clipboard } from '@capacitor/clipboard';
-import { Capacitor, CapacitorHttp } from '@capacitor/core';
+import { Capacitor } from '@capacitor/core';
 import bigDecimal from 'js-big-decimal';
 import { toast, ToastContent, ToastOptions, ToastPosition, ToastTransition, TypeOptions } from 'react-toastify';
 import nexcore from 'nexcore-lib';
