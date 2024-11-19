@@ -140,13 +140,12 @@ export const syncWallet = createAsyncThunk('wallet/syncWallet', async (_, thunkA
         txHistory.set(tx.tx_hash, tx);
     }
 
-    let promises: Promise<void>[] = [];
-    let updateBalance = txHistory.size > 0;
     for (let tx of txHistory.values()) {
-        let t = WalletUtils.classifyAndSaveTransaction(tx, allAddresses);
-        promises.push(t);
+        //low-end devices might crash if doing it concurrently, so one-by-one.
+        await WalletUtils.classifyAndSaveTransaction(tx, allAddresses);
     }
 
+    let updateBalance = txHistory.size > 0;
     let updateWalletKeys = false;
     let walletKeys = state.keys;
     let balance: Balance = { confirmed: "0", unconfirmed: "0" };
@@ -165,8 +164,6 @@ export const syncWallet = createAsyncThunk('wallet/syncWallet', async (_, thunkA
         balance = WalletUtils.sumBalance(balances);
         tokensBalance = WalletUtils.sumTokensBalance(tokenBalances)
     }
-
-    await Promise.all(promises);
 
     if (fromHeight < Math.max(rData.lastHeight, cData.lastHeight)) {
         await StorageProvider.setTransactionsState({ height: Math.max(rData.lastHeight, cData.lastHeight) });
