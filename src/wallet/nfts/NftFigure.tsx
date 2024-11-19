@@ -66,7 +66,7 @@ export default function NftFigure({ nftEntity, tokenBalance, onClick }: { nftEnt
   }
   
   return (
-    <Figure className="m-3 nft-card" style={{ width: isMobile ? '40%' : '20%' }} onClick={onClick}>
+    <Figure className="m-3 nft-card" style={{ width: isMobile ? (nftType != 'audio' ? '40%' : '90%') : '20%' }} onClick={onClick}>
       { nftType == 'video' && <video controls src={nftImage} width={"100%"} style={{objectFit: 'cover'}}/>
         || nftType == 'audio' && <audio controls src={nftImage} style={{ width: '100%', objectFit: 'cover'}}/>
         || <Figure.Image src={nftImage} />

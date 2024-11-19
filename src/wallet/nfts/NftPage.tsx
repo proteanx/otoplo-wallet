@@ -108,7 +108,7 @@ export default function NftPage({ nftEntity, keys, back }: { nftEntity: NftEntit
             <Col className='center'>
               { files?.map((f, i) => {
                 return (
-                  <Figure key={i} className="mx-3" style={{ width: isMobile ? '40%' : '30%' }}>
+                  <Figure key={i} className="mx-3" style={{ width: isMobile ? (f.type != 'audio' ? '40%' : '80%') : '30%' }}>
                     { f.type == 'video' && <video controls src={f.image} width={"100%"} style={{objectFit: 'cover'}}/>
                       || f.type == 'audio' && <audio controls src={f.image} style={{width: '100%', objectFit: 'cover'}}/>
                       || <Figure.Image src={f.image} />
