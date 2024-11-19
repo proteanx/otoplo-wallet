@@ -2,7 +2,7 @@ import { ContractEntity, NftEntity, TokenEntity, TransactionEntity } from "../mo
 import { Balance } from "../models/wallet.entities";
 
 export interface IAppDB {
-    clearData(): Promise<void>;
+    clearData(partial: boolean): Promise<void>;
     initSchema(): Promise<boolean>;
 
     upsertTransaction(txEntry: TransactionEntity): Promise<void>;

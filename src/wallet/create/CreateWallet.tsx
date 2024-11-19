@@ -32,7 +32,7 @@ export default function CreateWallet({ cancelCreate, setDecSeed }: { cancelCreat
 
   const handleSeed = () => {
     var phrase = words.join(' ');
-    clearLocalWallet().then(_ => {
+    clearLocalWallet(false).then(_ => {
       encryptAndStoreMnemonic(phrase, pwEnc);
       setDecSeed(phrase);
       cancelCreate();

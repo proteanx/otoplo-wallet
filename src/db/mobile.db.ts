@@ -69,14 +69,30 @@ const upgradeSchemaV2 =  [
   `CREATE INDEX IF NOT EXISTS nfts_time_idx ON nfts (addedTime);`,
   `CREATE INDEX IF NOT EXISTS nfts_group ON nfts (parentGroup);`,
 ];
+
+const upgradeSchemaV3 = [
+  `DROP TABLE IF EXISTS nfts;`,
+
+  `CREATE TABLE IF NOT EXISTS nfts (
+    tokenIdHex TEXT PRIMARY KEY NOT NULL,
+    token TEXT NOT NULL UNIQUE,
+    zipData TEXT,
+    parentGroup TEXT,
+    addedTime INTEGER
+  );`,
+
+  `CREATE INDEX IF NOT EXISTS nfts_time_idx ON nfts (addedTime);`,
+  `CREATE INDEX IF NOT EXISTS nfts_group ON nfts (parentGroup);`,
+]
   
 const upgradeStatements = [
   { toVersion: 1, statements: createSchemaV1 },
   { toVersion: 2, statements: upgradeSchemaV2 },
+  { toVersion: 3, statements: upgradeSchemaV3 },
   // for future
-  //{ toVersion: 3, statements: upgradeSchemaV3 },
+  //{ toVersion: 4, statements: upgradeSchemaV4 },
 ];
-const dbVersion = 2;
+const dbVersion = 3;
 
 export class MobileDB implements IAppDB {
 
@@ -99,7 +115,7 @@ export class MobileDB implements IAppDB {
     return true;
   }
 
-  public async clearData() {
+  public async clearData(partial: boolean) {
     let db = await this.getDBConnection();
     let exist = await db.isExists();
     if (exist.result) {
@@ -110,19 +126,21 @@ export class MobileDB implements IAppDB {
         await db.run("DELETE FROM transactions");
       }
 
-      table = await db.isTable("contracts");
-      if (table.result) {
-        await db.run("DELETE FROM contracts");
-      }
-
-      table = await db.isTable("tokens");
-      if (table.result) {
-        await db.run("DELETE FROM tokens");
-      }
-
       table = await db.isTable("nfts");
       if (table.result) {
         await db.run("DELETE FROM nfts");
+      }
+
+      if (!partial) {
+        table = await db.isTable("contracts");
+        if (table.result) {
+          await db.run("DELETE FROM contracts");
+        }
+
+        table = await db.isTable("tokens");
+        if (table.result) {
+          await db.run("DELETE FROM tokens");
+        }
       }
     }
   }
@@ -158,7 +176,7 @@ export class MobileDB implements IAppDB {
   }
 
   public async clearTransactions() {
-    await this.execRun("DELETE FROM transactions");
+    await this.execRun("DELETE FROM transactions;");
   }
 
   public async getVaults(isArchive: number): Promise<ContractEntity[] | undefined> {

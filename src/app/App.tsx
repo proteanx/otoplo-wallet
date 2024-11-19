@@ -97,10 +97,10 @@ function App() {
         }
         if (seed) {
           let code = await StorageProvider.getVersionCode();
-          if (code !== "2") { 
-            await clearLocalWallet();
-            await StorageProvider.saveEncryptedSeed(seed);
-            await StorageProvider.setVersionCode("2");
+          if (code !== "3") { 
+            await clearLocalWallet(true);
+            //await StorageProvider.saveEncryptedSeed(seed);
+            await StorageProvider.setVersionCode("3");
           }
           setEncSeed(seed);
         }

@@ -9,7 +9,13 @@ export default class StorageProvider {
   public static readonly VAULT_SCAN_LOCK = "vault-scan";
   public static readonly VAULT_REFRESH_LOCK = "refresh-vaults";
 
-  public static async clearData() {
+  public static async clearData(partial: boolean) {
+    if (partial) {
+      await this.setTransactionsState({ height: 0 });
+      localStorage.removeItem("last-check");
+      return;
+    }
+
     localStorage.clear();
     if (isMobilePlatform()) {
       await Preferences.clear();

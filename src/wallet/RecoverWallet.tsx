@@ -58,7 +58,7 @@ export default function RecoverWallet({ cancelRecover, setDecSeed }: { cancelRec
       var err = validatePassword(pwRef.current.value, pwValidRef.current.value);
       setPwErr(err);
       if (err === "") {
-        clearLocalWallet().then(_ => {
+        clearLocalWallet(false).then(_ => {
           encryptAndStoreMnemonic(phrase, pwRef.current!.value);
           setDecSeed(phrase);
           setShow(false);

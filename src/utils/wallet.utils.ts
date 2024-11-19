@@ -21,9 +21,9 @@ export enum TxTokenType {
     TRANSFER
 }
 
-export async function clearLocalWallet() {
-    await StorageProvider.clearData();
-    await dbProvider.clearData();
+export async function clearLocalWallet(partial: boolean) {
+    await StorageProvider.clearData(partial);
+    await dbProvider.clearData(partial);
 }
 
 export function isValidNexaAddress(address: string, type = NexCore.Address.PayToScriptTemplate) {
@@ -290,7 +290,7 @@ export async function classifyAndSaveTransaction(txHistory: ITXHistory, myAddres
 
     if (txEntry.token !== 'none' && NiftyProvider.isNiftySubgroup(txEntry.token)) {
         if (txEntry.state !== 'outgoing') {
-            await fetchAndSaveNFT(txEntry.token, NiftyProvider.NIFTY_TOKEN.token);
+            await fetchAndSaveNFT(txEntry.token, NiftyProvider.NIFTY_TOKEN.token, txEntry.time);
         }
         txEntry.extraGroup = NiftyProvider.NIFTY_TOKEN.token;
     }

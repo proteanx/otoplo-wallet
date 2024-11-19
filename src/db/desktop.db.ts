@@ -23,11 +23,13 @@ export class DesktopDB extends Dexie implements IAppDB {
     });
   }
 
-  public async clearData() {
+  public async clearData(partial: boolean) {
     await this.transactions.clear();
-    await this.contracts.clear();
-    await this.tokens.clear();
     await this.nfts.clear();
+    if (!partial) {
+      await this.contracts.clear();
+      await this.tokens.clear();
+    }
   }
 
   public async initSchema(): Promise<boolean> {

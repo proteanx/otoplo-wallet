@@ -22,8 +22,8 @@ export class DBProvider {
         return this.appdb.initSchema();
     }
 
-    public async clearData() {
-        await this.appdb.clearData();
+    public async clearData(partial: boolean) {
+        await this.appdb.clearData(partial);
     }
 
     public async addLocalTransaction(tx: TransactionEntity) {

@@ -17,7 +17,7 @@ export function tokenIdToHex(token: string) {
     return getAddressBuffer(token).toString('hex');
 }
 
-export async function fetchAndSaveNFT(token: string, parent: string) {
+export async function fetchAndSaveNFT(token: string, parent: string, time: number) {
     // support only nifty for now
     try {
         let exist = await dbProvider.isNftExist(token);
@@ -28,7 +28,7 @@ export async function fetchAndSaveNFT(token: string, parent: string) {
         let hexId = tokenIdToHex(token);
         let nft = await NiftyProvider.fetchNFT(hexId);
         let nftEntity: NftEntity = {
-            addedTime: currentTimestamp(),
+            addedTime: time,
             parentGroup: parent,
             token: token,
             tokenIdHex: hexId,
