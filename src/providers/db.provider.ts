@@ -22,8 +22,8 @@ export class DBProvider {
         return this.appdb.initSchema();
     }
 
-    public async clearData() {
-        await this.appdb.clearData();
+    public async clearData(partial: boolean) {
+        await this.appdb.clearData(partial);
     }
 
     public async addLocalTransaction(tx: TransactionEntity) {
@@ -95,12 +95,20 @@ export class DBProvider {
         nftUpdateTrigger.setUpdateTrigger((prev) => prev + 1);
     }
 
-    public async getLocalNfts() {
-        return await this.appdb.getNfts();
+    public async getLocalNfts(pageNum: number, pageSize: number) {
+        return await this.appdb.getNfts(pageNum, pageSize);
     }
 
     public async deleteNft(id: string) {
         await this.appdb.deleteNft(id);
         nftUpdateTrigger.setUpdateTrigger((prev) => prev + 1);
+    }
+
+    public async countLocalNfts() {
+        return await this.appdb.countNfts();
+    }
+
+    public async isNftExist(id: string): Promise<boolean> {
+        return await this.appdb.isNftExist(id);
     }
 }

@@ -23,11 +23,13 @@ export class DesktopDB extends Dexie implements IAppDB {
     });
   }
 
-  public async clearData() {
+  public async clearData(partial: boolean) {
     await this.transactions.clear();
-    await this.contracts.clear();
-    await this.tokens.clear();
     await this.nfts.clear();
+    if (!partial) {
+      await this.contracts.clear();
+      await this.tokens.clear();
+    }
   }
 
   public async initSchema(): Promise<boolean> {
@@ -103,11 +105,20 @@ export class DesktopDB extends Dexie implements IAppDB {
     await this.nfts.put(nft, nft.tokenIdHex);
   }
 
-  public async getNfts() {
-    return await this.nfts.orderBy('addedTime').reverse().toArray();
+  public async getNfts(pageNum: number, pageSize: number) {
+    return await this.nfts.orderBy('addedTime').reverse().offset((pageNum-1)*pageSize).limit(pageSize).toArray();
   }
 
   public async deleteNft(id: string) {
     await this.nfts.delete(id);
+  }
+
+  public async countNfts(): Promise<number> {
+    return await this.nfts.count();
+  }
+
+  public async isNftExist(id: string): Promise<boolean> {
+    let count = await this.nfts.where('tokenIdHex').equals(id).or('token').equals(id).count();
+    return count > 0;
   }
 }

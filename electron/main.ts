@@ -45,6 +45,13 @@ function createWindow(): void {
       mainWindow.setTitle("Otoplo Wallet " + app.getVersion());
     });
   }
+
+  const ses = mainWindow.webContents.session;
+  ses.getCacheSize().then(res => {
+    if (res > 100000000) {
+      ses.clearCache();
+    }
+  });
 }
 
 if (!gotTheLock) {

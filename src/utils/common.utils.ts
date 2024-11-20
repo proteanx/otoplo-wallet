@@ -1,5 +1,5 @@
 import { Clipboard } from '@capacitor/clipboard';
-import { Capacitor, CapacitorHttp } from '@capacitor/core';
+import { Capacitor } from '@capacitor/core';
 import bigDecimal from 'js-big-decimal';
 import { toast, ToastContent, ToastOptions, ToastPosition, ToastTransition, TypeOptions } from 'react-toastify';
 import nexcore from 'nexcore-lib';
@@ -18,7 +18,7 @@ export function currentTimestamp() {
     return Math.floor(Date.now() / 1000);
 }
 
-export function isNullOrEmpty(arg?: string | any[]) {
+export function isNullOrEmpty(arg?: string | any[]): arg is undefined | [] | '' {
     return !arg || arg.length === 0;
 }
 

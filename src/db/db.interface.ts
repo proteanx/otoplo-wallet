@@ -2,7 +2,7 @@ import { ContractEntity, NftEntity, TokenEntity, TransactionEntity } from "../mo
 import { Balance } from "../models/wallet.entities";
 
 export interface IAppDB {
-    clearData(): Promise<void>;
+    clearData(partial: boolean): Promise<void>;
     initSchema(): Promise<boolean>;
 
     upsertTransaction(txEntry: TransactionEntity): Promise<void>;
@@ -22,7 +22,9 @@ export interface IAppDB {
     getTokens(): Promise<TokenEntity[] | undefined>;
     deleteToken(id: string): Promise<void>;
 
+    countNfts(): Promise<number>;
     upsertNft(nft: NftEntity): Promise<void>;
-    getNfts(): Promise<NftEntity[] | undefined>;
+    getNfts(pageNum: number, pageSize: number): Promise<NftEntity[] | undefined>;
     deleteNft(id: string): Promise<void>;
+    isNftExist(id: string): Promise<boolean>;
 }

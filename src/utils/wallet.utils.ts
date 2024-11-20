@@ -21,9 +21,9 @@ export enum TxTokenType {
     TRANSFER
 }
 
-export async function clearLocalWallet() {
-    await StorageProvider.clearData();
-    await dbProvider.clearData();
+export async function clearLocalWallet(partial: boolean) {
+    await StorageProvider.clearData(partial);
+    await dbProvider.clearData(partial);
 }
 
 export function isValidNexaAddress(address: string, type = NexCore.Address.PayToScriptTemplate) {
@@ -81,7 +81,7 @@ async function discoverWalletIndex(deriveKey: HDPrivateKey) {
             let rAddr = deriveKey.deriveChild(i, false).getPublicKey().toAddress().toString();
             let isUsed = await isAddressUsed(rAddr);
             if (isUsed) {
-                index++;
+                index = i;
                 stop = false;
             }
         }
@@ -290,14 +290,12 @@ export async function classifyAndSaveTransaction(txHistory: ITXHistory, myAddres
 
     if (txEntry.token !== 'none' && NiftyProvider.isNiftySubgroup(txEntry.token)) {
         if (txEntry.state !== 'outgoing') {
-            await fetchAndSaveNFT(txEntry.token, NiftyProvider.NIFTY_TOKEN.token);
+            await fetchAndSaveNFT(txEntry.token, NiftyProvider.NIFTY_TOKEN.token, txEntry.time);
         }
         txEntry.extraGroup = NiftyProvider.NIFTY_TOKEN.token;
     }
 
     await dbProvider.addLocalTransaction(txEntry);
-
-    return txEntry;
 }
 
 function classifyTokenTransaction(vin: ITXInput[], vout: ITXOutput[], txState: TxEntityState, myAddresses: string[]): [TxTokenType, string, string, string] {

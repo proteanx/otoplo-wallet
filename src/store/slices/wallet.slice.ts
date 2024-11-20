@@ -4,29 +4,36 @@ import { RootState } from "../store";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as WalletUtils from "../../utils/wallet.utils";
 import StorageProvider from "../../providers/storage.provider";
-import { TransactionEntity } from "../../models/db.entities";
 import bigDecimal from "js-big-decimal";
 import { rostrumProvider } from "../../providers/rostrum.provider";
 import { sleep } from "../../utils/common.utils";
 import { initializePrices, getNexaPrice } from "../../utils/price.utils";
+import { NftEntity } from "../../models/db.entities";
+import { dbProvider } from "../../app/App";
 
 export interface WalletState {
     accountKey?: HDPrivateKey;
     keys: WalletKeys;
     balance: Balance;
     tokensBalance: Record<string, Balance>;
+    nfts: NftEntity[];
     height: number;
     price: Record<string, bigDecimal>;
     sync: boolean;
+    syncNfts: boolean;
+    fetchNfts: boolean;
 }
   
 const initialState: WalletState = {
     keys: {receiveKeys: [], changeKeys: []},
     balance: {confirmed: "0", unconfirmed: "0"},
     tokensBalance: {},
+    nfts: [],
     height: 0,
     price: initializePrices(),
-    sync: false
+    sync: false,
+    syncNfts: false,
+    fetchNfts: false
 }
 
 export const fetchHeightAndPrice = createAsyncThunk('wallet/fetchHeightAndPrice', async (_, thunkAPI) => {
@@ -66,6 +73,52 @@ export const fetchBalance = createAsyncThunk('wallet/fetchBalance', async (withD
     return { balance: WalletUtils.sumBalance(balances), tokensBalance: WalletUtils.sumTokensBalance(tokenBalances), keys: wKeys };
 });
 
+export const syncNfts = createAsyncThunk('wallet/syncNfts', async (_, thunkAPI) => {  
+    let rootState = thunkAPI.getState() as RootState;
+    let state = rootState.wallet;
+
+    let cachedNfts = state.nfts;
+    let count = await dbProvider.countLocalNfts();
+
+    if (count == cachedNfts.length) {
+        return;
+    }
+
+    thunkAPI.dispatch(setFetchNfts(true));
+    thunkAPI.dispatch(setNfts([]));
+
+    let pageSize = 3;
+    let pageNum = 0;
+    let nfts: NftEntity[] = [];
+    let nftsToDelete: string[] = [];
+
+    while (nfts.length < count) {
+        let nftsToAdd: NftEntity[] = [];
+        pageNum++;
+        let res = await dbProvider.getLocalNfts(pageNum, pageSize);
+        if (res) {
+            for (let n of res) {
+                if (!state.tokensBalance[n.tokenIdHex]) {
+                    nftsToDelete.push(n.tokenIdHex);
+                    count--;
+                } else {
+                    nftsToAdd.push(n)
+                }
+            }
+            nfts = nfts.concat(nftsToAdd);
+            thunkAPI.dispatch(setNfts(nfts));
+            thunkAPI.dispatch(setFetchNfts(false));
+        }
+    }
+
+    if (nftsToDelete.length > 0) {
+        for (let nft of nftsToDelete) {
+            console.log(nft)
+            await dbProvider.deleteNft(nft);
+        }
+    }
+});
+
 export const syncWallet = createAsyncThunk('wallet/syncWallet', async (_, thunkAPI) => {
     let rootState = thunkAPI.getState() as RootState;
     let state = rootState.wallet;
@@ -87,14 +140,12 @@ export const syncWallet = createAsyncThunk('wallet/syncWallet', async (_, thunkA
         txHistory.set(tx.tx_hash, tx);
     }
 
-    let updateBalance = false;
-    let txPromises: Promise<TransactionEntity>[] = [];
     for (let tx of txHistory.values()) {
-        updateBalance = true;
-        let t = WalletUtils.classifyAndSaveTransaction(tx, allAddresses);
-        txPromises.push(t);
+        //low-end devices might crash if doing it concurrently, so one-by-one.
+        await WalletUtils.classifyAndSaveTransaction(tx, allAddresses);
     }
 
+    let updateBalance = txHistory.size > 0;
     let updateWalletKeys = false;
     let walletKeys = state.keys;
     let balance: Balance = { confirmed: "0", unconfirmed: "0" };
@@ -113,8 +164,6 @@ export const syncWallet = createAsyncThunk('wallet/syncWallet', async (_, thunkA
         balance = WalletUtils.sumBalance(balances);
         tokensBalance = WalletUtils.sumTokensBalance(tokenBalances)
     }
-
-    await Promise.all(txPromises);
 
     if (fromHeight < Math.max(rData.lastHeight, cData.lastHeight)) {
         await StorageProvider.setTransactionsState({ height: Math.max(rData.lastHeight, cData.lastHeight) });
@@ -135,6 +184,15 @@ export const walletSlice = createSlice({
         },
         setSync: (state) => {
             state.sync = true;
+        },
+        setNfts: (state, action: PayloadAction<NftEntity[]>) => {
+            state.nfts = action.payload;
+        },
+        setSyncNfts: (state, action: PayloadAction<boolean>) => {
+            state.syncNfts = action.payload;
+        },
+        setFetchNfts: (state, action: PayloadAction<boolean>) => {
+            state.fetchNfts = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -149,6 +207,9 @@ export const walletSlice = createSlice({
             })
             .addCase(syncWallet.pending, (state) => {
                 state.sync = true;
+            })
+            .addCase(syncNfts.pending, (state) => {
+                state.syncNfts = true;
             })
             .addCase(syncWallet.fulfilled, (state, action) => {
                 let payload = action.payload
@@ -172,14 +233,19 @@ export const walletSlice = createSlice({
                 console.log(action.error.message);
             });
         
-        builder.addMatcher(syncWallet.settled, (state) => {
-            state.sync = false;
-            StorageProvider.removeLock(StorageProvider.SYNC_LOCK);
-        });
+        builder
+            .addMatcher(syncWallet.settled, (state) => {
+                state.sync = false;
+                StorageProvider.removeLock(StorageProvider.SYNC_LOCK);
+            })
+            .addMatcher(syncNfts.settled, (state) => {
+                state.syncNfts = false;
+                state.fetchNfts = false;
+            });
     },
 });
 
-export const { setAccountKey, setKeys, setSync } = walletSlice.actions;
+export const { setAccountKey, setKeys, setSync, setNfts, setSyncNfts, setFetchNfts } = walletSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const walletState = (state: RootState) => state.wallet;

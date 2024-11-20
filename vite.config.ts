@@ -5,7 +5,7 @@ import electron from 'vite-plugin-electron';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import path from 'path';
 
-const shouldRunElectron = process.env.VITE_IS_DESKTOP == 'true' || process.env.APP_DEV?.includes('true');
+const shouldRunElectron = process.env.VITE_IS_DESKTOP == 'true' || process.env.NODE_ENV == 'development';
 
 export default defineConfig({
   base: './',
