@@ -10,15 +10,17 @@
   "dependencies": {
     "@capacitor-community/sqlite": "^6.0.2",
     "@capacitor-mlkit/barcode-scanning": "^6.2.0",
-    "@capacitor/android": "^6.1.2",
-    "@capacitor/app": "^6.0.1",
-    "@capacitor/clipboard": "^6.0.1",
-    "@capacitor/core": "^6.1.2",
-    "@capacitor/dialog": "^6.0.1",
-    "@capacitor/ios": "^6.1.2",
-    "@capacitor/preferences": "^6.0.2",
-    "@capacitor/splash-screen": "^6.0.2",
-    "@fortawesome/fontawesome-free": "^6.6.0",
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/app": "^6.0.2",
+    "@capacitor/clipboard": "^6.0.2",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/dialog": "^6.0.2",
+    "@capacitor/filesystem": "^6.0.2",
+    "@capacitor/ios": "^6.2.0",
+    "@capacitor/preferences": "^6.0.3",
+    "@capacitor/share": "^6.0.3",
+    "@capacitor/splash-screen": "^6.0.3",
+    "@fortawesome/fontawesome-free": "^6.7.1",
     "@reduxjs/toolkit": "^2.3.0",
     "@vgrunner/electrum-cash": "^2.0.12",
     "@yudiel/react-qr-scanner": "^2.0.8",
@@ -58,7 +60,7 @@
     }
   },
   "devDependencies": {
-    "@capacitor/cli": "^6.1.2",
+    "@capacitor/cli": "^6.2.0",
     "@electron-forge/cli": "^7.5.0",
     "@electron-forge/maker-dmg": "^7.5.0",
     "@types/crypto-js": "^4.2.2",
@@ -76,6 +78,6 @@
     "vite-plugin-electron": "^0.29.0",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-svgr": "^4.3.0",
-    "vite-tsconfig-paths": "^5.1.2"
+    "vite-tsconfig-paths": "^5.1.3"
   }
 }
