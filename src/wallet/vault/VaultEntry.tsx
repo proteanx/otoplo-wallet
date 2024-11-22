@@ -10,7 +10,7 @@ import { QRCode } from 'react-qrcode-logo';
 import Claim from './Claim';
 import { ListGroup, Offcanvas } from 'react-bootstrap';
 import { copy, isMobileScreen } from '../../utils/common.utils';
-import { WalletKeys } from '../../models/wallet.entities';
+import { Price, WalletKeys } from '../../models/wallet.entities';
 import { VaultInfo } from './Vault';
 import HDPrivateKey from 'nexcore-lib/types/lib/hdprivatekey';
 import { estimateDateByFutureBlock, generateHodlKey, getVaultBlockAndIndex } from '../../utils/vault.utils';
@@ -21,7 +21,7 @@ import { getCurrencySymbol } from '../../utils/price.utils';
 interface VaultEntryProps {
   keys: WalletKeys;
   heightVal: number;
-  price: Record<string, bigDecimal>;
+  price: Record<string, Price>;
   vault: VaultInfo;
   vaultAccountKey: HDPrivateKey;
   refreshVaults: () => Promise<void>;
@@ -79,7 +79,7 @@ export default function VaultEntry({ keys, heightVal, price, vault, vaultAccount
               <div className='mt-2'>
                 Balance
                 <div>
-                  <b>{val.confirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA @ {getCurrencySymbol(selectedCurrency)}{price[selectedCurrency.toLowerCase()].multiply(val.confirmed).round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()}</b>
+                  <b>{val.confirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA @ {getCurrencySymbol(selectedCurrency)}{price[selectedCurrency.toLowerCase()].value.multiply(val.confirmed).round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()}</b>
                 </div>
               </div>
               { val.unconfirmed.compareTo(new bigDecimal(0)) > 0 && 
