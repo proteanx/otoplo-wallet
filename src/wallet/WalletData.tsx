@@ -13,8 +13,8 @@ import SendMoney from './actions/SendMoney';
 import { scanForNewAddresses } from '../utils/wallet.utils';
 import ReceiveMoney from './actions/ReceiveMoney';
 import TxExport from './tx/TxExport';
-import StorageProvider from '../providers/storage.provider';
-import { getSelectedCurrency, getCurrencySymbol } from '../utils/price.utils';
+import { getSelectedCurrency } from '../utils/price.utils';
+import PriceChange from './misc/PriceChange';
 
 export default function WalletData() {
   let isMobile = isMobileScreen();
@@ -55,8 +55,6 @@ export default function WalletData() {
     val.unconfirmed = new bigDecimal(0);
   }
 
-  const currencySymbol = getCurrencySymbol(selectedCurrency);
-
   let rAddrs = wallet.keys.receiveKeys?.map(key => key.address).reverse();
 
   return (
@@ -66,8 +64,10 @@ export default function WalletData() {
         <div className='larger'>
           {val.confirmed.round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()} NEXA
         </div>
-        <div className='smaller' style={{fontWeight: "400"}}>
-          {wallet.price[selectedCurrency.toLowerCase()]?.compareTo(new bigDecimal(0)) > 0 && `(${currencySymbol}${wallet.price[selectedCurrency.toLowerCase()].multiply(val.confirmed).round(2, bigDecimal.RoundingModes.HALF_DOWN).getPrettyValue()})`}
+        <div className='mt-1' style={{fontWeight: "400"}}>
+          { wallet.price[selectedCurrency.toLowerCase()]?.value.compareTo(new bigDecimal(0)) > 0 && 
+            <PriceChange balance={val.confirmed} selectedCurrency={selectedCurrency}/>
+          }
         </div>
       </Card.Title>
       { val.unconfirmed.compareTo(new bigDecimal(0)) > 0 && 

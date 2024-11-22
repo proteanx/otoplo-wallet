@@ -1,4 +1,5 @@
-import HDPrivateKey from "nexcore-lib/types/lib/hdprivatekey"
+import type bigDecimal from "js-big-decimal";
+import type HDPrivateKey from "nexcore-lib/types/lib/hdprivatekey"
 
 export interface WalletKeys {
     receiveKeys: AddressKey[];
@@ -28,4 +29,9 @@ export interface AddressKey {
 export interface Balance {
     confirmed: string | number;
     unconfirmed: string | number;
+}
+
+export interface Price {
+    value: bigDecimal;
+    change: bigDecimal;
 }

@@ -51,7 +51,7 @@ export default function SideMenu({ activeItem, setActiveItem, sidebarToggled, se
         <MenuItem disabled suffix={wallet.height ? "Online" : "Offline"}>Status:</MenuItem>
         <MenuItem disabled suffix={"nexa"}>Network:</MenuItem>
         <MenuItem disabled suffix={new bigDecimal(wallet.height).getPrettyValue()}>Block Height:</MenuItem>
-        <MenuItem disabled suffix={wallet.price.usd.compareTo(new bigDecimal(0)) > 0 && wallet.price.usd.getPrettyValue()}>NEXA/USDT:</MenuItem>
+        <MenuItem disabled suffix={wallet.price.usd.value.compareTo(new bigDecimal(0)) > 0 && wallet.price.usd.value.getPrettyValue()}>NEXA/USDT:</MenuItem>
       </Menu>
       <Footer/>
     </Sidebar>
