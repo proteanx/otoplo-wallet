@@ -1,37 +1,35 @@
 import { Button } from "react-bootstrap"
-import { isMobilePlatform, showToast } from "../../utils/common.utils"
 import { NftEntity } from "../../models/db.entities"
+import { exportFile, FileProps } from "../../utils/file.utils";
+import ExportFile from "../actions/ExportFile";
+import { useState } from "react";
+import { isMobilePlatform } from "../../utils/common.utils";
 
 export default function NftExport({ nftEntity, title }: { nftEntity: NftEntity, title: string }) {
 
-  // currently support only on desktop
-  if (isMobilePlatform()){
-    return;
-  }
+  const [fileProps, setFileProps] = useState<FileProps>();
+  const [showExport, setShowExport] = useState(false);
 
   const exportNft = async () => {
-    try {
-      let name = (title || nftEntity.tokenIdHex).replaceAll(" ", "_");
-      let success = await window.electronAPI.exportFile(Buffer.from(nftEntity.zipData, 'base64'), `${name}.zip`);
-      if (success) {
-        showToast('success', 'NFT Saved!');
-      }
-    } catch (e) {
-      console.log(e);
-      showToast('error', 'Failed to export NFT', {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+    let file: FileProps = {
+      type: "NFT",
+      dir: "NFTs",
+      name: `${(title || nftEntity.token).replace(/[^a-zA-Z0-9]/g, '_')}.zip`,
+      content: nftEntity.zipData
     }
+
+    if (isMobilePlatform()) {
+      setFileProps(file);
+      setShowExport(true);
+    } else {
+      await exportFile(file);
+    }    
   }
 
   return (
-    <Button className="mx-1" onClick={exportNft}><i className="fa fa-arrow-up-right-from-square"/> Export</Button>
+    <>
+      <Button className="mx-1" onClick={exportNft}><i className="fa fa-arrow-up-right-from-square"/> Export</Button>
+      <ExportFile show={showExport} close={() => setShowExport(false)} file={fileProps}/>
+    </>
   )
 }

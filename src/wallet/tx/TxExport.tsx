@@ -1,16 +1,17 @@
 import { ListGroup, Spinner } from "react-bootstrap";
-import { currentTimestamp, isMobilePlatform, isNullOrEmpty, parseAmountWithDecimals, showToast } from "../../utils/common.utils";
+import { currentTimestamp, isMobilePlatform, isNullOrEmpty, parseAmountWithDecimals } from "../../utils/common.utils";
 import { useState } from "react";
 import { dbProvider } from "../../app/App";
 import { TxTokenType } from "../../utils/wallet.utils";
+import { Encoding } from "@capacitor/filesystem";
+import { exportFile, FileProps } from "../../utils/file.utils";
+import ExportFile from "../actions/ExportFile";
 
-export default function TxExport() {
-  // currently support only on desktop
-  if (isMobilePlatform()) {
-    return;
-  }
+export default function TxExport({ hideMenu }: { hideMenu: () => void;  }) {
 
   const [loading, setLoading] = useState(false);
+  const [fileProps, setFileProps] = useState<FileProps>();
+  const [showExport, setShowExport] = useState(false);
 
   const exportTxs = async () => {
     setLoading(true);
@@ -32,32 +33,35 @@ export default function TxExport() {
         csvArr.push(line);
       }
 
-      let csvData = Buffer.from(csvArr.join('\n'), 'utf-8');
-      let success = await window.electronAPI.exportFile(csvData, `otoplo_nexa_transactions_${currentTimestamp()}.csv`);
-      if (success) {
-        showToast('success', 'Transactions CSV Saved!');
+      let file: FileProps = {
+        type: "Transactions CSV",
+        dir: "",
+        name: `otoplo_transactions_${currentTimestamp()}.csv`,
+        content: csvArr.join('\n'),
+        encoding: Encoding.UTF8
       }
-    } catch (e) {
-      console.log(e);
-      showToast('error', 'Failed to export Transactions', {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+
+      if (isMobilePlatform()) {
+        setFileProps(file);
+        setShowExport(true);
+      } else {
+        let success = await exportFile(file);
+        if (success) {
+          hideMenu();
+        }
+      }
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <ListGroup.Item action={!loading} onClick={exportTxs}>
-      <div>Export Transactions to CSV</div>
-      { loading && <div className="mt-1"><Spinner animation="grow"/></div> }
-    </ListGroup.Item>
+    <>
+      <ListGroup.Item action={!loading} onClick={exportTxs}>
+        <div>Export Transactions to CSV</div>
+        { loading && <div className="mt-1"><Spinner animation="grow"/></div> }
+      </ListGroup.Item>
+      <ExportFile show={showExport} close={() => setShowExport(false)} file={fileProps}/>
+    </>
   )
 }

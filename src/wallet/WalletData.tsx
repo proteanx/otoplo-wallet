@@ -101,7 +101,7 @@ export default function WalletData() {
               <ListGroup.Item action onClick={scanMoreAddresses} disabled={scanMsg !== ''}>
                 Scan More Addresses
               </ListGroup.Item>
-              <TxExport/>
+              <TxExport hideMenu={() => setShowOffCanvas(false)}/>
             </ListGroup>
           </Offcanvas.Body>
         </Offcanvas>

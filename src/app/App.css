@@ -444,3 +444,7 @@ code, .text-monospace {
     --bs-modal-header-border-color: rgb(110, 110, 110);
     --bs-modal-footer-border-color: rgb(110, 110, 110);
 }
+
+.loader {
+    width: fit-content;
+}

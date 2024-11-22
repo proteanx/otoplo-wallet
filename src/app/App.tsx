@@ -18,6 +18,7 @@ import StorageProvider from '../providers/storage.provider';
 import { DBProvider } from '../providers/db.provider';
 import { clearLocalWallet } from '../utils/wallet.utils';
 import { Spinner } from 'react-bootstrap';
+import Loader from './Loader';
 
 // Singleton DBProvider
 export let dbProvider: DBProvider;
@@ -169,6 +170,7 @@ function App() {
           </Container>
         </div>
       </div>
+      <Loader/>
       {unlocked || <Footer/>}
     </>
   );
