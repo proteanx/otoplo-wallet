@@ -43,8 +43,6 @@
   },
   "scripts": {
     "start": "vite",
-    "serve": "vite preview",
-    "test": "vitest",
     "build": "del-cli ./dist && tsc && vite build",
     "build:android": "npm run build && npx cap sync android",
     "build:ios": "npm run build && npx cap sync ios",
